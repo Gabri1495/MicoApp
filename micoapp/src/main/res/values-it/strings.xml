@@ -1,0 +1,19 @@
+<resources>
+    <string name="menu_settings">Impostazioni</string>
+    <string name="navigation_drawer_close">Apertura del drawer di navigazione</string>
+    <string name="navigation_drawer_open">Chiusura del drawer di navigazione</string>
+    <string name="action_contact_us">Contattaci</string>
+    <string name="action_email">E-mail</string>
+    <string name="action_telegram">Telegram</string>
+    <string name="menu_archive">Archivio</string>
+    <string name="menu_communicate">Comunnica</string>
+    <string name="menu_encyclopedia">Enciclopedia</string>
+    <string name="menu_history">Cronologia</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_map">Mappa</string>
+    <string name="menu_memories">Ricordi</string>
+    <string name="menu_send">Invia</string>
+    <string name="menu_statistics">Statistiche</string>
+    <string name="email_subject">"Assistenza per "</string>
+    <string name="email_text">Inglese ed Italiano sono le lingue preferite, altrimenti verrà usato Google Translate.\nCancellare questa parte prima di spedire ;)</string>
+</resources>

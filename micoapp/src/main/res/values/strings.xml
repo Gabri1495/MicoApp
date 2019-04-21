@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name" translatable="false">MicoApp</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="menu_settings">Settings</string>
+    <string name="action_contact_us">Contact us</string>
+    <string name="action_telegram">Telegram</string>
+    <string name="action_email">E-mail</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_map">Map</string>
+    <string name="menu_encyclopedia">Encyclopedia</string>
+    <string name="menu_archive">Archive</string>
+    <string name="menu_memories">Memories</string>
+    <string name="menu_statistics">Statistics</string>
+    <string name="menu_communicate">Communicate</string>
+    <string name="menu_send">Send</string>
+    <string name="menu_history">History</string>
+    <string name="email_subject">Support for</string>
+    <string name="email_text">English and Italian are the favorite languages, otherwise Google Translate will be used.\nDelete this part before send ;)</string>
+</resources>
