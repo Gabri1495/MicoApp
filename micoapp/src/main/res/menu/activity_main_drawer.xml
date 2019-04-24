@@ -6,6 +6,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/menu_home"
+            android:checked="true"
             android:icon="@drawable/ic_menu_home"
             android:title="@string/menu_home" />
         <item
@@ -36,14 +37,16 @@
 
     <item android:title="@string/menu_communicate">
         <menu>
-            <item
-                android:id="@+id/menu_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="@string/menu_send" />
-            <item
-                android:id="@+id/menu_history"
-                android:icon="@drawable/ic_menu_history"
-                android:title="@string/menu_history" />
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/menu_send"
+                    android:icon="@drawable/ic_menu_send"
+                    android:title="@string/menu_send" />
+                <item
+                    android:id="@+id/menu_history"
+                    android:icon="@drawable/ic_menu_history"
+                    android:title="@string/menu_history" />
+            </group>
         </menu>
     </item>
 
