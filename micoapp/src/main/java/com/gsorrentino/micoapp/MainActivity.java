@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,7 +19,20 @@ import android.view.MenuItem;
 import android.view.View;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        HomeFragment.OnFragmentInteractionListener,
+        MapFragment.OnFragmentInteractionListener,
+        EncyclopediaFragment.OnFragmentInteractionListener,
+        ArchiveFragment.OnFragmentInteractionListener,
+        MemoriesFragment.OnFragmentInteractionListener,
+        StatisticsFragment.OnFragmentInteractionListener,
+        SettingsFragment.OnFragmentInteractionListener,
+        SendFragment.OnFragmentInteractionListener,
+        HistoryFragment.OnFragmentInteractionListener {
+
+    FragmentManager fragmentManager;
+    FragmentTransaction fragmentTransaction;
+    Fragment newFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +40,13 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Aggiungo dinamicamente il primo fragment
+        fragmentManager = getSupportFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction();
+        newFragment = new HomeFragment();
+        fragmentTransaction.add(R.id.fragment_container, newFragment);
+        fragmentTransaction.commit();
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -96,30 +119,46 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        fragmentTransaction = fragmentManager.beginTransaction();
 
         switch (id) {
             case R.id.menu_home:
-                //TODO
+                newFragment = new HomeFragment();
+                break;
             case R.id.menu_map:
-                //TODO
+                newFragment = new MapFragment();
+                break;
             case R.id.menu_encyclopedia:
-                //TODO
+                newFragment = new EncyclopediaFragment();
+                break;
             case R.id.menu_archive:
-                //TODO
+                newFragment = new ArchiveFragment();
+                break;
             case R.id.menu_memories:
-                //TODO
+                newFragment = new MemoriesFragment();
+                break;
             case R.id.menu_statistics:
-                //TODO
+                newFragment = new StatisticsFragment();
+                break;
             case R.id.menu_settings:
-                //TODO
+                newFragment = new SettingsFragment();
+                break;
             case R.id.menu_send:
-                //TODO
+                newFragment = new SendFragment();
+                break;
             case R.id.menu_history:
-                //TODO
+                newFragment = new HistoryFragment();
         }
+        fragmentTransaction.replace(R.id.fragment_container, newFragment);
+        fragmentTransaction.commit();
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        //TODO gestire comunicazione con fragment
     }
 }
