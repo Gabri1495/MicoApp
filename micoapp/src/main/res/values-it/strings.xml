@@ -16,4 +16,14 @@
     <string name="menu_statistics">Statistiche</string>
     <string name="email_subject">"Assistenza per "</string>
     <string name="email_text">Inglese ed Italiano sono le lingue preferite, altrimenti verrà usato Google Translate.\nCancellare questa parte prima di spedire ;)</string>
+    <string name="name">Nome</string>
+    <string name="nickname">Nickname</string>
+    <string name="surname">Cognome</string>
+    <string name="user_information">Informazioni utente</string>
+    <string name="drawer_on_back">Apri menù laterale con Indietro</string>
+    <string name="drawer_on_back_desc_on">Usando Indietro nela home dell\'app si apre il menù laterale</string>
+    <string name="drawer_on_back_desc_off">Usando Indietro nela home dell\'app si chiude l\'app</string>
+    <string name="behaviour">Comportamento</string>
+    <string name="header_image_content">Questa è l\'icona dell\'app</string>
+    <string name="error_carriage_return">Necessaria singola linea!\nPer favore evitare di andare a capo</string>
 </resources>

@@ -16,21 +16,20 @@
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="Questa è l'immagine dell'utente"
+        android:contentDescription="@string/header_image_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         app:srcCompat="@mipmap/ic_launcher_round" />
 
     <TextView
+        android:id="@+id/header_nickname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Nome utente"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/header_name_surname"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Dati legati all'utente" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

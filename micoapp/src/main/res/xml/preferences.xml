@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/behaviour">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/preference_drawer_on_back"
+            android:summaryOff="@string/drawer_on_back_desc_off"
+            android:summaryOn="@string/drawer_on_back_desc_on"
+            android:title="@string/drawer_on_back" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/user_information">
+
+        <EditTextPreference
+            android:defaultValue=" "
+            android:imeOptions="actionNext"
+            android:inputType="textPersonName"
+            android:key="@string/preference_nickname"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/nickname" />
+        <EditTextPreference
+            android:defaultValue=" "
+            android:inputType="textPersonName"
+            android:key="@string/preference_name"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            android:title="@string/name" />
+        <EditTextPreference
+            android:defaultValue=" "
+            android:inputType="textPersonName"
+            android:key="@string/preference_surname"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/surname" />
+    </PreferenceCategory>
+</PreferenceScreen>
