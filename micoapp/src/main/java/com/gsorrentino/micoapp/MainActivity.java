@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity
 
     SharedPreferences sharedPreferences;
 
+    boolean backPressed = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +49,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        backPressed = false;
 
         // Aggiungo dinamicamente il primo fragment
         fragmentManager = getSupportFragmentManager();
@@ -56,13 +60,19 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+            public void onDrawerClosed(View drawerView){
+                super.onDrawerClosed(drawerView);
+                backPressed = false;
+            }
+        };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        //Utilizzo i valori delle impostazioni per personalizzare l'header
+
+        // Utilizzo i valori delle impostazioni per personalizzare l'header
         View headerView = navigationView.getHeaderView(0);
         String tmp = sharedPreferences.getString(getString(R.string.preference_name), "")
                 + " " + sharedPreferences.getString(getString(R.string.preference_surname), "");
@@ -70,20 +80,45 @@ public class MainActivity extends AppCompatActivity
                 .setText(sharedPreferences.getString(getString(R.string.preference_nickname), ""));
         ((TextView) headerView.findViewById(R.id.header_name_surname))
                 .setText(tmp);
+
+        // In base ai valori delle impostazioni adatto l'interfaccia
+        if(sharedPreferences.getBoolean(getString(R.string.preference_drawer_open_onStart), false)){
+            drawer.openDrawer(GravityCompat.START);
+        }
     }
 
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        boolean drawerOpen = drawer.isDrawerOpen(GravityCompat.START);
+        boolean doubleBack = sharedPreferences.getBoolean(getString(R.string.preference_exit_double_back), false);
+        boolean drawerOnBack = sharedPreferences.getBoolean(getString(R.string.preference_drawer_on_back), false);
+
+        if (drawerOnBack) {
+            if (doubleBack) {
+                if (!drawerOpen) {
+                    drawer.openDrawer(GravityCompat.START);
+                    backPressed = true;
+                } else if (!backPressed) {
+                    drawer.closeDrawer(GravityCompat.START);
+                } else {
+                    finishAffinity();
+                }
+            } else {
+                if (!drawerOpen) {
+                    drawer.openDrawer(GravityCompat.START);
+                } else {
+                    drawer.closeDrawer(GravityCompat.START);
+                }
+            }
+        } else if (drawerOpen) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (sharedPreferences.getBoolean(getString(R.string.preference_drawer_on_back), false)) {
-            drawer.openDrawer(GravityCompat.START);
-        }
-        else {
+        } else {
             super.onBackPressed();
         }
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -124,7 +159,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         fragmentTransaction = fragmentManager.beginTransaction();

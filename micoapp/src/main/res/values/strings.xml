@@ -21,9 +21,9 @@
     <string name="name">Name</string>
     <string name="surname">Surname</string>
     <string name="user_information">User\'s information</string>
-    <string name="drawer_on_back">Open drawer on back</string>
-    <string name="drawer_on_back_desc_on">Using back button in app home will open the drawer</string>
-    <string name="drawer_on_back_desc_off">Using back button in app home will close app</string>
+    <string name="drawer_on_back">Open Drawer on Back</string>
+    <string name="drawer_on_back_desc_on">Using Back button in app home will open the Drawer</string>
+    <string name="drawer_on_back_desc_off">Using Back button in app home will close app</string>
     <string name="behaviour">Behaviour</string>
     <string name="preference_drawer_on_back" translatable="false">preference_drawer_on_back</string>
     <string name="preference_nickname" translatable="false">preference_nickname</string>
@@ -31,4 +31,12 @@
     <string name="preference_surname" translatable="false">preference_surname</string>
     <string name="header_image_content">This is app icon</string>
     <string name="error_carriage_return">Single line needed!\nPlease avoid carriage return</string>
+    <string name="preference_drawer_open_onStart" translatable="false">preference_drawer_open_onStart</string>
+    <string name="preference_exit_double_back" translatable="false">preference_exit_double_back</string>
+    <string name="drawer_open_onStart_desc_on">Start app with Drawer already open</string>
+    <string name="drawer_open_onStart_desc_off">Start app with Drawer closed (as usual)</string>
+    <string name="drawer_open_onStart">Open drawer immediately</string>
+    <string name="exit_double_back">Exit after second Back</string>
+    <string name="exit_double_back_desc_on">First Back opens drawer, second one exits app</string>
+    <string name="exit_double_back_desc_off">Back will open and close drawer in a sort of loop</string>
 </resources>

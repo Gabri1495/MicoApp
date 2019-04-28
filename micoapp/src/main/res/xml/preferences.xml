@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/behaviour">
-
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/preference_drawer_on_back"
-            android:summaryOff="@string/drawer_on_back_desc_off"
-            android:summaryOn="@string/drawer_on_back_desc_on"
-            android:title="@string/drawer_on_back" />
-    </PreferenceCategory>
-
     <PreferenceCategory android:title="@string/user_information">
 
         <EditTextPreference
             android:defaultValue=" "
+            android:dialogLayout="@layout/preference_dialog_edittext_custom"
             android:imeOptions="actionNext"
             android:inputType="textPersonName"
             android:key="@string/preference_nickname"
@@ -24,15 +15,17 @@
             android:title="@string/nickname" />
         <EditTextPreference
             android:defaultValue=" "
+            android:dialogLayout="@layout/preference_dialog_edittext_custom"
+            android:imeOptions="actionNext"
             android:inputType="textPersonName"
             android:key="@string/preference_name"
             android:maxLines="1"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:imeOptions="actionNext"
             android:title="@string/name" />
         <EditTextPreference
             android:defaultValue=" "
+            android:dialogLayout="@layout/preference_dialog_edittext_custom"
             android:inputType="textPersonName"
             android:key="@string/preference_surname"
             android:maxLines="1"
@@ -40,4 +33,27 @@
             android:singleLine="true"
             android:title="@string/surname" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/behaviour">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/preference_drawer_open_onStart"
+            android:summaryOff="@string/drawer_open_onStart_desc_off"
+            android:summaryOn="@string/drawer_open_onStart_desc_on"
+            android:title="@string/drawer_open_onStart" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/preference_drawer_on_back"
+            android:summaryOff="@string/drawer_on_back_desc_off"
+            android:summaryOn="@string/drawer_on_back_desc_on"
+            android:title="@string/drawer_on_back" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:dependency="@string/preference_drawer_on_back"
+            android:key="@string/preference_exit_double_back"
+            android:summaryOff="@string/exit_double_back_desc_off"
+            android:summaryOn="@string/exit_double_back_desc_on"
+            android:title="@string/exit_double_back" />
+    </PreferenceCategory>
+
 </PreferenceScreen>
