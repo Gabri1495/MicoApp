@@ -37,34 +37,24 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         String key = preference.getKey();
-        String finalValue = "";
-        if(newValue instanceof String){
-            finalValue = (String)newValue;
-            int index = (finalValue.indexOf(System.getProperty("line.separator")));
-            if(index != -1) {
-                finalValue = (finalValue.substring(0, index));
-                Toast.makeText(getActivity(), R.string.error_carriage_return, Toast.LENGTH_LONG).show();
-                return false;
-            }
-        }
 
         NavigationView navigationView = getActivity().findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         String tmp;
 
         if(key.equals(getString(R.string.preference_nickname))){
-            preference.setSummary(finalValue);
-            ((TextView) headerView.findViewById(R.id.header_nickname)).setText(finalValue);
+            preference.setSummary((String) newValue);
+            ((TextView) headerView.findViewById(R.id.header_nickname)).setText((String) newValue);
         }
         if(key.equals(getString(R.string.preference_name))){
-            preference.setSummary(finalValue);
-            tmp = finalValue + " " + ((EditTextPreference)findPreference(getString(R.string.preference_surname))).getText();
+            preference.setSummary((String) newValue);
+            tmp = newValue + " " + ((EditTextPreference)findPreference(getString(R.string.preference_surname))).getText();
             ((TextView) headerView.findViewById(R.id.header_name_surname)).setText(tmp);
         }
         if(key.equals(getString(R.string.preference_surname))){
-            preference.setSummary(finalValue);
+            preference.setSummary((String) newValue);
             tmp = ((EditTextPreference)findPreference(getString(R.string.preference_name))).getText()
-                    + " " + finalValue;
+                    + " " + newValue;
             ((TextView) headerView.findViewById(R.id.header_name_surname)).setText(tmp);
         }
 

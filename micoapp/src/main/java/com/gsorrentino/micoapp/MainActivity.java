@@ -51,12 +51,14 @@ public class MainActivity extends AppCompatActivity
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         backPressed = false;
 
-        // Aggiungo dinamicamente il primo fragment
+        // Aggiungo dinamicamente il primo fragment solo se non ve ne sono già
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
-        newFragment = new HomeFragment();
-        fragmentTransaction.add(R.id.fragment_container, newFragment);
-        fragmentTransaction.commit();
+        if (fragmentManager.getFragments().isEmpty()) {
+            newFragment = new HomeFragment();
+            fragmentTransaction.replace(R.id.fragment_container, newFragment);
+            fragmentTransaction.commit();
+        }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

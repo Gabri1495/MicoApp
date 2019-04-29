@@ -21,8 +21,8 @@
     <string name="surname">Cognome</string>
     <string name="user_information">Informazioni utente</string>
     <string name="drawer_on_back">Apri menù laterale con Indietro</string>
-    <string name="drawer_on_back_desc_on">Usando Indietro nella home dell\'app si apre il menù laterale</string>
-    <string name="drawer_on_back_desc_off">Usando Indietro nella home dell\'app si chiude l\'app</string>
+    <string name="drawer_on_back_desc_on">Usando Indietro si apre il menù laterale</string>
+    <string name="drawer_on_back_desc_off">Usando Indietro si chiude l\'app</string>
     <string name="behaviour">Comportamento</string>
     <string name="header_image_content">Questa è l\'icona dell\'app</string>
     <string name="error_carriage_return">Necessaria singola linea!\nPer favore evitare di andare a capo</string>

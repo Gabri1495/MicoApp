@@ -22,8 +22,8 @@
     <string name="surname">Surname</string>
     <string name="user_information">User\'s information</string>
     <string name="drawer_on_back">Open Drawer on Back</string>
-    <string name="drawer_on_back_desc_on">Using Back button in app home will open the Drawer</string>
-    <string name="drawer_on_back_desc_off">Using Back button in app home will close app</string>
+    <string name="drawer_on_back_desc_on">Using Back button will open the Drawer</string>
+    <string name="drawer_on_back_desc_off">Using Back butto will close app</string>
     <string name="behaviour">Behaviour</string>
     <string name="preference_drawer_on_back" translatable="false">preference_drawer_on_back</string>
     <string name="preference_nickname" translatable="false">preference_nickname</string>
