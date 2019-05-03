@@ -1,6 +1,6 @@
 package com.gsorrentino.micoapp.model;
 
-class Utente {
+public class Utente {
     private String nickname;
     private String nome;
     private String cognome;

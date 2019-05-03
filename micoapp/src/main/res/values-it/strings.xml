@@ -32,4 +32,5 @@
     <string name="exit_double_back">Esci dopo il secondo Indietro</string>
     <string name="exit_double_back_desc_on">Primo Indietro apre il menù laterale, il secondo esce dall\'app</string>
     <string name="exit_double_back_desc_off">Indietro apre e chiude il menù laterale in una sorta di loop</string>
+    <string name="db_populated">Il Database è stato prepopolato. Ciò avviene solo dopo il primo avvio</string>
 </resources>

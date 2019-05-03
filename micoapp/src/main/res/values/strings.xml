@@ -39,4 +39,5 @@
     <string name="exit_double_back">Exit after second Back</string>
     <string name="exit_double_back_desc_on">First Back opens drawer, second one exits app</string>
     <string name="exit_double_back_desc_off">Back will open and close drawer in a sort of loop</string>
+    <string name="db_populated">Database has been pre-populated. This happens only after first run</string>
 </resources>
