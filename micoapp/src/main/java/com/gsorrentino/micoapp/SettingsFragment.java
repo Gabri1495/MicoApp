@@ -12,16 +12,14 @@ import com.google.android.material.navigation.NavigationView;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceChangeListener {
 
-    public SettingsFragment() {
-        // Required empty public constructor
-    }
+    public SettingsFragment() {}
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
 
-        // Imposto i riassunti delle varie impostazioni
-        // Riutilizzo sempre lo stesso oggetto, ma imposto anche i listener per i vari campi
+         /*Imposto i riassunti delle varie impostazioni
+         Riutilizzo sempre lo stesso oggetto, ma imposto anche i listener per i vari campi*/
         EditTextPreference etp = (EditTextPreference) findPreference(getString(R.string.preference_nickname));
         etp.setOnPreferenceChangeListener(this);
         etp.setSummary(etp.getText());

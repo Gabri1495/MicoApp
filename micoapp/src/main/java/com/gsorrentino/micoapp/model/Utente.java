@@ -1,37 +1,18 @@
 package com.gsorrentino.micoapp.model;
 
+import androidx.annotation.NonNull;
+
 public class Utente {
-    private String nickname;
-    private String nome;
-    private String cognome;
+    @NonNull
+    public String nickname;
+    @NonNull
+    public String nome;
+    @NonNull
+    public String cognome;
 
-    public Utente(String nickname, String nome, String cognome) {
+    public Utente(@NonNull String nickname, @NonNull String nome, @NonNull String cognome) {
         this.nickname = nickname;
         this.nome = nome;
-        this.cognome = cognome;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getCognome() {
-        return cognome;
-    }
-
-    public void setCognome(String cognome) {
         this.cognome = cognome;
     }
 }

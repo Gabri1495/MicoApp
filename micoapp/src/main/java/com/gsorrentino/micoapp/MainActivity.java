@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         backPressed = false;
 
-        // Aggiungo dinamicamente il primo fragment solo se non ve ne sono già
+        /* Aggiungo dinamicamente il primo fragment solo se non ve ne sono già */
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         if (fragmentManager.getFragments().isEmpty()) {
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // Utilizzo i valori delle impostazioni per personalizzare l'header
+        /* Utilizzo i valori delle impostazioni per personalizzare l'header */
         View headerView = navigationView.getHeaderView(0);
         String tmp = sharedPreferences.getString(getString(R.string.preference_name), "")
                 + " " + sharedPreferences.getString(getString(R.string.preference_surname), "");
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity
         ((TextView) headerView.findViewById(R.id.header_name_surname))
                 .setText(tmp);
 
-        // In base ai valori delle impostazioni adatto l'interfaccia
+         /* In base ai valori delle impostazioni adatto l'interfaccia */
         if(sharedPreferences.getBoolean(getString(R.string.preference_drawer_open_onStart), false)){
             drawer.openDrawer(GravityCompat.START);
         }
@@ -131,20 +131,20 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+         /*Handle action bar item clicks here. The action bar will
+         automatically handle clicks on the Home/Up button, so long
+         as you specify a parent activity in AndroidManifest.xml.*/
         int id = item.getItemId();
 
         switch (id) {
-            // Apre una chat su Telegram per contattare lo sviluppatore
+             /*Apre una chat su Telegram per contattare lo sviluppatore*/
             case R.id.action_telegram:
                 Intent telegramIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/Gabri1495"));
                 if(telegramIntent.resolveActivity(getPackageManager()) != null)
                     startActivity(telegramIntent);
                 return true;
 
-            // Prepara una mail in parte precompilata per contattare lo sviluppatore
+             /*Prepara una mail in parte precompilata per contattare lo sviluppatore*/
             case R.id.action_email:
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
                 emailIntent.setData(Uri.parse("mailto:"));
@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
+         /*Handle navigation view item clicks here.*/
         int id = item.getItemId();
         fragmentTransaction = fragmentManager.beginTransaction();
 
