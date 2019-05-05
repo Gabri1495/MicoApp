@@ -55,5 +55,12 @@
             android:summaryOn="@string/exit_double_back_desc_on"
             android:title="@string/exit_double_back" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/database">
+
+        <Preference android:title="@string/delete_finds"
+            android:key="@string/preference_delete_finds"/>
+        <Preference android:title="@string/delete_db"
+            android:key="@string/preference_delete_db"/>
+    </PreferenceCategory>
 
 </PreferenceScreen>

@@ -26,7 +26,6 @@ import java.util.List;
 public class ArchiveFragment extends Fragment {
 
     private MicoAppDatabase db;
-    private RitrovamentoViewModel ritrovamentoViewModel;
 
     private OnFragmentInteractionListener mListener;
 
@@ -58,7 +57,7 @@ public class ArchiveFragment extends Fragment {
         final RitrovamentoListAdapter adapter = new RitrovamentoListAdapter(getActivity());
         recyclerView.setAdapter(adapter);
 
-        ritrovamentoViewModel = ViewModelProviders.of(this).get(RitrovamentoViewModel.class);
+        RitrovamentoViewModel ritrovamentoViewModel = ViewModelProviders.of(this).get(RitrovamentoViewModel.class);
         ritrovamentoViewModel.getAllRitrovamenti().observe(this, new Observer<List<Ritrovamento>>() {
             @Override
             public void onChanged(List<Ritrovamento> ritrovamenti) {

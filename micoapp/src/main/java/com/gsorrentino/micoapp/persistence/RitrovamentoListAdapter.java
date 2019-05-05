@@ -3,6 +3,7 @@ package com.gsorrentino.micoapp.persistence;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.location.Address;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.TooltipCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gsorrentino.micoapp.R;
@@ -66,6 +68,13 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
             Ritrovamento current = ritrovamenti.get(position);
             holder.mushroomTextView.setText(current.fungo);
             holder.userTextView.setText(current.autore.nickname);
+            /*Controllo la versione di Android, essendo i Tooltips disponibili solo dall'SDk 26*/
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                holder.userTextView.setTooltipText(current.autore.getNomeCompleto());
+            }
+            else {
+                TooltipCompat.setTooltipText(holder.userTextView, current.autore.getNomeCompleto());
+            }
             Address ind = current.indirizzo;
             String showAddress;
             if (ind != null) {

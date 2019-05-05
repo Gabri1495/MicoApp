@@ -1,14 +1,25 @@
 package com.gsorrentino.micoapp;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.google.android.material.navigation.NavigationView;
+import com.gsorrentino.micoapp.model.Ritrovamento;
+import com.gsorrentino.micoapp.model.Utente;
+import com.gsorrentino.micoapp.persistence.MicoAppDatabase;
+import com.gsorrentino.micoapp.persistence.RitrovamentoDao;
+
+import java.lang.ref.WeakReference;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceChangeListener {
 
@@ -29,6 +40,53 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         etp = (EditTextPreference) findPreference(getString(R.string.preference_surname));
         etp.setOnPreferenceChangeListener(this);
         etp.setSummary(etp.getText());
+
+        Preference preferenceButton = findPreference(getString(R.string.preference_delete_finds));
+        preferenceButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setMessage(R.string.dialog_deleting_finds);
+                builder.setPositiveButton(R.string.proceed, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        new DeleteAllDbAsync(MicoAppDatabase.getInstance(getContext(), false)).execute();
+                    }
+                });
+                builder.setNegativeButton(R.string.undo, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.create().show();
+                return true;
+            }
+        });
+
+        preferenceButton = findPreference(getString(R.string.preference_delete_db));
+        preferenceButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setMessage(R.string.dialog_deleting_db);
+                builder.setPositiveButton(R.string.proceed, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getContext().deleteDatabase(MicoAppDatabase.DB_NAME);
+                        MicoAppDatabase.invalidateInstance();
+                    }
+                });
+                builder.setNegativeButton(R.string.undo, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.create().show();
+                return true;
+            }
+        });
     }
 
     @Override
@@ -55,6 +113,25 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             ((TextView) headerView.findViewById(R.id.header_name_surname)).setText(tmp);
         }
 
+
         return true;
+    }
+
+
+
+    private static class DeleteAllDbAsync extends AsyncTask<Void, Void, Void> {
+
+        private final RitrovamentoDao dao;
+
+        DeleteAllDbAsync(MicoAppDatabase db) {
+            dao = db.ritrovamentoDao();
+        }
+
+        @Override
+        protected Void doInBackground(final Void... params) {
+            dao.deleteAll();
+            return null;
+        }
+
     }
 }

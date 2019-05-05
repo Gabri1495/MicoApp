@@ -11,6 +11,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.gsorrentino.micoapp.R;
 import com.gsorrentino.micoapp.model.Ritrovamento;
 import com.gsorrentino.micoapp.model.Utente;
 
@@ -23,7 +24,7 @@ public abstract class MicoAppDatabase extends RoomDatabase {
     public abstract  RitrovamentoDao ritrovamentoDao();
 
     /* Per avere un accesso atomico al campo usiamo volatile */
-    private static final String DB_NAME = "mico_app.db";
+    public static final String DB_NAME = "mico_app.db";
     private static volatile MicoAppDatabase INSTANCE = null;
     private static WeakReference<Context> contextRef;
 
@@ -34,6 +35,11 @@ public abstract class MicoAppDatabase extends RoomDatabase {
             INSTANCE = create (context, memoryOnly);
         }
         return INSTANCE;
+    }
+
+    /* Utilizzata dopo aver cancellato il db */
+    public static void invalidateInstance(){
+        INSTANCE = null;
     }
 
     private static MicoAppDatabase create (final Context context, boolean memoryOnly) {
@@ -84,7 +90,7 @@ public abstract class MicoAppDatabase extends RoomDatabase {
             super.onPostExecute(result);
             Context context = contextRef.get();
             if(context != null) {
-                Toast.makeText(context, "DB pre-popolato!\nToast italiani perché di testing.\nVerranno rimossi", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, R.string.db_populated, Toast.LENGTH_LONG).show();
             }
         }
 

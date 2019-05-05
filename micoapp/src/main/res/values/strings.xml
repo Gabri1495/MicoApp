@@ -23,14 +23,13 @@
     <string name="user_information">User\'s information</string>
     <string name="drawer_on_back">Open Drawer on Back</string>
     <string name="drawer_on_back_desc_on">Using Back button will open the Drawer</string>
-    <string name="drawer_on_back_desc_off">Using Back butto will close app</string>
+    <string name="drawer_on_back_desc_off">Using Back button will close app</string>
     <string name="behaviour">Behaviour</string>
     <string name="preference_drawer_on_back" translatable="false">preference_drawer_on_back</string>
     <string name="preference_nickname" translatable="false">preference_nickname</string>
     <string name="preference_name" translatable="false">preference_name</string>
     <string name="preference_surname" translatable="false">preference_surname</string>
     <string name="header_image_content">This is app icon</string>
-    <string name="error_carriage_return">Single line needed!\nPlease avoid carriage return</string>
     <string name="preference_drawer_open_onStart" translatable="false">preference_drawer_open_onStart</string>
     <string name="preference_exit_double_back" translatable="false">preference_exit_double_back</string>
     <string name="drawer_open_onStart_desc_on">Start app with Drawer already open</string>
@@ -39,6 +38,15 @@
     <string name="exit_double_back">Exit after second Back</string>
     <string name="exit_double_back_desc_on">First Back opens drawer, second one exits app</string>
     <string name="exit_double_back_desc_off">Back will open and close drawer in a sort of loop</string>
-    <string name="db_populated">Database has been pre-populated. This happens only after first run</string>
+    <string name="db_populated">Database has been pre-populated.\nThis happens only after first run</string>
     <string name="archive_image_content">This is a photo of mushroom found</string>
+    <string name="database">Database</string>
+    <string name="delete_db">Delete Database</string>
+    <string name="preference_delete_db" translatable="false">preference_delete_db</string>
+    <string name="preference_delete_finds" translatable="false">preference_delete_finding</string>
+    <string name="delete_finds">Delete all Finds</string>
+    <string name="dialog_deleting_db">Pay attention!\nYou are deleting the whole Database.\nThis operation is undoable!</string>
+    <string name="dialog_deleting_finds">Pay attention!\nYou are deleting all the Finds.\nThis operation is undoable!</string>
+    <string name="undo">Undo</string>
+    <string name="proceed">Proceed</string>
 </resources>

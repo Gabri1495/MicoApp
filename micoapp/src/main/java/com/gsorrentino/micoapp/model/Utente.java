@@ -15,4 +15,8 @@ public class Utente {
         this.nome = nome;
         this.cognome = cognome;
     }
+
+    public String getNomeCompleto() {
+        return this.nome + " " + this.cognome;
+    }
 }
