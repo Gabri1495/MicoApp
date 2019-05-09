@@ -2,50 +2,55 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
-        android:id="@+id/mushroom_textView"
+        android:id="@+id/archive_mushroom_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Fungo"/>
 
     <TextView
-        android:id="@+id/user_textView"
+        android:id="@+id/archive_user_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/mushroom_image"
-        app:layout_constraintStart_toEndOf="@+id/mushroom_textView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/archive_mushroom_image"
+        app:layout_constraintStart_toEndOf="@+id/archive_mushroom_textView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Utente"/>
 
     <TextView
-        android:id="@+id/address_textView"
+        android:id="@+id/archive_address_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mushroom_textView" />
+        app:layout_constraintTop_toBottomOf="@+id/archive_mushroom_textView"
+        tools:text="Località"/>
 
     <TextView
-        android:id="@+id/date_textView"
+        android:id="@+id/archive_date_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/mushroom_image"
-        app:layout_constraintStart_toEndOf="@+id/address_textView"
-        app:layout_constraintTop_toBottomOf="@+id/user_textView" />
+        app:layout_constraintEnd_toStartOf="@+id/archive_mushroom_image"
+        app:layout_constraintStart_toEndOf="@+id/archive_address_textView"
+        app:layout_constraintTop_toBottomOf="@+id/archive_user_textView"
+        tools:text="26/6/01"/>
 
     <ImageView
-        android:id="@+id/mushroom_image"
+        android:id="@+id/archive_mushroom_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"

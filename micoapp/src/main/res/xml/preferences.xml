@@ -59,6 +59,8 @@
 
         <Preference android:title="@string/delete_finds"
             android:key="@string/preference_delete_finds"/>
+        <Preference android:title="@string/delete_received"
+            android:key="@string/preference_delete_received"/>
         <Preference android:title="@string/delete_db"
             android:key="@string/preference_delete_db"/>
     </PreferenceCategory>

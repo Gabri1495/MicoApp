@@ -20,7 +20,6 @@ import com.gsorrentino.micoapp.model.Ritrovamento;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,11 +35,11 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
 
         private RitrovamentoViewHolder(View itemView) {
             super(itemView);
-            mushroomTextView = itemView.findViewById(R.id.mushroom_textView);
-            userTextView = itemView.findViewById(R.id.user_textView);
-            addressTextView = itemView.findViewById(R.id.address_textView);
-            dateTextView = itemView.findViewById(R.id.date_textView);
-            mushroomImageView = itemView.findViewById(R.id.mushroom_image);
+            mushroomTextView = itemView.findViewById(R.id.archive_mushroom_textView);
+            userTextView = itemView.findViewById(R.id.archive_user_textView);
+            addressTextView = itemView.findViewById(R.id.archive_address_textView);
+            dateTextView = itemView.findViewById(R.id.archive_date_textView);
+            mushroomImageView = itemView.findViewById(R.id.archive_mushroom_image);
         }
     }
 

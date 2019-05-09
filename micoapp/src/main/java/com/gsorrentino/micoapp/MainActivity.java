@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -27,11 +28,9 @@ public class MainActivity extends AppCompatActivity
         HomeFragment.OnFragmentInteractionListener,
         MapFragment.OnFragmentInteractionListener,
         EncyclopediaFragment.OnFragmentInteractionListener,
-        ArchiveFragment.OnFragmentInteractionListener,
         MemoriesFragment.OnFragmentInteractionListener,
         StatisticsFragment.OnFragmentInteractionListener,
-        SendFragment.OnFragmentInteractionListener,
-        HistoryFragment.OnFragmentInteractionListener {
+        SendFragment.OnFragmentInteractionListener {
 
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
@@ -154,6 +153,15 @@ public class MainActivity extends AppCompatActivity
 
                 if(emailIntent.resolveActivity(getPackageManager()) != null)
                     startActivity(emailIntent);
+                return true;
+
+            case R.id.action_github:
+                Toast.makeText(this, R.string.tmp_github, Toast.LENGTH_LONG).show();
+                return true;
+
+            case R.id.action_informations:
+                //TODO avviare nuova activity con le info
+                Toast.makeText(this, R.string.tmp_work_in_progress, Toast.LENGTH_SHORT).show();
                 return true;
         }
 

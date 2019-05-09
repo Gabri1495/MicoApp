@@ -40,4 +40,13 @@
     <string name="dialog_deleting_finds">Fai attenzione!\nStai cancellando tutti i Ritrovamenti.\nQuesta operazione è irreversibile!</string>
     <string name="proceed">Procedi</string>
     <string name="undo">Annulla</string>
+    <string name="success_operation">Operazione eseguita con successo!</string>
+    <string name="delete_received">Cancella tutta la cronologia dei Ricevuti</string>
+    <string name="dialog_deleting_received">Fai attenzione!\nStai cancellando tutti i Ricevuti.\nQuesta operazione è irreversibile!</string>
+    <string name="action_github">GitHub</string>
+    <string name="action_informations">Informazioni</string>
+    <string name="tmp_github">Il repository su GitHub è ancora privato</string>
+    <string name="tmp_work_in_progress">Lavori in corso…</string>
+    <string name="received_on">Ricevuto il:</string>
+    <string name="error_insert">Si è verificato un errore durante l\'inserimento di un nuovo elemento nel DB!</string>
 </resources>

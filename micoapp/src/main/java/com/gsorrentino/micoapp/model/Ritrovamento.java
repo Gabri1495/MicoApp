@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -14,7 +15,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-@Entity
+@Entity(indices={@Index(value={"nickname", "nome", "cognome", "data"}, unique=true)})
 public class Ritrovamento {
     @PrimaryKey(autoGenerate = true)
     public int key;
@@ -25,6 +26,7 @@ public class Ritrovamento {
     @Ignore
     public Address indirizzo;
     // TODO Ricordarsi in futuro di usare Time (supportato solo da API 24)
+    @NonNull
     public Calendar data;
     @NonNull
     public String fungo;

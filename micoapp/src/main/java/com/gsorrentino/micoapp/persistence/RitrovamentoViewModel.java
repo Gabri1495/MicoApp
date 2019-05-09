@@ -30,6 +30,6 @@ public class RitrovamentoViewModel extends AndroidViewModel {
     }
 
     public void insert (Ritrovamento ritrovamento) {
-        repository.insert(ritrovamento);
+        repository.insertRitrovamento(ritrovamento);
     }
 }

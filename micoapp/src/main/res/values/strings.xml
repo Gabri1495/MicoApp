@@ -49,4 +49,14 @@
     <string name="dialog_deleting_finds">Pay attention!\nYou are deleting all the Finds.\nThis operation is undoable!</string>
     <string name="undo">Undo</string>
     <string name="proceed">Proceed</string>
+    <string name="success_operation">Operation executed successfully!</string>
+    <string name="preference_delete_received" translatable="false">preference_delete_received</string>
+    <string name="delete_received">Delete alla Received history</string>
+    <string name="dialog_deleting_received">Pay attention!\nYou are deleting all the Received.\nThis operation is undoable!</string>
+    <string name="action_github">GitHub</string>
+    <string name="action_informations">Informations</string>
+    <string name="tmp_github">GitHub repository is still private</string>
+    <string name="tmp_work_in_progress">Work in progress…</string>
+    <string name="received_on">Received on:</string>
+    <string name="error_insert">An error occurred during insert of a new element in DB!</string>
 </resources>

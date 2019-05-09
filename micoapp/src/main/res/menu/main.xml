@@ -18,4 +18,11 @@
                 android:title="@string/action_email" />
         </menu>
     </item>
+    <item
+        android:id="@+id/action_github"
+        android:icon="@drawable/ic_github"
+        android:title="@string/action_github" />
+    <item
+        android:id="@+id/action_informations"
+        android:title="@string/action_informations" />
 </menu>
