@@ -24,8 +24,8 @@ android {
         applicationId "com.gsorrentino.micoapp"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 10
-        versionName '0.2.3'
+        versionCode 11
+        versionName '0.2.4'
     }
     buildTypes {
         release {
@@ -33,17 +33,19 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+            resValue 'string', "api_key_release", keystoreProperties['googleMapsKeyRelease']
         }
         debug {
             minifyEnabled false
             debuggable true
+            resValue 'string', "api_key_debug", keystoreProperties['googleMapsKeyDebug']
         }
         applicationVariants.all {
             variant ->
                 variant.outputs.each {
                     output ->
                         def buildType = "${variant.buildType.name}"
-                        if(buildType != "release")
+                        if (buildType != "release")
                             buildType = "_" + buildType
                         else
                             buildType = ""
