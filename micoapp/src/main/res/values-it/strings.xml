@@ -49,4 +49,13 @@
     <string name="tmp_work_in_progress">Lavori in corso…</string>
     <string name="received_on">Ricevuto il:</string>
     <string name="error_insert">Si è verificato un errore durante l\'inserimento di un nuovo elemento nel DB!</string>
+    <string name="latitude">Latitudine</string>
+    <string name="longitude">Longitudine</string>
+    <string name="mushroom">Fungo</string>
+    <string name="note">Nota</string>
+    <string name="quantity">Quantità</string>
+    <string name="edit_find">Modifica Ritrovamento</string>
+    <string name="save">Salva</string>
+    <string name="info_open_source">Questa è un\'app open source</string>
+    <string name="info_credits">Rinraziamenti</string>
 </resources>

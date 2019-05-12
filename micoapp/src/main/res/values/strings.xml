@@ -59,4 +59,14 @@
     <string name="tmp_work_in_progress">Work in progress…</string>
     <string name="received_on">Received on:</string>
     <string name="error_insert">An error occurred during insert of a new element in DB!</string>
+    <string name="title_activity_maps" translatable="false">Map</string>
+    <string name="mushroom">Mushroom</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="quantity">Quantity</string>
+    <string name="note">Note</string>
+    <string name="edit_find">Edit Find</string>
+    <string name="save">Save</string>
+    <string name="info_open_source">This is an open source app</string>
+    <string name="info_credits">Credits</string>
 </resources>

@@ -33,8 +33,6 @@ public class HistoryFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (db == null)
             this.db = MicoAppDatabase.getInstance(getActivity(), false);
-
-
     }
 
     @Override

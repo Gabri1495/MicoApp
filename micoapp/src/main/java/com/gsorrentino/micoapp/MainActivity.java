@@ -26,7 +26,6 @@ import com.google.android.material.navigation.NavigationView;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         HomeFragment.OnFragmentInteractionListener,
-        MapFragment.OnFragmentInteractionListener,
         EncyclopediaFragment.OnFragmentInteractionListener,
         MemoriesFragment.OnFragmentInteractionListener,
         StatisticsFragment.OnFragmentInteractionListener,
@@ -160,8 +159,8 @@ public class MainActivity extends AppCompatActivity
                 return true;
 
             case R.id.action_informations:
-                //TODO avviare nuova activity con le info
-                Toast.makeText(this, R.string.tmp_work_in_progress, Toast.LENGTH_SHORT).show();
+                Intent infoIntent = new Intent(this, InfoActivity.class);
+                startActivity(infoIntent);
                 return true;
         }
 
