@@ -1,8 +1,11 @@
 package com.gsorrentino.micoapp;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,6 +48,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        createNotificationChannel();
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         backPressed = false;
@@ -212,5 +217,18 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
         //TODO gestire comunicazione con fragment
+    }
+
+    private void createNotificationChannel() {
+         /*Create the NotificationChannel, but only on API 26+ because
+         the NotificationChannel class is new and not in the support library*/
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(MapFragment.PERMISSION_CHANNEL_ID,
+                    getString(R.string.channel_permissions_name),
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription(getString(R.string.channel_permissions_desc));
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 }

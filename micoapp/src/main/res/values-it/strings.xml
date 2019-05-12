@@ -58,4 +58,8 @@
     <string name="save">Salva</string>
     <string name="info_open_source">Questa è un\'app open source</string>
     <string name="info_credits">Rinraziamenti</string>
+    <string name="permission_explanation">Senza il Permesso Localizzazione quest\'app non può automaticamente identificare la tua posizione.\nDovrai selezionarla manualmente</string>
+    <string name="permission_title">A cosa serve il permesso di Localizzazione?</string>
+    <string name="channel_permissions_name">Permessi</string>
+    <string name="channel_permissions_desc">Maggiori informazioni riguardo ai permessi richiesti dall\'app</string>
 </resources>

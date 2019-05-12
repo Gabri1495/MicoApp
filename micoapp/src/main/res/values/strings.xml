@@ -69,4 +69,8 @@
     <string name="save">Save</string>
     <string name="info_open_source">This is an open source app</string>
     <string name="info_credits">Credits</string>
+    <string name="permission_explanation">Without Location Permission this app can not automatically detect your position.\nYou will have to select it manually</string>
+    <string name="permission_title">What is Location Permission for?</string>
+    <string name="channel_permissions_name">Permissions</string>
+    <string name="channel_permissions_desc">More info about permission requested by app</string>
 </resources>
