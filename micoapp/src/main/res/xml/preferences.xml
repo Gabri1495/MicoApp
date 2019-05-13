@@ -4,7 +4,6 @@
     <PreferenceCategory android:title="@string/user_information">
 
         <EditTextPreference
-            android:defaultValue=" "
             android:dialogLayout="@layout/preference_dialog_edittext_custom"
             android:imeOptions="actionNext"
             android:inputType="textPersonName"
@@ -14,7 +13,6 @@
             android:singleLine="true"
             android:title="@string/nickname" />
         <EditTextPreference
-            android:defaultValue=" "
             android:dialogLayout="@layout/preference_dialog_edittext_custom"
             android:imeOptions="actionNext"
             android:inputType="textPersonName"
@@ -24,7 +22,6 @@
             android:singleLine="true"
             android:title="@string/name" />
         <EditTextPreference
-            android:defaultValue=" "
             android:dialogLayout="@layout/preference_dialog_edittext_custom"
             android:inputType="textPersonName"
             android:key="@string/preference_surname"

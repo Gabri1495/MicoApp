@@ -62,4 +62,7 @@
     <string name="permission_title">A cosa serve il permesso di Localizzazione?</string>
     <string name="channel_permissions_name">Permessi</string>
     <string name="channel_permissions_desc">Maggiori informazioni riguardo ai permessi richiesti dall\'app</string>
+    <string name="error_location">Errore imprevisto durante il recupero della posizione</string>
+    <string name="dialog_credentials">Ricordati di impostare il tuo nickname, nome e cognome nelle impostazioni!</string>
+    <string name="ok">Ok</string>
 </resources>

@@ -73,4 +73,8 @@
     <string name="permission_title">What is Location Permission for?</string>
     <string name="channel_permissions_name">Permissions</string>
     <string name="channel_permissions_desc">More info about permission requested by app</string>
+    <string name="error_location">Unexpected error during location retrieving</string>
+    <string name="intent_latlng" translatable="false">com.gsorrentino.micoapp.latlng</string>
+    <string name="dialog_credentials">Remember to set your nickname, name and surname in settings!</string>
+    <string name="ok">Ok</string>
 </resources>

@@ -15,7 +15,7 @@
         android:layout_marginEnd="8dp"
         android:ems="10"
         android:hint="@string/mushroom"
-        android:inputType="textPersonName"
+        android:inputType="textPersonName|textCapWords"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -70,10 +70,10 @@
         android:ems="10"
         android:gravity="start|top"
         android:hint="@string/note"
-        android:inputType="textMultiLine"
+        android:inputType="textMultiLine|textCapSentences"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_time_editText" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_lng_editText" />
 
     <Button
         android:id="@+id/edit_save_button"
@@ -85,4 +85,30 @@
         android:text="@string/save"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_note_editText" />
+
+    <EditText
+        android:id="@+id/edit_lat_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_time_editText" />
+
+    <EditText
+        android:id="@+id/edit_lng_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_lat_editText" />
 </androidx.constraintlayout.widget.ConstraintLayout>

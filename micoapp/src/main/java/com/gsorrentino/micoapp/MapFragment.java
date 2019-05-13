@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -31,7 +33,9 @@ import com.gsorrentino.micoapp.persistence.MicoAppDatabase;
 import java.util.Objects;
 
 
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends Fragment implements OnMapReadyCallback,
+        GoogleMap.OnMapLongClickListener,
+        GoogleMap.OnMapClickListener {
 
      /*MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION is an
      app-defined int constant. The callback method gets the result of the request.*/
@@ -42,6 +46,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private MicoAppDatabase db;
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
+    private Marker marker;
+    private LatLng currentPosition;
 
     public MapFragment() {}
 
@@ -66,7 +72,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                retrieveCurrentLocation();
                 Intent intent = new Intent(getActivity(), EditFindActivity.class);
+                /*Se è stato impostato un marker esso verrà usato per le coordinate,
+                * altrimenti verrà recuperata la posizione attuale*/
+                intent.putExtra(getString(R.string.intent_latlng),
+                        marker != null ? marker.getPosition() : currentPosition);
                 startActivity(intent);
             }
         });
@@ -80,34 +91,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-        if(checkManageLocationPermissions()) {
-            try {
-                fusedLocationClient.getLastLocation()
-                        .addOnSuccessListener(Objects.requireNonNull(getActivity()), new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                double lat;
-                                double lng;
-                                String titleMarker;
-                                if (location == null) {
-                                    lat = 44.498955;
-                                    lng = 11.327591;
-                                    titleMarker = "Marker in Bologna";
-                                } else {
-                                    lat = location.getLatitude();
-                                    lng = location.getLongitude();
-                                    titleMarker = "Marker on your current position";
-                                }
-                                LatLng bologna = new LatLng(lat, lng);
-                                mMap.addMarker(new MarkerOptions().position(bologna).title(titleMarker));
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bologna, 16f));
-
-                            }
-                        });
-            }catch (SecurityException e){e.printStackTrace();}
-        }
+        checkManageLocationPermissions();
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(44.498955, 11.327591), 6f));
+        mMap.setOnMapClickListener(this);
+        mMap.setOnMapLongClickListener(this);
     }
 
     /*Return true only if permission is already granted*/
@@ -135,8 +122,45 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         } else {
              /*Permission has already been granted*/
+            mMap.setMyLocationEnabled(true);
             return true;
         }
         return false;
+    }
+
+    private void retrieveCurrentLocation() {
+        if(checkManageLocationPermissions()) {
+            try {
+                fusedLocationClient.getLastLocation()
+                        .addOnSuccessListener(Objects.requireNonNull(getActivity()), new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                if (location == null) {
+                                     currentPosition = new LatLng(0f, 0f);
+                                } else {
+                                    currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
+                                }
+                            }
+                        });
+            } catch (SecurityException e) {
+                e.printStackTrace();
+                Toast.makeText(getActivity(), R.string.error_location, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        if(marker != null)
+            marker.remove();
+        marker = mMap.addMarker(new MarkerOptions().position(latLng));
+    }
+
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+        if(marker != null) {
+            marker.remove();
+            marker = null;
+        }
     }
 }

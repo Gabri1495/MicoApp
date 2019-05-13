@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -79,10 +80,10 @@ public class MainActivity extends AppCompatActivity
 
         /* Utilizzo i valori delle impostazioni per personalizzare l'header */
         View headerView = navigationView.getHeaderView(0);
-        String tmp = sharedPreferences.getString(getString(R.string.preference_name), "")
-                + " " + sharedPreferences.getString(getString(R.string.preference_surname), "");
+        String tmp = sharedPreferences.getString(getString(R.string.preference_name), "Nemo")
+                + " " + sharedPreferences.getString(getString(R.string.preference_surname), "Nessuno");
         ((TextView) headerView.findViewById(R.id.header_nickname))
-                .setText(sharedPreferences.getString(getString(R.string.preference_nickname), ""));
+                .setText(sharedPreferences.getString(getString(R.string.preference_nickname), "Nessuno"));
         ((TextView) headerView.findViewById(R.id.header_name_surname))
                 .setText(tmp);
 
@@ -90,6 +91,8 @@ public class MainActivity extends AppCompatActivity
         if(sharedPreferences.getBoolean(getString(R.string.preference_drawer_open_onStart), false)){
             drawer.openDrawer(GravityCompat.START);
         }
+
+        checkCredentials();
     }
 
     @Override
@@ -229,6 +232,17 @@ public class MainActivity extends AppCompatActivity
             channel.setDescription(getString(R.string.channel_permissions_desc));
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    /*Controllo se le preference legate alle credenziali siano mai state cambiate*/
+    private void checkCredentials() {
+        if(!sharedPreferences.contains(getString(R.string.preference_nickname))
+        || !sharedPreferences.contains(getString(R.string.preference_name))
+        || !sharedPreferences.contains(getString(R.string.preference_surname))) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.dialog_credentials).setNeutralButton(R.string.ok, null)
+                    .create().show();
         }
     }
 }

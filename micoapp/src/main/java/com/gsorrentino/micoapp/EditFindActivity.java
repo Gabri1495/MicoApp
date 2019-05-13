@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.gsorrentino.micoapp.model.Ritrovamento;
 import com.gsorrentino.micoapp.model.Utente;
 import com.gsorrentino.micoapp.persistence.MicoAppDatabase;
@@ -32,6 +33,14 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
         if (db == null)
             this.db = MicoAppDatabase.getInstance(this, false);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        LatLng latLng = new LatLng(0f, 0f);
+        LatLng tmp = getIntent().getParcelableExtra(getString(R.string.intent_latlng));
+        if(tmp != null)
+            latLng = tmp;
+
+        ((EditText)findViewById(R.id.edit_lat_editText)).setText(String.valueOf(latLng.latitude));
+        ((EditText)findViewById(R.id.edit_lng_editText)).setText(String.valueOf(latLng.longitude));
     }
 
     @Override
@@ -43,8 +52,10 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
         String fungo = ((EditText)findViewById(R.id.edit_mushroom_editText)).getText().toString();
         String nota = ((EditText)findViewById(R.id.edit_note_editText)).getText().toString();
         int quantita =  Integer.valueOf(((EditText)findViewById(R.id.edit_quantity_editText)).getText().toString());
+        double lat = Double.valueOf(((EditText)findViewById(R.id.edit_lat_editText)).getText().toString());
+        double lng = Double.valueOf(((EditText)findViewById(R.id.edit_lng_editText)).getText().toString());
 
-        Ritrovamento ritrovamento = new Ritrovamento(0.0, 0.0, fungo,
+        Ritrovamento ritrovamento = new Ritrovamento(lat, lng, fungo,
                 new Utente(Objects.requireNonNull(nickname), Objects.requireNonNull(nome), Objects.requireNonNull(cognome)));
         ritrovamento.quantita = quantita;
         ritrovamento.note = nota;
