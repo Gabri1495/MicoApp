@@ -2,6 +2,7 @@ package com.gsorrentino.micoapp;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -43,6 +45,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     static String PERMISSION_CHANNEL_ID = "Permissions";
     static int PERMISSION_NOTIFICATION_ID = 1;
 
+    private static final double LAT_DEFAULT = 44.498955;
+    private static final double LNG_DEFAULT = 11.327591;
+    private static final float ZOOM_DEFAULT = 6f;
+
+    private double lat;
+    private double lng;
+    private float zoom;
+    private SharedPreferences sharedPrefs;
+
     private MicoAppDatabase db;
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
@@ -62,7 +73,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
 
@@ -89,10 +99,30 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        sharedPrefs = Objects.requireNonNull(getActivity()).getSharedPreferences("pref", 0);
+        lat = Double.longBitsToDouble(sharedPrefs.getLong("lat", Double.doubleToLongBits(LAT_DEFAULT)));
+        lng = Double.longBitsToDouble(sharedPrefs.getLong("lng", Double.doubleToLongBits(LNG_DEFAULT)));
+        zoom = sharedPrefs.getFloat("zoom", ZOOM_DEFAULT);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        CameraPosition tmpPos = mMap.getCameraPosition();
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.putLong("lat", Double.doubleToRawLongBits(tmpPos.target.latitude));
+        editor.putLong("lng", Double.doubleToRawLongBits(tmpPos.target.longitude));
+        editor.putFloat("zoom", tmpPos.zoom);
+        editor.apply();
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), zoom));
         checkManageLocationPermissions();
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(44.498955, 11.327591), 6f));
         mMap.setOnMapClickListener(this);
         mMap.setOnMapLongClickListener(this);
     }

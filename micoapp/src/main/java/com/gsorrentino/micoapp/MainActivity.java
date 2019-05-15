@@ -91,7 +91,11 @@ public class MainActivity extends AppCompatActivity
         if(sharedPreferences.getBoolean(getString(R.string.preference_drawer_open_onStart), false)){
             drawer.openDrawer(GravityCompat.START);
         }
+    }
 
+    @Override
+    public void onResume(){
+        super.onResume();
         checkCredentials();
     }
 
