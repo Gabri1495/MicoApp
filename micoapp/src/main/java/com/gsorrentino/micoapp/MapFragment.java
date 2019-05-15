@@ -1,6 +1,7 @@
 package com.gsorrentino.micoapp;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -41,7 +42,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
      /*MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION is an
      app-defined int constant. The callback method gets the result of the request.*/
-    static int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     static String PERMISSION_CHANNEL_ID = "Permissions";
     static int PERMISSION_NOTIFICATION_ID = 1;
 
@@ -147,8 +148,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 NotificationManagerCompat.from(getActivity()).notify(PERMISSION_NOTIFICATION_ID, builder.build());
             }
             /*No explanation needed; request the permission*/
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         } else {
              /*Permission has already been granted*/
@@ -156,6 +156,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             return true;
         }
         return false;
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
+        // If request is cancelled, the result arrays are empty.
+        if (requestCode == MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mMap.setMyLocationEnabled(true);
+            }
+        }
     }
 
     private void retrieveCurrentLocation() {
