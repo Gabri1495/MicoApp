@@ -2,7 +2,9 @@ package com.gsorrentino.micoapp;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -19,8 +21,15 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -29,7 +38,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gsorrentino.micoapp.persistence.MicoAppDatabase;
 
@@ -40,9 +51,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnMapLongClickListener,
         GoogleMap.OnMapClickListener {
 
-     /*MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION is an
-     app-defined int constant. The callback method gets the result of the request.*/
+    /*MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION is an
+    app-defined int constant. The callback method gets the result of the request.*/
     static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private static final int REQUEST_CHECK_SETTINGS = 2;
     static String PERMISSION_CHANNEL_ID = "Permissions";
     static int PERMISSION_NOTIFICATION_ID = 1;
 
@@ -55,13 +67,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private float zoom;
     private SharedPreferences sharedPrefs;
 
+    private LocationCallback locationCallback;
+    private LocationRequest locationRequest;
+
     private MicoAppDatabase db;
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
     private Marker marker;
     private LatLng currentPosition;
 
-    public MapFragment() {}
+    public MapFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,6 +85,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         if (db == null)
             this.db = MicoAppDatabase.getInstance(getActivity(), false);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(Objects.requireNonNull(getActivity()));
+
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+                Location location = locationResult.getLastLocation();
+                if (location != null) {
+                    currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
+                }
+            }
+        };
     }
 
     @Override
@@ -79,6 +108,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        sharedPrefs = Objects.requireNonNull(getActivity()).getSharedPreferences("pref", 0);
+        lat = Double.longBitsToDouble(sharedPrefs.getLong("lat", Double.doubleToLongBits(LAT_DEFAULT)));
+        lng = Double.longBitsToDouble(sharedPrefs.getLong("lng", Double.doubleToLongBits(LNG_DEFAULT)));
+        zoom = sharedPrefs.getFloat("zoom", ZOOM_DEFAULT);
+
         FloatingActionButton fab = Objects.requireNonNull(getActivity()).findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +120,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 retrieveCurrentLocation();
                 Intent intent = new Intent(getActivity(), EditFindActivity.class);
                 /*Se è stato impostato un marker esso verrà usato per le coordinate,
-                * altrimenti verrà recuperata la posizione attuale*/
+                 * altrimenti verrà recuperata la posizione attuale*/
                 intent.putExtra(getString(R.string.intent_latlng),
                         marker != null ? marker.getPosition() : currentPosition);
                 startActivity(intent);
@@ -100,32 +134,40 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-        sharedPrefs = Objects.requireNonNull(getActivity()).getSharedPreferences("pref", 0);
-        lat = Double.longBitsToDouble(sharedPrefs.getLong("lat", Double.doubleToLongBits(LAT_DEFAULT)));
-        lng = Double.longBitsToDouble(sharedPrefs.getLong("lng", Double.doubleToLongBits(LNG_DEFAULT)));
-        zoom = sharedPrefs.getFloat("zoom", ZOOM_DEFAULT);
+    public void onResume() {
+        super.onResume();
+        retrieveCurrentLocation();
+        manageLocationUpdate();
+        if (locationRequest != null)
+            if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()),
+                    Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+            }
+
     }
 
     @Override
     public void onPause(){
         super.onPause();
-        CameraPosition tmpPos = mMap.getCameraPosition();
-        SharedPreferences.Editor editor = sharedPrefs.edit();
-        editor.putLong("lat", Double.doubleToRawLongBits(tmpPos.target.latitude));
-        editor.putLong("lng", Double.doubleToRawLongBits(tmpPos.target.longitude));
-        editor.putFloat("zoom", tmpPos.zoom);
-        editor.apply();
+        if(mMap != null) {
+            CameraPosition tmpPos = mMap.getCameraPosition();
+            SharedPreferences.Editor editor = sharedPrefs.edit();
+            editor.putLong("lat", Double.doubleToRawLongBits(tmpPos.target.latitude));
+            editor.putLong("lng", Double.doubleToRawLongBits(tmpPos.target.longitude));
+            editor.putFloat("zoom", tmpPos.zoom);
+            editor.apply();
+        }
+        fusedLocationClient.removeLocationUpdates(locationCallback);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), zoom));
-        checkManageLocationPermissions();
         mMap.setOnMapClickListener(this);
         mMap.setOnMapLongClickListener(this);
+        /*Cerco di avere già pronte in memoria le coordinate*/
+        retrieveCurrentLocation();
     }
 
     /*Return true only if permission is already granted*/
@@ -152,7 +194,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                     MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         } else {
              /*Permission has already been granted*/
-            mMap.setMyLocationEnabled(true);
+            if(mMap != null) {
+                mMap.setMyLocationEnabled(true);
+            }
             return true;
         }
         return false;
@@ -166,7 +210,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         if (requestCode == MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                mMap.setMyLocationEnabled(true);
+                if(mMap != null) {
+                    mMap.setMyLocationEnabled(true);
+                }
             }
         }
     }
@@ -192,11 +238,65 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
+    private void manageLocationUpdate() {
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(15000);
+        locationRequest.setFastestInterval(10000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+
+        Activity activity = getActivity();
+        if(activity != null) {
+            SettingsClient client = LocationServices.getSettingsClient(activity);
+            Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+
+            task.addOnSuccessListener(getActivity(), new OnSuccessListener<LocationSettingsResponse>() {
+                @Override
+                public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                    // All location settings are satisfied. The client can initialize
+                    // location requests here.
+
+                }
+            });
+
+            task.addOnFailureListener(getActivity(), new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    if (e instanceof ResolvableApiException) {
+                        // Location settings are not satisfied, but this can be fixed
+                        // by showing the user a dialog.
+                        try {
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            ResolvableApiException resolvable = (ResolvableApiException) e;
+//                            resolvable.startResolutionForResult(getActivity(),
+//                                    REQUEST_CHECK_SETTINGS);
+                            startIntentSenderForResult(resolvable.getResolution().getIntentSender(), REQUEST_CHECK_SETTINGS,
+                                    null, 0, 0, 0, null);
+                        } catch (IntentSender.SendIntentException sendEx) {
+                            // Ignore the error.
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        manageLocationUpdate();
+    }
+
     @Override
     public void onMapClick(LatLng latLng) {
         if(marker != null)
             marker.remove();
-        marker = mMap.addMarker(new MarkerOptions().position(latLng));
+        marker = mMap.addMarker(new MarkerOptions()
+                .draggable(true)
+                .position(latLng)
+                .title("" + latLng.latitude + ", " + latLng.longitude));
     }
 
     @Override

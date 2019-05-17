@@ -74,12 +74,10 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
             else {
                 TooltipCompat.setTooltipText(holder.userTextView, current.autore.getNomeCompleto());
             }
-            Address ind = current.indirizzo;
+            String ind = current.indirizzo;
             String showAddress;
             if (ind != null) {
-                showAddress = Objects.toString(ind.getThoroughfare(), "") + ", "
-                        + Objects.toString(ind.getLocality(), "") + ", "
-                        + Objects.toString(ind.getCountryName(), "");
+                showAddress = ind;
             } else {
                 showAddress = current.latitudine + " " + current.longitudine;
             }

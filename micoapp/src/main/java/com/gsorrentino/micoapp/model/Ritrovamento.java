@@ -23,8 +23,7 @@ public class Ritrovamento {
     public double longitudine;
     @Ignore
     private LatLng coordinate;
-    @Ignore
-    public Address indirizzo;
+    public String indirizzo;
     // TODO Ricordarsi in futuro di usare Time (supportato solo da API 24)
     @NonNull
     public Calendar data;
@@ -58,17 +57,4 @@ public class Ritrovamento {
         this.latitudine = coordinate.latitude;
         this.longitudine = coordinate.longitude;
     }
-
-//    TODO Usare oppure cancellare
-//    Geocoder geocoder;
-//    Address address = null;
-//    geocoder = new Geocoder(context, Locale.getDefault());
-//
-//            try {
-//        address = geocoder.getFromLocation(coordinate.latitude, coordinate.longitude, 1).get(0);
-//    } catch (IOException e) {
-//        e.printStackTrace();
-//    }
-
-
 }

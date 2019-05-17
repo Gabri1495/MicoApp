@@ -5,6 +5,8 @@ import androidx.preference.PreferenceManager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -16,13 +18,17 @@ import com.gsorrentino.micoapp.model.Ritrovamento;
 import com.gsorrentino.micoapp.model.Utente;
 import com.gsorrentino.micoapp.persistence.MicoAppDatabase;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class EditFindActivity extends AppCompatActivity implements View.OnClickListener {
 
     SharedPreferences sharedPreferences;
     private MicoAppDatabase db;
+    private Geocoder geocoder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +39,7 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
         if (db == null)
             this.db = MicoAppDatabase.getInstance(this, false);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        geocoder = new Geocoder(this, Locale.getDefault());
 
         LatLng latLng = new LatLng(0f, 0f);
         LatLng tmp = getIntent().getParcelableExtra(getString(R.string.intent_latlng));
@@ -55,8 +62,17 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
         double lat = Double.valueOf(((EditText)findViewById(R.id.edit_lat_editText)).getText().toString());
         double lng = Double.valueOf(((EditText)findViewById(R.id.edit_lng_editText)).getText().toString());
 
+        List<Address> indirizzo = null;
+        try {
+            indirizzo = geocoder.getFromLocation(lat, lng, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         Ritrovamento ritrovamento = new Ritrovamento(lat, lng, fungo,
                 new Utente(Objects.requireNonNull(nickname), Objects.requireNonNull(nome), Objects.requireNonNull(cognome)));
+        if(indirizzo != null && indirizzo.size() > 0)
+            ritrovamento.indirizzo = indirizzo.get(0).getAddressLine(0);
         ritrovamento.quantita = quantita;
         ritrovamento.note = nota;
 
