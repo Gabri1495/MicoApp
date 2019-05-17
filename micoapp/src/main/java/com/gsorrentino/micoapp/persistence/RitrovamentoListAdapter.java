@@ -85,10 +85,10 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
             Calendar calendar = current.data;
             String showDate = dateFormat.format(calendar.getTime());
             holder.dateTextView.setText(showDate);
-            Bitmap immagine = current.immagine;
-            if (immagine != null) {
-                holder.mushroomImageView.setImageBitmap(current.immagine);
-            }
+//            Bitmap immagine = current.immagine;
+//            if (immagine != null) {
+//                holder.mushroomImageView.setImageBitmap(current.immagine);
+//            }
         }
         /*Se i dati non sono ancora pronti evitiamo di lavorare
           su dei null, ma non prendiamo ulteriori provvedimenti */

@@ -34,8 +34,6 @@ public class Ritrovamento {
     @Embedded
     @NonNull
     public Utente autore;
-    @Ignore
-    public Bitmap immagine;
     public String pathImmagine;
 
     public Ritrovamento(double latitudine, double longitudine, @NonNull String fungo, @NonNull Utente autore) {
