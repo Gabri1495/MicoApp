@@ -46,11 +46,8 @@
     <string name="action_github">GitHub</string>
     <string name="action_informations">Informazioni</string>
     <string name="tmp_github">Il repository su GitHub è ancora privato</string>
-    <string name="tmp_work_in_progress">Lavori in corso…</string>
     <string name="received_on">Ricevuto il:</string>
     <string name="error_insert">Si è verificato un errore durante l\'inserimento di un nuovo elemento nel DB!</string>
-    <string name="latitude">Latitudine</string>
-    <string name="longitude">Longitudine</string>
     <string name="mushroom">Fungo</string>
     <string name="note">Nota</string>
     <string name="quantity">Quantità</string>
@@ -65,4 +62,5 @@
     <string name="error_location">Errore imprevisto durante il recupero della posizione</string>
     <string name="dialog_credentials">Ricordati di impostare il tuo nickname, nome e cognome nelle impostazioni!</string>
     <string name="ok">Ok</string>
+    <string name="error_generic">Si è verificato un generico errore...</string>
 </resources>

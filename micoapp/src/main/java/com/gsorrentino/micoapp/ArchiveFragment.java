@@ -20,7 +20,10 @@ import com.gsorrentino.micoapp.persistence.RitrovamentoViewModel;
 import java.util.List;
 import java.util.Objects;
 
-
+/**
+ * Un {@link Fragment} che gestisce la visualizzazione dei
+ * {@link Ritrovamento} salvati nel database locale
+ */
 public class ArchiveFragment extends Fragment {
 
     private MicoAppDatabase db;
@@ -33,8 +36,6 @@ public class ArchiveFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (db == null)
             this.db = MicoAppDatabase.getInstance(getActivity(), false);
-
-
     }
 
     @Override
@@ -43,6 +44,7 @@ public class ArchiveFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_archive, container, false);
     }
 
+    /*Una volta che la View è stata creata basta agganciare il ViewModel*/
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

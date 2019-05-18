@@ -21,6 +21,7 @@ import java.util.List;
 
 public class RicevutoListAdapter extends RecyclerView.Adapter<RicevutoListAdapter.RicevutoViewHolder> {
 
+
     class RicevutoViewHolder extends RecyclerView.ViewHolder {
         private final TextView mushroomTextView;
         private final TextView userTextView;
@@ -36,8 +37,9 @@ public class RicevutoListAdapter extends RecyclerView.Adapter<RicevutoListAdapte
         }
     }
 
-    private List<Ricevuto> ricevuti = Collections.emptyList();
+
     private final LayoutInflater mInflater;
+    private List<Ricevuto> ricevuti = Collections.emptyList();
     private DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 
     public RicevutoListAdapter(Context context) {
@@ -75,16 +77,16 @@ public class RicevutoListAdapter extends RecyclerView.Adapter<RicevutoListAdapte
           su dei null, ma non prendiamo ulteriori provvedimenti */
     }
 
-    public void setRicevuti(List<Ricevuto> ricevuti) {
-        this.ricevuti = ricevuti;
-        notifyDataSetChanged();
-    }
-
     @Override
     public int getItemCount() {
         if(ricevuti != null) {
             return ricevuti.size();
         }
         else return 0;
+    }
+
+    public void setRicevuti(List<Ricevuto> ricevuti) {
+        this.ricevuti = ricevuti;
+        notifyDataSetChanged();
     }
 }

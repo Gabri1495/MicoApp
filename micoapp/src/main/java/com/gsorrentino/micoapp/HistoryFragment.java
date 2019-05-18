@@ -20,7 +20,10 @@ import com.gsorrentino.micoapp.persistence.RicevutoViewModel;
 import java.util.List;
 import java.util.Objects;
 
-
+/**
+ * Un {@link Fragment} che gestisce la visualizzazione dei
+ * {@link Ricevuto} salvati nel database locale
+ */
 public class HistoryFragment extends Fragment {
 
     private MicoAppDatabase db;

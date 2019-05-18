@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+/**
+ * Semplice {@link android.app.Activity} riassuntiva
+ */
 public class InfoActivity extends AppCompatActivity {
 
     @Override

@@ -2,6 +2,9 @@ package com.gsorrentino.micoapp.model;
 
 import androidx.annotation.NonNull;
 
+/**
+ * Un persona definita da nickname, nome e cognome che ha trovato un fungo.
+ */
 public class Utente {
     @NonNull
     public String nickname;
@@ -16,6 +19,9 @@ public class Utente {
         this.cognome = cognome;
     }
 
+    /**
+     * @return Nome concatenato al cognome e separato da spazio
+     */
     public String getNomeCompleto() {
         return this.nome + " " + this.cognome;
     }

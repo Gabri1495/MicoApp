@@ -26,6 +26,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.material.navigation.NavigationView;
+import com.gsorrentino.micoapp.util.Costanti;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -41,7 +42,9 @@ public class MainActivity extends AppCompatActivity
 
     SharedPreferences sharedPreferences;
 
+    /*Variabile utilizzata per gestire il drawer in base alle impostazioni dell'utente*/
     boolean backPressed = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,11 +96,13 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
     @Override
     public void onResume(){
         super.onResume();
         checkCredentials();
     }
+
 
     @Override
     public void onBackPressed() {
@@ -134,16 +139,16 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
+
     @Override
+    /*Handle action bar item clicks here. The action bar will
+      automatically handle clicks on the Home/Up button, so long
+      as you specify a parent activity in AndroidManifest.xml.*/
     public boolean onOptionsItemSelected(MenuItem item) {
-         /*Handle action bar item clicks here. The action bar will
-         automatically handle clicks on the Home/Up button, so long
-         as you specify a parent activity in AndroidManifest.xml.*/
         int id = item.getItemId();
 
         switch (id) {
@@ -166,10 +171,12 @@ public class MainActivity extends AppCompatActivity
                     startActivity(emailIntent);
                 return true;
 
+            /*Mostra la pagina su GitHub con il codice sorgente*/
             case R.id.action_github:
                 Toast.makeText(this, R.string.tmp_github, Toast.LENGTH_LONG).show();
                 return true;
 
+            /*Mostra l'activity riassuntiva dell'applicazione*/
             case R.id.action_informations:
                 Intent infoIntent = new Intent(this, InfoActivity.class);
                 startActivity(infoIntent);
@@ -180,8 +187,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    /*Handle navigation view item clicks here.*/
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-         /*Handle navigation view item clicks here.*/
         int id = item.getItemId();
         fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -190,7 +197,7 @@ public class MainActivity extends AppCompatActivity
                 newFragment = new HomeFragment();
                 break;
             case R.id.menu_map:
-                newFragment = new MapFragment();
+                newFragment = new MapCustomFragment();
                 break;
             case R.id.menu_encyclopedia:
                 newFragment = new EncyclopediaFragment();
@@ -221,16 +228,20 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+
     @Override
     public void onFragmentInteraction(Uri uri) {
         //TODO gestire comunicazione con fragment
     }
 
+
+    /**
+     * Crea i vari {@link NotificationChannel} che l'applicazione usa,
+     * ma solo nel caso le API utilizzate siano 26+
+     */
     private void createNotificationChannel() {
-         /*Create the NotificationChannel, but only on API 26+ because
-         the NotificationChannel class is new and not in the support library*/
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(MapFragment.PERMISSION_CHANNEL_ID,
+            NotificationChannel channel = new NotificationChannel(Costanti.PERMISSION_CHANNEL_ID,
                     getString(R.string.channel_permissions_name),
                     NotificationManager.IMPORTANCE_DEFAULT);
             channel.setDescription(getString(R.string.channel_permissions_desc));
@@ -239,7 +250,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    /*Controllo se le preference legate alle credenziali siano mai state cambiate*/
+
+    /**
+     * Controllo se le preference legate alle credenziali siano mai state cambiate,
+     * in caso contrario un {@link AlertDialog verrà mostrato}
+     */
     private void checkCredentials() {
         if(!sharedPreferences.contains(getString(R.string.preference_nickname))
         || !sharedPreferences.contains(getString(R.string.preference_name))

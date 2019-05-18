@@ -1,8 +1,5 @@
 package com.gsorrentino.micoapp.model;
 
-import android.graphics.Bitmap;
-import android.location.Address;
-
 import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Entity;
@@ -15,6 +12,9 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+/**
+ * Rappresenta il ritrovamento di un fungo da parte dell'utente
+ */
 @Entity(indices={@Index(value={"nickname", "nome", "cognome", "data"}, unique=true)})
 public class Ritrovamento {
     @PrimaryKey(autoGenerate = true)
@@ -36,6 +36,15 @@ public class Ritrovamento {
     public Utente autore;
     public String pathImmagine;
 
+    /**
+     * I campi sono pubblici e la data del ritrovamento viene
+     * inizialmente settata dal costruttore
+     *
+     * @param latitudine Lat del ritrovamento
+     * @param longitudine Lng del ritrovamento
+     * @param fungo Fungo trovato
+     * @param autore Chi ha trovato il fungo
+     */
     public Ritrovamento(double latitudine, double longitudine, @NonNull String fungo, @NonNull Utente autore) {
         this.data = new GregorianCalendar();
         this.latitudine = latitudine;
@@ -44,12 +53,22 @@ public class Ritrovamento {
         this.autore = autore;
     }
 
+    /**
+     * Se LatLng non ancora istanziato lo fa ora partendo da lat e lng
+     *
+     * @return Coordinate del ritrovamento
+     */
     public LatLng getCoordinate() {
         if (coordinate == null)
             coordinate = new LatLng(latitudine, longitudine);
         return coordinate;
     }
 
+    /**
+     * Contestualmente imposta anche lat e lng
+     *
+     * @param coordinate Coordinate del ritrovamento
+     */
     public void setCoordinate(LatLng coordinate) {
         this.coordinate = coordinate;
         this.latitudine = coordinate.latitude;

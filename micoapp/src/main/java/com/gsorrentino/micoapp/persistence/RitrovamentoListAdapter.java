@@ -1,8 +1,6 @@
 package com.gsorrentino.micoapp.persistence;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.location.Address;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +19,6 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoListAdapter.RitrovamentoViewHolder> {
 
@@ -44,8 +41,7 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
     }
 
 
-
-    /*Cached copy of words*/
+    /*Cached copy of Ritrovamenti*/
     private List<Ritrovamento> ritrovamenti = Collections.emptyList();
     private final LayoutInflater mInflater;
     private DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
@@ -85,6 +81,7 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
             Calendar calendar = current.data;
             String showDate = dateFormat.format(calendar.getTime());
             holder.dateTextView.setText(showDate);
+            // TODO Caricare l'immagine a partire dal path
 //            Bitmap immagine = current.immagine;
 //            if (immagine != null) {
 //                holder.mushroomImageView.setImageBitmap(current.immagine);
@@ -94,16 +91,16 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
           su dei null, ma non prendiamo ulteriori provvedimenti */
     }
 
-    public void setRitrovamenti(List<Ritrovamento> ritrovamenti) {
-        this.ritrovamenti = ritrovamenti;
-        notifyDataSetChanged();
-    }
-
     @Override
     public int getItemCount() {
         if(ritrovamenti != null) {
             return ritrovamenti.size();
         }
         else return 0;
+    }
+
+    public void setRitrovamenti(List<Ritrovamento> ritrovamenti) {
+        this.ritrovamenti = ritrovamenti;
+        notifyDataSetChanged();
     }
 }

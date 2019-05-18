@@ -1,29 +1,30 @@
 package com.gsorrentino.micoapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
-
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.gsorrentino.micoapp.model.Ritrovamento;
 import com.gsorrentino.micoapp.model.Utente;
 import com.gsorrentino.micoapp.persistence.MicoAppDatabase;
+import com.gsorrentino.micoapp.util.AsyncTasks;
+import com.gsorrentino.micoapp.util.Costanti;
 
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+/**
+ * Gestisce la modifica o creazione di un'entità di {@link Ritrovamento}
+ */
 public class EditFindActivity extends AppCompatActivity implements View.OnClickListener {
 
     SharedPreferences sharedPreferences;
@@ -41,6 +42,8 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         geocoder = new Geocoder(this, Locale.getDefault());
 
+        /*Recupero eventuali coordinate passate con l'Intent e le uso
+        * per precompilare le relative TextViews*/
         LatLng latLng = new LatLng(0f, 0f);
         LatLng tmp = getIntent().getParcelableExtra(getString(R.string.intent_latlng));
         if(tmp != null)
@@ -76,36 +79,7 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
         ritrovamento.quantita = quantita;
         ritrovamento.note = nota;
 
-        new InsertFindAsync(this, ritrovamento).execute();
+        new AsyncTasks.ManageFindAsync(this, ritrovamento).execute(Costanti.INSERT);
         finish();
-    }
-
-
-    private static class InsertFindAsync extends AsyncTask<Void, Void, Void> {
-
-        private MicoAppDatabase db;
-        private Ritrovamento find;
-        private final WeakReference<Context> contextRef;
-
-        InsertFindAsync(Context context, Ritrovamento find) {
-            this.find = find;
-            contextRef = new WeakReference<>(context);
-            db = MicoAppDatabase.getInstance(context, false);
-        }
-
-        @Override
-        protected Void doInBackground(final Void... params) {
-            db.ritrovamentoDao().insertRitrovamento(find);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            Context context = contextRef.get();
-            if(context != null) {
-                Toast.makeText(context, R.string.success_operation, Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 }

@@ -1,28 +1,28 @@
 package com.gsorrentino.micoapp.persistence;
 
 import android.app.Application;
-import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
 import com.gsorrentino.micoapp.model.Ricevuto;
 import com.gsorrentino.micoapp.model.Ritrovamento;
+import com.gsorrentino.micoapp.util.AsyncTasks;
+import com.gsorrentino.micoapp.util.Costanti;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 class MicoAppRepository {
 
-    private RitrovamentoDao ritrovamentoDao;
-    private RicevutoDao ricevutoDao;
+    private WeakReference<Application> application;
     private LiveData<List<Ritrovamento>> allRitrovamenti;
     private LiveData<List<Ricevuto>> allRicevuti;
 
     MicoAppRepository(Application application) {
         MicoAppDatabase db = MicoAppDatabase.getInstance(application, false);
-        ritrovamentoDao = db.ritrovamentoDao();
-        allRitrovamenti = ritrovamentoDao.getAllRitrovamenti();
-        ricevutoDao = db.ricevutoDao();
-        allRicevuti = ricevutoDao.getAllRicevuti();
+        allRitrovamenti = db.ritrovamentoDao().getAllRitrovamenti();
+        allRicevuti = db.ricevutoDao().getAllRicevuti();
+        this.application = new WeakReference<>(application);
     }
 
     LiveData<List<Ritrovamento>> getAllRitrovamenti() {
@@ -33,7 +33,10 @@ class MicoAppRepository {
      Like this, Room ensures that you're not doing any long running operations on the main
      thread, blocking the UI.*/
     void insertRitrovamento(Ritrovamento ritrovamento) {
-        new insertRitrovamentoAsyncTask(ritrovamentoDao).execute(ritrovamento);
+        Application context = application.get();
+        if(context != null) {
+            new AsyncTasks.ManageFindAsync(context, ritrovamento).execute(Costanti.INSERT);
+        }
     }
 
     LiveData<List<Ricevuto>> getAllRicevuti() {
@@ -41,37 +44,9 @@ class MicoAppRepository {
     }
 
     void insertRicevuto(Ricevuto ricevuto) {
-        new insertRicevutoAsyncTask(ricevutoDao).execute(ricevuto);
-    }
-
-    private static class insertRitrovamentoAsyncTask extends AsyncTask<Ritrovamento, Void, Void> {
-
-        private RitrovamentoDao mAsyncTaskDao;
-
-        insertRitrovamentoAsyncTask(RitrovamentoDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final Ritrovamento... params) {
-            mAsyncTaskDao.insertRitrovamento(params[0]);
-            return null;
-        }
-    }
-
-
-    private static class insertRicevutoAsyncTask extends AsyncTask<Ricevuto, Void, Void> {
-
-        private RicevutoDao mAsyncTaskDao;
-
-        insertRicevutoAsyncTask(RicevutoDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final Ricevuto... params) {
-            mAsyncTaskDao.insertRicevuto(params[0]);
-            return null;
+        Application context = application.get();
+        if(context != null) {
+            new AsyncTasks.ManageReceivedAsync(context, ricevuto).execute(Costanti.INSERT);
         }
     }
 }
