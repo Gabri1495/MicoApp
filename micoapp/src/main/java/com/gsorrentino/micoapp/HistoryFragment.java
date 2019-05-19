@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,7 +17,6 @@ import com.gsorrentino.micoapp.persistence.MicoAppDatabase;
 import com.gsorrentino.micoapp.persistence.RicevutoListAdapter;
 import com.gsorrentino.micoapp.persistence.RicevutoViewModel;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -49,17 +48,15 @@ public class HistoryFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         RecyclerView recyclerView = Objects.requireNonNull(getActivity()).findViewById(R.id.history_recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(llm);
+        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), llm.getOrientation());
+        recyclerView.addItemDecoration(mDividerItemDecoration);
 
         final RicevutoListAdapter adapter = new RicevutoListAdapter(getActivity());
         recyclerView.setAdapter(adapter);
 
         RicevutoViewModel ricevutoViewModel = ViewModelProviders.of(this).get(RicevutoViewModel.class);
-        ricevutoViewModel.getAllRicevuti().observe(this, new Observer<List<Ricevuto>>() {
-            @Override
-            public void onChanged(List<Ricevuto> ricevuti) {
-                adapter.setRicevuti(ricevuti);
-            }
-        });
+        ricevutoViewModel.getAllRicevuti().observe(this, adapter::setRicevuti);
     }
 }

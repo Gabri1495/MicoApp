@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.TooltipCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gsorrentino.micoapp.R;
@@ -24,18 +25,24 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
 
 
     class RitrovamentoViewHolder extends RecyclerView.ViewHolder {
+        private final TextView mushroomNumberTextView;
         private final TextView mushroomTextView;
         private final TextView userTextView;
-        private final TextView addressTextView;
         private final TextView dateTextView;
+        private final ConstraintLayout subItem;
+        private final TextView addressTextView;
+        private final TextView noteTextView;
         private final ImageView mushroomImageView;
 
         private RitrovamentoViewHolder(View itemView) {
             super(itemView);
+            mushroomNumberTextView = itemView.findViewById(R.id.archive_mushroomNumber_textView);
             mushroomTextView = itemView.findViewById(R.id.archive_mushroom_textView);
             userTextView = itemView.findViewById(R.id.archive_user_textView);
-            addressTextView = itemView.findViewById(R.id.archive_address_textView);
             dateTextView = itemView.findViewById(R.id.archive_date_textView);
+            subItem = itemView.findViewById(R.id.archive_constraintSubLayout);
+            addressTextView = itemView.findViewById(R.id.archive_address_textView);
+            noteTextView = itemView.findViewById(R.id.archive_note_textView);
             mushroomImageView = itemView.findViewById(R.id.archive_mushroom_image);
         }
     }
@@ -61,7 +68,18 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
     public void onBindViewHolder(@NonNull RitrovamentoViewHolder holder, int position) {
         if (ritrovamenti != null) {
             Ritrovamento current = ritrovamenti.get(position);
+
+            /*Gestisco la visibilità della parte da ampliare dell'item*/
+            holder.subItem.setVisibility(current.expanded ? View.VISIBLE : View.GONE);
+            holder.itemView.setOnClickListener(v -> {
+                current.expanded = !current.expanded;
+                notifyItemChanged(position);
+            });
+
+            holder.mushroomNumberTextView.setText(String.valueOf(current.quantita));
+
             holder.mushroomTextView.setText(current.fungo);
+
             holder.userTextView.setText(current.autore.nickname);
             /*Controllo la versione di Android, essendo i Tooltips disponibili solo dall'SDk 26*/
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
@@ -70,6 +88,7 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
             else {
                 TooltipCompat.setTooltipText(holder.userTextView, current.autore.getNomeCompleto());
             }
+
             String ind = current.indirizzo;
             String showAddress;
             if (ind != null) {
@@ -78,9 +97,13 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
                 showAddress = current.latitudine + " " + current.longitudine;
             }
             holder.addressTextView.setText(showAddress);
+
             Calendar calendar = current.data;
             String showDate = dateFormat.format(calendar.getTime());
             holder.dateTextView.setText(showDate);
+
+            holder.noteTextView.setText(current.note);
+
             // TODO Caricare l'immagine a partire dal path
 //            Bitmap immagine = current.immagine;
 //            if (immagine != null) {

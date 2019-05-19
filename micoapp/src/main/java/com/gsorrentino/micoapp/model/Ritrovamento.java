@@ -35,6 +35,18 @@ public class Ritrovamento {
     @NonNull
     public Utente autore;
     public String pathImmagine;
+    @Ignore
+    public boolean expanded;    /*Utilizzato per gestire l'ampliamento e riduzione nella RecyclerView*/
+
+
+    private Ritrovamento(@NonNull String fungo, @NonNull Utente autore) {
+        this.data = new GregorianCalendar();
+        this.fungo = fungo;
+        this.autore = autore;
+        this.quantita = 1;
+        this.note = "";
+        this.expanded = false;
+    }
 
     /**
      * I campi sono pubblici e la data del ritrovamento viene
@@ -46,11 +58,24 @@ public class Ritrovamento {
      * @param autore Chi ha trovato il fungo
      */
     public Ritrovamento(double latitudine, double longitudine, @NonNull String fungo, @NonNull Utente autore) {
-        this.data = new GregorianCalendar();
+        this(fungo, autore);
         this.latitudine = latitudine;
         this.longitudine = longitudine;
-        this.fungo = fungo;
-        this.autore = autore;
+    }
+
+    /**
+     * I campi sono pubblici e la data del ritrovamento viene
+     * inizialmente settata dal costruttore. In questo
+     * costruttore verranno automaticamente inizializzati anche
+     * i campi {@link Ritrovamento#latitudine} e {@link Ritrovamento#longitudine}
+     *
+     * @param latLng LatLng del ritrovamento
+     * @param fungo Fungo trovato
+     * @param autore Chi ha trovato il fungo
+     */
+    public Ritrovamento(LatLng latLng, @NonNull String fungo, @NonNull Utente autore) {
+        this(fungo, autore);
+        setCoordinate(latLng);
     }
 
     /**
@@ -67,11 +92,13 @@ public class Ritrovamento {
     /**
      * Contestualmente imposta anche lat e lng
      *
-     * @param coordinate Coordinate del ritrovamento
+     * @param coordinate Coordinate del ritrovamento; se null verranno ignorate
      */
     public void setCoordinate(LatLng coordinate) {
-        this.coordinate = coordinate;
-        this.latitudine = coordinate.latitude;
-        this.longitudine = coordinate.longitude;
+        if (coordinate != null) {
+            this.coordinate = coordinate;
+            this.latitudine = coordinate.latitude;
+            this.longitudine = coordinate.longitude;
+        }
     }
 }

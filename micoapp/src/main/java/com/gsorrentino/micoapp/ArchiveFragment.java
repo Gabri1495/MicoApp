@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,7 +17,6 @@ import com.gsorrentino.micoapp.persistence.MicoAppDatabase;
 import com.gsorrentino.micoapp.persistence.RitrovamentoListAdapter;
 import com.gsorrentino.micoapp.persistence.RitrovamentoViewModel;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -50,17 +49,15 @@ public class ArchiveFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     
         RecyclerView recyclerView = Objects.requireNonNull(getActivity()).findViewById(R.id.archive_recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(llm);
+        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), llm.getOrientation());
+        recyclerView.addItemDecoration(mDividerItemDecoration);
 
         final RitrovamentoListAdapter adapter = new RitrovamentoListAdapter(getActivity());
         recyclerView.setAdapter(adapter);
 
         RitrovamentoViewModel ritrovamentoViewModel = ViewModelProviders.of(this).get(RitrovamentoViewModel.class);
-        ritrovamentoViewModel.getAllRitrovamenti().observe(this, new Observer<List<Ritrovamento>>() {
-            @Override
-            public void onChanged(List<Ritrovamento> ritrovamenti) {
-                adapter.setRitrovamenti(ritrovamenti);
-            }
-        });
+        ritrovamentoViewModel.getAllRitrovamenti().observe(this, adapter::setRitrovamenti);
     }
 }

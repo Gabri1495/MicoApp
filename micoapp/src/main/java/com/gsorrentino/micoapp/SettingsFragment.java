@@ -1,7 +1,6 @@
 package com.gsorrentino.micoapp;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -31,94 +30,57 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
 
-        setSummaryAndListener((EditTextPreference) findPreference(getString(R.string.preference_nickname)));
-        setSummaryAndListener((EditTextPreference) findPreference(getString(R.string.preference_name)));
-        setSummaryAndListener((EditTextPreference) findPreference(getString(R.string.preference_surname)));
+        setSummaryAndListener(findPreference(getString(R.string.preference_nickname)));
+        setSummaryAndListener(findPreference(getString(R.string.preference_name)));
+        setSummaryAndListener(findPreference(getString(R.string.preference_surname)));
 
         /*Configuro le Preference per le varie rimozioni*/
         Preference preferenceButton = findPreference(getString(R.string.preference_delete_finds));
         if (preferenceButton != null) {
-            preferenceButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    final Context context = getContext();
-                    if(context != null) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setMessage(R.string.dialog_deleting_finds);
-                        builder.setPositiveButton(R.string.proceed, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                new AsyncTasks.DeleteAllDbAsync(context).execute(Costanti.REMOVE_FINDS);
-                            }
-                        });
-                        builder.setNegativeButton(R.string.undo, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                        builder.create().show();
-                    }
-                    return true;
+            preferenceButton.setOnPreferenceClickListener(preference -> {
+                final Context context = getContext();
+                if(context != null) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage(R.string.dialog_deleting_finds);
+                    builder.setPositiveButton(R.string.proceed, (dialog, which) -> new AsyncTasks.DeleteAllDbAsync(context).execute(Costanti.REMOVE_FINDS));
+                    builder.setNegativeButton(R.string.undo, (dialog, which) -> dialog.cancel());
+                    builder.create().show();
                 }
+                return true;
             });
         }
 
         preferenceButton = findPreference(getString(R.string.preference_delete_received));
         if (preferenceButton != null) {
-            preferenceButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    final Context context = getContext();
-                    if(context != null) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setMessage(R.string.dialog_deleting_received);
-                        builder.setPositiveButton(R.string.proceed, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                new AsyncTasks.DeleteAllDbAsync(context).execute(Costanti.REMOVE_RECEIVED);
-                            }
-                        });
-                        builder.setNegativeButton(R.string.undo, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                        builder.create().show();
-                    }
-                    return true;
+            preferenceButton.setOnPreferenceClickListener(preference -> {
+                final Context context = getContext();
+                if(context != null) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage(R.string.dialog_deleting_received);
+                    builder.setPositiveButton(R.string.proceed, (dialog, which) -> new AsyncTasks.DeleteAllDbAsync(context).execute(Costanti.REMOVE_RECEIVED));
+                    builder.setNegativeButton(R.string.undo, (dialog, which) -> dialog.cancel());
+                    builder.create().show();
                 }
+                return true;
             });
         }
 
         preferenceButton = findPreference(getString(R.string.preference_delete_db));
         if (preferenceButton != null) {
-            preferenceButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    final Context context = getContext();
-                    if(context != null) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setMessage(R.string.dialog_deleting_db);
-                        builder.setPositiveButton(R.string.proceed, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                context.deleteDatabase(Costanti.DB_NAME);
-                                MicoAppDatabase.invalidateInstance();
-                                Toast.makeText(context, R.string.success_operation, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        builder.setNegativeButton(R.string.undo, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                        builder.create().show();
-                    }
-                    return true;
+            preferenceButton.setOnPreferenceClickListener(preference -> {
+                final Context context = getContext();
+                if(context != null) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage(R.string.dialog_deleting_db);
+                    builder.setPositiveButton(R.string.proceed, (dialog, which) -> {
+                        context.deleteDatabase(Costanti.DB_NAME);
+                        MicoAppDatabase.invalidateInstance();
+                        Toast.makeText(context, R.string.success_operation, Toast.LENGTH_SHORT).show();
+                    });
+                    builder.setNegativeButton(R.string.undo, (dialog, which) -> dialog.cancel());
+                    builder.create().show();
                 }
+                return true;
             });
         }
     }

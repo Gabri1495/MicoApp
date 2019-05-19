@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/archive_mushroomNumber_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:scrollHorizontally="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="6" />
 
     <TextView
         android:id="@+id/archive_mushroom_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:scrollHorizontally="true"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/archive_mushroomNumber_textView"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Fungo" />
 
@@ -22,45 +33,68 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:scrollHorizontally="true"
-        app:layout_constraintEnd_toStartOf="@+id/archive_mushroom_image"
-        app:layout_constraintStart_toEndOf="@+id/archive_mushroom_textView"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Utente" />
-
-    <TextView
-        android:id="@+id/archive_address_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:scrollHorizontally="true"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintEnd_toStartOf="@+id/archive_date_textView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/archive_mushroom_textView"
-        tools:text="Località" />
+        tools:text="Utente" />
 
     <TextView
         android:id="@+id/archive_date_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:scrollHorizontally="true"
         app:layout_constraintEnd_toStartOf="@+id/archive_mushroom_image"
-        app:layout_constraintTop_toBottomOf="@+id/archive_user_textView"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="26/6/01" />
 
     <ImageView
         android:id="@+id/archive_mushroom_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
         android:contentDescription="@string/archive_image_content"
+        app:layout_constraintBottom_toTopOf="@+id/archive_constraintSubLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/ic_launcher" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/archive_constraintSubLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/archive_mushroom_image">
+
+        <TextView
+            android:id="@+id/archive_address_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:scrollHorizontally="true"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Località" />
+
+        <TextView
+            android:id="@+id/archive_note_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:scrollHorizontally="true"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/archive_address_textView"
+            tools:text="Nota" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

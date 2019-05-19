@@ -38,8 +38,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gsorrentino.micoapp.persistence.MicoAppDatabase;
@@ -118,17 +116,14 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
         zoom = sharedPrefs.getFloat("zoom", Costanti.ZOOM_DEFAULT);
 
         FloatingActionButton fab = Objects.requireNonNull(getActivity()).findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                retrieveCurrentLocation();
-                Intent intent = new Intent(getActivity(), EditFindActivity.class);
-                /*Se è stato impostato un marker esso verrà usato per le coordinate,
-                 * altrimenti verrà recuperata la posizione attuale*/
-                intent.putExtra(getString(R.string.intent_latlng),
-                        marker != null ? marker.getPosition() : currentPosition);
-                startActivity(intent);
-            }
+        fab.setOnClickListener(view1 -> {
+            retrieveCurrentLocation();
+            Intent intent = new Intent(getActivity(), EditFindActivity.class);
+            /*Se è stato impostato un marker esso verrà usato per le coordinate,
+             * altrimenti verrà recuperata la posizione attuale*/
+            intent.putExtra(getString(R.string.intent_latlng),
+                    marker != null ? marker.getPosition() : currentPosition);
+            startActivity(intent);
         });
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
@@ -209,16 +204,13 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
         if(checkManageLocationPermissions()) {
             try {
                 fusedLocationClient.getLastLocation()
-                        .addOnSuccessListener(Objects.requireNonNull(getActivity()), new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                if (location == null) {
-                                    if (currentPosition == null) {
-                                        currentPosition = new LatLng(0f, 0f);
-                                    }
-                                } else {
-                                    currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
+                        .addOnSuccessListener(Objects.requireNonNull(getActivity()), location -> {
+                            if (location == null) {
+                                if (currentPosition == null) {
+                                    currentPosition = new LatLng(0f, 0f);
                                 }
+                            } else {
+                                currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
                             }
                         });
             } catch (SecurityException e) {
@@ -312,28 +304,22 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
             SettingsClient client = LocationServices.getSettingsClient(activity);
             Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
 
-            task.addOnSuccessListener(activity, new OnSuccessListener<LocationSettingsResponse>() {
-                @Override
-                public void onSuccess(LocationSettingsResponse locationSettingsResponse) {}
-            });
+            task.addOnSuccessListener(activity, locationSettingsResponse -> {});
 
-            task.addOnFailureListener(activity, new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    if (e instanceof ResolvableApiException && !alreadyShowed) {
-                         /*Location settings are not satisfied, but this can be fixed by showing the user a dialog.
-                         * In ogni caso mostro max una volta il dialog all'utente ogni onCreate*/
-                        try {
-                             /*Show the dialog by calling startIntentSenderForResult(),
-                              and check the result in onActivityResult()*/
-                            ResolvableApiException resolvable = (ResolvableApiException) e;
-                            startIntentSenderForResult(resolvable.getResolution().getIntentSender(),
-                                    Costanti.REQUEST_CHECK_LOCALIZATION_SETTINGS,
-                                    null, 0, 0, 0, null);
-                            alreadyShowed = true;
-                        } catch (IntentSender.SendIntentException sendEx) {
-                            Toast.makeText(activity, R.string.error_generic, Toast.LENGTH_SHORT).show();
-                        }
+            task.addOnFailureListener(activity, e -> {
+                if (e instanceof ResolvableApiException && !alreadyShowed) {
+                     /*Location settings are not satisfied, but this can be fixed by showing the user a dialog.
+                     * In ogni caso mostro max una volta il dialog all'utente ogni onCreate*/
+                    try {
+                         /*Show the dialog by calling startIntentSenderForResult(),
+                          and check the result in onActivityResult()*/
+                        ResolvableApiException resolvable = (ResolvableApiException) e;
+                        startIntentSenderForResult(resolvable.getResolution().getIntentSender(),
+                                Costanti.REQUEST_CHECK_LOCALIZATION_SETTINGS,
+                                null, 0, 0, 0, null);
+                        alreadyShowed = true;
+                    } catch (IntentSender.SendIntentException sendEx) {
+                        Toast.makeText(activity, R.string.error_generic, Toast.LENGTH_SHORT).show();
                     }
                 }
             });
