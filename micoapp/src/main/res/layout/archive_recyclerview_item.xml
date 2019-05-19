@@ -11,32 +11,46 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:scrollHorizontally="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="6" />
 
     <TextView
         android:id="@+id/archive_mushroom_textView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:scrollHorizontally="true"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/archive_date_textView"
         app:layout_constraintStart_toEndOf="@+id/archive_mushroomNumber_textView"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Fungo" />
 
     <TextView
         android:id="@+id/archive_user_textView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:scrollHorizontally="true"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/archive_constraintSubLayout"
+        app:layout_constraintEnd_toStartOf="@id/padding"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/archive_mushroom_textView"
         tools:text="Utente" />
+
+    <Space
+        android:id="@+id/padding"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/archive_constraintSubLayout"
+        app:layout_constraintEnd_toStartOf="@+id/archive_mushroom_image"
+        app:layout_constraintStart_toEndOf="@+id/archive_user_textView"
+        app:layout_constraintTop_toBottomOf="@+id/archive_mushroom_textView" />
 
     <TextView
         android:id="@+id/archive_date_textView"
@@ -58,6 +72,7 @@
         android:layout_marginBottom="16dp"
         android:contentDescription="@string/archive_image_content"
         app:layout_constraintBottom_toTopOf="@+id/archive_constraintSubLayout"
+        app:layout_constraintStart_toEndOf="@id/padding"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/ic_launcher" />
@@ -97,4 +112,5 @@
             app:layout_constraintTop_toBottomOf="@+id/archive_address_textView"
             tools:text="Nota" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

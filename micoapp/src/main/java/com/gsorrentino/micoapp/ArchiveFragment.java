@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.gsorrentino.micoapp.model.Ritrovamento;
 import com.gsorrentino.micoapp.persistence.MicoAppDatabase;
@@ -53,6 +54,8 @@ public class ArchiveFragment extends Fragment {
         recyclerView.setLayoutManager(llm);
         DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), llm.getOrientation());
         recyclerView.addItemDecoration(mDividerItemDecoration);
+
+        ((SimpleItemAnimator) Objects.requireNonNull(recyclerView.getItemAnimator())).setSupportsChangeAnimations(false);
 
         final RitrovamentoListAdapter adapter = new RitrovamentoListAdapter(getActivity());
         recyclerView.setAdapter(adapter);

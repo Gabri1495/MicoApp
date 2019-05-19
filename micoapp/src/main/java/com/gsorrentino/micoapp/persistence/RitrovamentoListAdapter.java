@@ -88,6 +88,16 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
             else {
                 TooltipCompat.setTooltipText(holder.userTextView, current.autore.getNomeCompleto());
             }
+            /*Abilitare i tooltip porta il campo di testo a non essere una zona valida per il tap
+            * che fa espandere l'elemento della lista.
+            * Lasciando espandere la TextView a piacimento finiva per sovrapporsi all'immagine.
+            * Con questo piccolo workaround riduco lo spazio della TextView nel caso non contenga
+            * un nickname lungo.*/
+            if(current.autore.nickname.length() < 20) {
+                ViewGroup.LayoutParams params = holder.userTextView.getLayoutParams();
+                params.width = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+                holder.userTextView.setLayoutParams(params);
+            }
 
             String ind = current.indirizzo;
             String showAddress;

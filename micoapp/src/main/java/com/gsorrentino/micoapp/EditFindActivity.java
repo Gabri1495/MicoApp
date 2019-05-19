@@ -6,6 +6,7 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
@@ -55,15 +56,23 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
+        if(!checkFields()){
+            Toast.makeText(this, R.string.error_missing_field, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        /*Disattivo il pulsante per non rischiare di creare una doppia entità*/
+        findViewById(R.id.edit_save_button).setEnabled(false);
+
         String nickname = sharedPreferences.getString(getString(R.string.preference_nickname), "Nemo");
         String nome = sharedPreferences.getString(getString(R.string.preference_name), "Nessuno");
         String cognome = sharedPreferences.getString(getString(R.string.preference_surname), "Nessuno");
 
         String fungo = ((EditText)findViewById(R.id.edit_mushroom_editText)).getText().toString();
         String nota = ((EditText)findViewById(R.id.edit_note_editText)).getText().toString();
-        int quantita =  Integer.valueOf(((EditText)findViewById(R.id.edit_quantity_editText)).getText().toString());
+        int quantita = Integer.valueOf(((EditText) findViewById(R.id.edit_quantity_editText)).getText().toString());
         double lat = Double.valueOf(((EditText)findViewById(R.id.edit_lat_editText)).getText().toString());
-        double lng = Double.valueOf(((EditText)findViewById(R.id.edit_lng_editText)).getText().toString());
+        double lng = Double.valueOf(((EditText) findViewById(R.id.edit_lng_editText)).getText().toString());
 
         List<Address> indirizzo = null;
         try {
@@ -81,5 +90,17 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
 
         new AsyncTasks.ManageFindAsync(this, ritrovamento).execute(Costanti.INSERT);
         finish();
+    }
+
+    /**
+     * Controlla che tutti i campi di testo cruciali siano stati compilati
+     *
+     * @return True se tutti i campi sono stati compilati
+     */
+    private boolean checkFields(){
+        return !((EditText) findViewById(R.id.edit_mushroom_editText)).getText().toString().isEmpty()
+                && !((EditText) findViewById(R.id.edit_quantity_editText)).getText().toString().isEmpty()
+                && !((EditText) findViewById(R.id.edit_lat_editText)).getText().toString().isEmpty()
+                && !((EditText) findViewById(R.id.edit_lng_editText)).getText().toString().isEmpty();
     }
 }

@@ -74,4 +74,5 @@
     <string name="dialog_credentials">Remember to set your nickname, name and surname in settings!</string>
     <string name="ok">@android:string/ok</string>
     <string name="error_generic">A generic error occurred…</string>
+    <string name="error_missing_field">You\'re missing some field</string>
 </resources>
