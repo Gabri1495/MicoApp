@@ -15,18 +15,26 @@ import java.util.List;
 class MicoAppRepository {
 
     private WeakReference<Application> application;
-    private LiveData<List<Ritrovamento>> allRitrovamenti;
-    private LiveData<List<Ricevuto>> allRicevuti;
+    private RicevutoDao daoReceived;
+    private RitrovamentoDao daoFind;
 
     MicoAppRepository(Application application) {
         MicoAppDatabase db = MicoAppDatabase.getInstance(application, false);
-        allRitrovamenti = db.ritrovamentoDao().getAllRitrovamenti();
-        allRicevuti = db.ricevutoDao().getAllRicevuti();
+        daoFind = db.ritrovamentoDao();
+        daoReceived = db.ricevutoDao();
         this.application = new WeakReference<>(application);
     }
 
     LiveData<List<Ritrovamento>> getAllRitrovamenti() {
-        return allRitrovamenti;
+        return daoFind.getAllRitrovamenti();
+    }
+
+    LiveData<List<Ritrovamento>> getAllRitrovamentiTimeDec() {
+        return daoFind.getAllRitrovamentiTimeDec();
+    }
+
+    LiveData<List<Ritrovamento>> getAllRitrovamentiFungoAsc() {
+        return daoFind.getAllRitrovamentiFungoAsc();
     }
 
      /*You must call this on a non-UI thread or your app will crash.
@@ -40,7 +48,7 @@ class MicoAppRepository {
     }
 
     LiveData<List<Ricevuto>> getAllRicevuti() {
-        return allRicevuti;
+        return daoReceived.getAllRicevuti();
     }
 
     void insertRicevuto(Ricevuto ricevuto) {

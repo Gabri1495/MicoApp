@@ -1,22 +1,33 @@
 package com.gsorrentino.micoapp.persistence;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.gsorrentino.micoapp.EditFindActivity;
 import com.gsorrentino.micoapp.R;
 import com.gsorrentino.micoapp.model.Ritrovamento;
+import com.gsorrentino.micoapp.util.AsyncTasks;
+import com.gsorrentino.micoapp.util.Costanti;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -48,13 +59,20 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
     }
 
 
+    private Context context;
     /*Cached copy of Ritrovamenti*/
     private List<Ritrovamento> ritrovamenti = Collections.emptyList();
     private final LayoutInflater mInflater;
     private DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 
+    /*Gestione selezione elementi*/
+    private ActionMode actionMode;  /*Utilizzato per evitare una doppia creazione in caso di doppio LongClick*/
+    private boolean multiSelect = false;
+    private ArrayList<Integer> selectedItemsIndex = new ArrayList<>();
+
     public RitrovamentoListAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
+        this.context = context;
     }
 
     @Override
@@ -69,11 +87,30 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
         if (ritrovamenti != null) {
             Ritrovamento current = ritrovamenti.get(position);
 
+            /*Resetto lo sfondo dei vari elementi*/
+            if (!selectedItemsIndex.contains(position)) {
+                holder.itemView.setBackgroundColor(Color.WHITE);
+            } else {
+                holder.itemView.setBackgroundColor(Color.LTGRAY);
+            }
+
+            holder.itemView.setOnLongClickListener(view -> {
+                if(actionMode != null)
+                    return false;
+                ((AppCompatActivity)view.getContext()).startSupportActionMode(new ActionModeCallbacks());
+                selectItem(holder.itemView, position);
+                return true;
+            });
             /*Gestisco la visibilità della parte da ampliare dell'item*/
             holder.subItem.setVisibility(current.expanded ? View.VISIBLE : View.GONE);
             holder.itemView.setOnClickListener(v -> {
-                current.expanded = !current.expanded;
-                notifyItemChanged(position);
+                if(multiSelect){
+                    selectItem(holder.itemView, position);
+                }
+                else {
+                    current.expanded = !current.expanded;
+                    notifyItemChanged(position);
+                }
             });
 
             holder.mushroomNumberTextView.setText(String.valueOf(current.quantita));
@@ -87,16 +124,6 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
             }
             else {
                 TooltipCompat.setTooltipText(holder.userTextView, current.autore.getNomeCompleto());
-            }
-            /*Abilitare i tooltip porta il campo di testo a non essere una zona valida per il tap
-            * che fa espandere l'elemento della lista.
-            * Lasciando espandere la TextView a piacimento finiva per sovrapporsi all'immagine.
-            * Con questo piccolo workaround riduco lo spazio della TextView nel caso non contenga
-            * un nickname lungo.*/
-            if(current.autore.nickname.length() < 20) {
-                ViewGroup.LayoutParams params = holder.userTextView.getLayoutParams();
-                params.width = ConstraintLayout.LayoutParams.WRAP_CONTENT;
-                holder.userTextView.setLayoutParams(params);
             }
 
             String ind = current.indirizzo;
@@ -112,13 +139,12 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
             String showDate = dateFormat.format(calendar.getTime());
             holder.dateTextView.setText(showDate);
 
-            holder.noteTextView.setText(current.note);
+            if(current.note.isEmpty())
+                holder.noteTextView.setVisibility(View.GONE);
+            else
+                holder.noteTextView.setText(current.note);
 
             // TODO Caricare l'immagine a partire dal path
-//            Bitmap immagine = current.immagine;
-//            if (immagine != null) {
-//                holder.mushroomImageView.setImageBitmap(current.immagine);
-//            }
         }
         /*Se i dati non sono ancora pronti evitiamo di lavorare
           su dei null, ma non prendiamo ulteriori provvedimenti */
@@ -135,5 +161,86 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
     public void setRitrovamenti(List<Ritrovamento> ritrovamenti) {
         this.ritrovamenti = ritrovamenti;
         notifyDataSetChanged();
+    }
+
+    /**
+     * Seleziona o deseleziona un elemento della RecyclerView,
+     * terminando l'{@link ActionMode} nel caso non ne restino selezionati
+     *
+     * @param layout Il Layout contenente l'item della RecyclerView
+     * @param position Posizione dell'item nella RecyclerView
+     */
+    private void selectItem(View layout, Integer position) {
+        if (selectedItemsIndex.contains(position)) {
+            selectedItemsIndex.remove(position);
+            layout.setBackgroundColor(Color.WHITE);
+        } else {
+            selectedItemsIndex.add(position);
+            layout.setBackgroundColor(Color.LTGRAY);
+        }
+        int selected = selectedItemsIndex.size();
+        actionMode.setTitle(String.valueOf(selected));
+        if(selected == 0) {
+            actionMode.finish();
+            return;
+        }
+        /*Disabilito la possibilità di modificare nel caso la selezione sia multipla*/
+        MenuItem editItem = actionMode.getMenu().findItem(R.id.menu_context_edit);
+        editItem.setVisible(selected == 1);
+        editItem.setEnabled(selected == 1);
+    }
+
+
+
+    /**
+     * Custom {@link ActionMode.Callback} to manage a multiple selectable
+     * {@link RecyclerView} of {@link Ritrovamento}
+     */
+    private class ActionModeCallbacks implements ActionMode.Callback {
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            actionMode = mode;
+            multiSelect = true;
+            mode.getMenuInflater().inflate(R.menu.archive, menu);
+            mode.setTitle(String.valueOf(selectedItemsIndex.size()));
+            mode.setSubtitle(R.string.action_mode_selected);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.menu_context_edit:
+                    Intent intent = new Intent(context, EditFindActivity.class);
+                    intent.putExtra(Costanti.INTENT_FIND, ritrovamenti.get(selectedItemsIndex.get(0)));
+                    context.startActivity(intent);
+                    break;
+                case R.id.menu_context_send:
+                    //TODO generare il file
+                    Toast.makeText(context, "Si prega di pazientare :)", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.menu_context_delete:
+                    for (Integer intItem : selectedItemsIndex) {
+                        new AsyncTasks.ManageFindAsync(context, ritrovamenti.get(intItem)).execute(Costanti.DELETE);
+                    }
+                    break;
+            }
+            mode.finish();
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            multiSelect = false;
+            selectedItemsIndex.clear();
+            actionMode = null;
+            notifyDataSetChanged();
+        }
     }
 }

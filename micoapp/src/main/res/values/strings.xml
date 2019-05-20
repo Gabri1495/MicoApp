@@ -70,9 +70,21 @@
     <string name="channel_permissions_name">Permissions</string>
     <string name="channel_permissions_desc">More info about permission requested by app</string>
     <string name="error_location">Unexpected error during location retrieving</string>
-    <string name="intent_latlng" translatable="false">com.gsorrentino.micoapp.latlng</string>
     <string name="dialog_credentials">Remember to set your nickname, name and surname in settings!</string>
     <string name="ok">@android:string/ok</string>
     <string name="error_generic">A generic error occurred…</string>
     <string name="error_missing_field">You\'re missing some field</string>
+    <string name="action_mode_selected">selected items</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="lat">Latitude</string>
+    <string name="lng">Longitude</string>
+    <string name="error_date">Date or Time format is wrong</string>
+    <string name="create_find">Edit Find</string>
+    <string name="radio_insert">Insert</string>
+    <string name="radio_mushroom">Mushroom</string>
+    <string name="radio_date">Date</string>
+    <string name="order_on">"Order on: "</string>
 </resources>

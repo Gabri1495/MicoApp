@@ -54,7 +54,7 @@
     <string name="edit_find">Modifica Ritrovamento</string>
     <string name="save">Salva</string>
     <string name="info_open_source">Questa è un\'app open source</string>
-    <string name="info_credits">Rinraziamenti</string>
+    <string name="info_credits">Ringraziamenti</string>
     <string name="permission_explanation">Senza il Permesso Localizzazione quest\'app non può automaticamente identificare la tua posizione.\nDovrai selezionarla manualmente</string>
     <string name="permission_title">A cosa serve il permesso di Localizzazione?</string>
     <string name="channel_permissions_name">Permessi</string>
@@ -64,4 +64,17 @@
     <string name="ok">Ok</string>
     <string name="error_generic">Si è verificato un generico errore…</string>
     <string name="error_missing_field">Stai saltando dei campi</string>
+    <string name="action_mode_selected">elementi selezionati</string>
+    <string name="edit">Modifica</string>
+    <string name="delete">Cancella</string>
+    <string name="date">Data</string>
+    <string name="time">Orario</string>
+    <string name="lat">Latitudine</string>
+    <string name="lng">Longitudine</string>
+    <string name="error_date">Il formato della Data o dell\'Ora è sbagliato</string>
+    <string name="create_find">Crea Ritrovamento</string>
+    <string name="radio_date">Data</string>
+    <string name="radio_insert">Inserimento</string>
+    <string name="radio_mushroom">Fungo</string>
+    <string name="order_on">"Ordina per: "</string>
 </resources>

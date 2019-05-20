@@ -27,6 +27,12 @@ public interface RitrovamentoDao {
     @Query("SELECT * FROM ritrovamento")
     LiveData<List<Ritrovamento>> getAllRitrovamenti();
 
+    @Query("SELECT * FROM ritrovamento ORDER BY data DESC")
+    LiveData<List<Ritrovamento>> getAllRitrovamentiTimeDec();
+
+    @Query("SELECT * FROM ritrovamento ORDER BY fungo ASC")
+    LiveData<List<Ritrovamento>> getAllRitrovamentiFungoAsc();
+
     @Query("SELECT * FROM ritrovamento WHERE fungo = :fungo")
     Ritrovamento[] loadAllRitrovamentiFungo(String fungo);
 

@@ -26,4 +26,11 @@ public final class Costanti {
     public static final double LNG_DEFAULT = 11.327591;
     public static final float ZOOM_DEFAULT = 6f;
 
+    /*Intent Extra string*/
+    private static final String INTENT_BASE = "com.gsorrentino.micoapp";
+    public static final String INTENT_LATLNG = INTENT_BASE + ".latlng";
+    public static final String INTENT_FIND = INTENT_BASE + ".find";
+
+    public static final String CREATE_MODE = "create";
+    public static final String EDIT_MODE = "edit";
 }

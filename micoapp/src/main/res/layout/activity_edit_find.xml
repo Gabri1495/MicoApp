@@ -4,79 +4,304 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".EditFindActivity">
+
+    <TextView
+        android:id="@+id/edit_mushroom_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:labelFor="@id/edit_mushroom_editText"
+        android:text="@string/mushroom"
+        app:layout_constraintBottom_toTopOf="@+id/edit_quantity_label"
+        app:layout_constraintEnd_toStartOf="@+id/edit_mushroom_editText"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/edit_mushroom_editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:ems="10"
-        android:hint="@string/mushroom"
         android:inputType="textPersonName|textCapWords"
+        app:layout_constraintBottom_toTopOf="@+id/edit_quantity_editText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/edit_mushroom_label"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/edit_quantity_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/edit_quantity_editText"
+        android:text="@string/quantity"
+        app:layout_constraintBaseline_toBaselineOf="@+id/edit_quantity_editText"
+        app:layout_constraintEnd_toEndOf="@+id/edit_mushroom_label"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/edit_mushroom_label" />
 
     <EditText
         android:id="@+id/edit_quantity_editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:ems="10"
-        android:hint="@string/quantity"
         android:inputType="number"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/edit_month_editText"
+        app:layout_constraintEnd_toEndOf="@+id/edit_mushroom_editText"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/edit_mushroom_editText"
         app:layout_constraintTop_toBottomOf="@+id/edit_mushroom_editText" />
 
-    <EditText
-        android:id="@+id/edit_date_editText"
+    <TextView
+        android:id="@+id/edit_date_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:inputType="date"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_quantity_editText" />
+        android:labelFor="@id/edit_day_editText"
+        android:text="@string/date"
+        app:layout_constraintBaseline_toBaselineOf="@+id/edit_day_editText"
+        app:layout_constraintEnd_toEndOf="@+id/edit_quantity_label"
+        app:layout_constraintStart_toStartOf="@+id/edit_quantity_label" />
 
     <EditText
-        android:id="@+id/edit_time_editText"
+        android:id="@+id/edit_day_editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:ems="3"
+        android:hint="dd"
+        android:inputType="number"
+        android:maxLength="2"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@id/edit_month_editText"
+        app:layout_constraintEnd_toStartOf="@+id/date_separator_1"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="@+id/edit_quantity_editText"
+        app:layout_constraintTop_toTopOf="@id/edit_month_editText"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/date_separator_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="/"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_month_editText"
+        app:layout_constraintEnd_toStartOf="@+id/edit_month_editText"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toEndOf="@+id/edit_day_editText"
+        app:layout_constraintTop_toTopOf="@+id/edit_day_editText"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/edit_month_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="3"
+        android:hint="mm"
+        android:inputType="number"
+        android:maxLength="2"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/edit_minute_editText"
+        app:layout_constraintEnd_toStartOf="@+id/edit_year_editText"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toEndOf="@+id/date_separator_1"
+        app:layout_constraintTop_toBottomOf="@+id/edit_quantity_editText"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/date_separator_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="/"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_year_editText"
+        app:layout_constraintEnd_toStartOf="@+id/edit_year_editText"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toEndOf="@+id/edit_month_editText"
+        app:layout_constraintTop_toTopOf="@+id/edit_month_editText"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/edit_year_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="3"
+        android:hint="yyyy"
+        android:inputType="number"
+        android:maxLength="4"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_month_editText"
+        app:layout_constraintEnd_toEndOf="@+id/edit_quantity_editText"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toEndOf="@+id/date_separator_2"
+        app:layout_constraintTop_toTopOf="@+id/edit_month_editText"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/edit_time_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/edit_hour_editText"
+        android:text="@string/time"
+        app:layout_constraintBaseline_toBaselineOf="@+id/edit_hour_editText"
+        app:layout_constraintEnd_toEndOf="@+id/edit_date_label"
+        app:layout_constraintStart_toStartOf="@+id/edit_date_label" />
+
+    <EditText
+        android:id="@+id/edit_hour_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="3"
+        android:hint="hh"
+        android:inputType="number"
+        android:maxLength="2"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@id/edit_minute_editText"
+        app:layout_constraintEnd_toStartOf="@+id/time_separator_1"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="@+id/edit_day_editText"
+        app:layout_constraintTop_toTopOf="@id/edit_minute_editText"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/time_separator_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text=":"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_minute_editText"
+        app:layout_constraintEnd_toStartOf="@+id/edit_minute_editText"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toEndOf="@+id/edit_hour_editText"
+        app:layout_constraintTop_toTopOf="@+id/edit_hour_editText"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/edit_minute_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="3"
+        android:hint="mm"
+        android:inputType="number"
+        android:maxLength="2"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@id/edit_lat_editText"
+        app:layout_constraintEnd_toStartOf="@+id/time_separator_2"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toEndOf="@+id/time_separator_1"
+        app:layout_constraintTop_toBottomOf="@+id/edit_month_editText"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/time_separator_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text=":"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_second_editText"
+        app:layout_constraintEnd_toStartOf="@+id/edit_second_editText"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toEndOf="@+id/edit_minute_editText"
+        app:layout_constraintTop_toTopOf="@+id/edit_minute_editText"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/edit_second_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="3"
+        android:hint="ss"
+        android:inputType="number"
+        android:maxLength="2"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_minute_editText"
+        app:layout_constraintEnd_toEndOf="@+id/edit_year_editText"
+        app:layout_constraintStart_toEndOf="@+id/time_separator_2"
+        app:layout_constraintTop_toTopOf="@+id/edit_minute_editText"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/edit_lat_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/edit_lat_editText"
+        android:text="@string/lat"
+        app:layout_constraintBaseline_toBaselineOf="@+id/edit_lat_editText"
+        app:layout_constraintEnd_toEndOf="@+id/edit_time_label"
+        app:layout_constraintStart_toStartOf="@+id/edit_time_label" />
+
+    <EditText
+        android:id="@+id/edit_lat_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:ems="10"
-        android:inputType="time"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_date_editText" />
+        android:inputType="numberDecimal"
+        app:layout_constraintBottom_toTopOf="@+id/edit_lng_editText"
+        app:layout_constraintEnd_toEndOf="@+id/edit_second_editText"
+        app:layout_constraintStart_toStartOf="@+id/edit_hour_editText"
+        app:layout_constraintTop_toBottomOf="@id/edit_minute_editText" />
+
+    <TextView
+        android:id="@+id/edit_lng_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/edit_lng_editText"
+        android:text="@string/lng"
+        app:layout_constraintBaseline_toBaselineOf="@+id/edit_lng_editText"
+        app:layout_constraintEnd_toEndOf="@+id/edit_lat_label"
+        app:layout_constraintStart_toStartOf="@+id/edit_lat_label" />
+
+    <EditText
+        android:id="@+id/edit_lng_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        app:layout_constraintBottom_toTopOf="@+id/edit_note_editText"
+        app:layout_constraintEnd_toEndOf="@+id/edit_lat_editText"
+        app:layout_constraintStart_toStartOf="@+id/edit_lat_editText"
+        app:layout_constraintTop_toBottomOf="@+id/edit_lat_editText" />
+
+    <TextView
+        android:id="@+id/edit_note_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/edit_note_editText"
+        android:text="@string/note"
+        app:layout_constraintBaseline_toBaselineOf="@+id/edit_note_editText"
+        app:layout_constraintEnd_toEndOf="@+id/edit_lng_label"
+        app:layout_constraintStart_toStartOf="@+id/edit_lng_label" />
 
     <EditText
         android:id="@+id/edit_note_editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="24dp"
         android:ems="10"
         android:gravity="start|top"
-        android:hint="@string/note"
         android:inputType="textMultiLine|textCapSentences"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/edit_save_update_button"
+        app:layout_constraintEnd_toEndOf="@+id/edit_lng_editText"
+        app:layout_constraintStart_toStartOf="@+id/edit_lng_editText"
         app:layout_constraintTop_toBottomOf="@+id/edit_lng_editText" />
 
     <Button
-        android:id="@+id/edit_save_button"
+        android:id="@+id/edit_save_update_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -86,29 +311,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_note_editText" />
 
-    <EditText
-        android:id="@+id/edit_lat_editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:inputType="numberDecimal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_time_editText" />
-
-    <EditText
-        android:id="@+id/edit_lng_editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:inputType="numberDecimal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_lat_editText" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,15 +18,27 @@ public class RitrovamentoViewModel extends AndroidViewModel {
 
     private MicoAppRepository repository;
     private LiveData<List<Ritrovamento>> allRitrovamenti;
+    private LiveData<List<Ritrovamento>> allRitrovamentiTimeDec;
+    private LiveData<List<Ritrovamento>> allRitrovamentiFungoAsc;
 
     public RitrovamentoViewModel(Application application) {
         super(application);
         repository = new MicoAppRepository(application);
         allRitrovamenti = repository.getAllRitrovamenti();
+        allRitrovamentiTimeDec = repository.getAllRitrovamentiTimeDec();
+        allRitrovamentiFungoAsc = repository.getAllRitrovamentiFungoAsc();
     }
 
     public LiveData<List<Ritrovamento>> getAllRitrovamenti() {
         return allRitrovamenti;
+    }
+
+    public LiveData<List<Ritrovamento>> getAllRitrovamentiTimeDec() {
+        return allRitrovamentiTimeDec;
+    }
+
+    public LiveData<List<Ritrovamento>> getAllRitrovamentiFungoAsc() {
+        return allRitrovamentiFungoAsc;
     }
 
     public void insert (Ritrovamento ritrovamento) {

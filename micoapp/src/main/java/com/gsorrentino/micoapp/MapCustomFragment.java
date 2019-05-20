@@ -121,8 +121,8 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
             Intent intent = new Intent(getActivity(), EditFindActivity.class);
             /*Se è stato impostato un marker esso verrà usato per le coordinate,
              * altrimenti verrà recuperata la posizione attuale*/
-            intent.putExtra(getString(R.string.intent_latlng),
-                    marker != null ? marker.getPosition() : currentPosition);
+            intent.putExtra(Costanti.INTENT_LATLNG,
+                    marker != null ? marker.getPosition() : currentPosition == null ? new LatLng(0f, 0f) : currentPosition);
             startActivity(intent);
         });
 

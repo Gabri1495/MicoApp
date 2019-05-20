@@ -1,5 +1,8 @@
 package com.gsorrentino.micoapp.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Entity;
@@ -11,12 +14,13 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Objects;
 
 /**
  * Rappresenta il ritrovamento di un fungo da parte dell'utente
  */
 @Entity(indices={@Index(value={"nickname", "nome", "cognome", "data"}, unique=true)})
-public class Ritrovamento {
+public class Ritrovamento implements Parcelable {
     @PrimaryKey(autoGenerate = true)
     public int key;
     public double latitudine;
@@ -101,4 +105,56 @@ public class Ritrovamento {
             this.longitudine = coordinate.longitude;
         }
     }
+
+
+    /*Implementazioni di Parcelable*/
+
+    public Ritrovamento(Parcel parcel){
+        autore = new Utente(Objects.requireNonNull(parcel.readString()),
+                Objects.requireNonNull(parcel.readString()),
+                Objects.requireNonNull(parcel.readString()));
+        data = (Calendar) Objects.requireNonNull(parcel.readSerializable());
+        expanded = false;
+        fungo = Objects.requireNonNull(parcel.readString());
+        indirizzo = parcel.readString();
+        key = parcel.readInt();
+        latitudine = parcel.readDouble();
+        longitudine= parcel.readDouble();
+        note = parcel.readString();
+        pathImmagine = parcel.readString();
+        quantita = parcel.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(autore.nickname);
+        dest.writeString(autore.nome);
+        dest.writeString(autore.cognome);
+        dest.writeSerializable(data);
+        dest.writeString(fungo);
+        dest.writeString(indirizzo);
+        dest.writeInt(key);
+        dest.writeDouble(latitudine);
+        dest.writeDouble(longitudine);
+        dest.writeString(note);
+        dest.writeString(pathImmagine);
+        dest.writeInt(quantita);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Ritrovamento> CREATOR = new Creator<Ritrovamento>() {
+        @Override
+        public Ritrovamento createFromParcel(Parcel in) {
+            return new Ritrovamento(in);
+        }
+
+        @Override
+        public Ritrovamento[] newArray(int size) {
+            return new Ritrovamento[size];
+        }
+    };
 }
