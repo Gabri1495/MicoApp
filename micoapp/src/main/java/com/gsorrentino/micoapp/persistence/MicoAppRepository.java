@@ -25,6 +25,7 @@ class MicoAppRepository {
         this.application = new WeakReference<>(application);
     }
 
+
     LiveData<List<Ritrovamento>> getAllRitrovamenti() {
         return daoFind.getAllRitrovamenti();
     }
@@ -47,8 +48,25 @@ class MicoAppRepository {
         }
     }
 
+
     LiveData<List<Ricevuto>> getAllRicevuti() {
         return daoReceived.getAllRicevuti();
+    }
+
+    LiveData<List<Ricevuto>> getAllRicevutiFungoAsc() {
+        return daoReceived.getAllRicevutiFungoAsc();
+    }
+
+    LiveData<List<Ricevuto>> getAllRicevutiTimeDec() {
+        return daoReceived.getAllRicevutiTimeDec();
+    }
+
+    LiveData<List<Ricevuto>> getAllRicevutiTimeReceivedDec() {
+        return daoReceived.getAllRicevutiTimeRiceivedDec();
+    }
+
+    LiveData<List<Ricevuto>> getAllRicevutiUserAsc() {
+        return daoReceived.getAllRicevutiUserAsc();
     }
 
     void insertRicevuto(Ricevuto ricevuto) {

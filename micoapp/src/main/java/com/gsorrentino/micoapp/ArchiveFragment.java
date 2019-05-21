@@ -33,7 +33,6 @@ public class ArchiveFragment extends Fragment {
     private RitrovamentoListAdapter adapter;
     private SharedPreferences sharedPrefs;
     private RadioGroup radioGroup;
-    private LiveData<Ritrovamento> currentRitrovamenti;
 
 
     public ArchiveFragment() {}
@@ -58,7 +57,7 @@ public class ArchiveFragment extends Fragment {
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> manageRadioGroup(checkedId));
 
         sharedPrefs = Objects.requireNonNull(getActivity()).getSharedPreferences(Costanti.SHARED_PREFERENCES, 0);
-        int restored = sharedPrefs.getInt("radioSelection", R.id.archive_date_radioButton);
+        int restored = sharedPrefs.getInt("archiveRadioSelection", R.id.archive_date_radioButton);
 
         RecyclerView recyclerView = Objects.requireNonNull(getActivity()).findViewById(R.id.archive_recycler);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -80,11 +79,17 @@ public class ArchiveFragment extends Fragment {
         super.onPause();
         if(radioGroup != null) {
             SharedPreferences.Editor editor = sharedPrefs.edit();
-            editor.putInt("radioSelection", radioGroup.getCheckedRadioButtonId());
+            editor.putInt("archiveRadioSelection", radioGroup.getCheckedRadioButtonId());
             editor.apply();
         }
     }
 
+    /**
+     * Modifica il LiveData e relativo observer in relazione
+     * all'id ricevuto, riuscendo così ad avere diversi ordinamenti
+     *
+     * @param checkedId id del RadioButton selezionato
+     */
     private void manageRadioGroup(int checkedId){
         switch (checkedId) {
             case R.id.archive_insert_radioButton :

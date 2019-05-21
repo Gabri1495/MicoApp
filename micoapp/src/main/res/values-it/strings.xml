@@ -78,4 +78,5 @@
     <string name="radio_mushroom">Fungo</string>
     <string name="order_on">"Ordina per: "</string>
     <string name="date_autoSet">Data e Orario saranno automaticamente impostati basandosi sul momento del salvataggio</string>
+    <string name="received">Ricevuto</string>
 </resources>

@@ -88,4 +88,5 @@
     <string name="radio_date">Date</string>
     <string name="order_on">"Order on: "</string>
     <string name="date_autoSet">Date and Time will be automatically set based on save moment</string>
+    <string name="received">Received</string>
 </resources>

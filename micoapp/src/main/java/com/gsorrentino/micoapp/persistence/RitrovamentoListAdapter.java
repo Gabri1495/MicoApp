@@ -209,6 +209,7 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
             mode.getMenuInflater().inflate(R.menu.selection, menu);
             mode.setTitle(String.valueOf(selectedItemsIndex.size()));
             mode.setSubtitle(R.string.action_mode_selected);
+            /*Inibisco la possibilità di aprire il drawer con lo swipe*/
             ((DrawerLayout)activity.findViewById(R.id.drawer_layout))
                     .setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             return true;

@@ -1,9 +1,11 @@
 package com.gsorrentino.micoapp;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,6 +18,7 @@ import com.gsorrentino.micoapp.model.Ricevuto;
 import com.gsorrentino.micoapp.persistence.MicoAppDatabase;
 import com.gsorrentino.micoapp.persistence.RicevutoListAdapter;
 import com.gsorrentino.micoapp.persistence.RicevutoViewModel;
+import com.gsorrentino.micoapp.util.Costanti;
 
 import java.util.Objects;
 
@@ -25,7 +28,10 @@ import java.util.Objects;
  */
 public class HistoryFragment extends Fragment {
 
-    private MicoAppDatabase db;
+    private RicevutoViewModel ricevutoViewModel;
+    private RicevutoListAdapter adapter;
+    private SharedPreferences sharedPrefs;
+    private RadioGroup radioGroup;
 
 
     public HistoryFragment() {}
@@ -33,8 +39,6 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (db == null)
-            this.db = MicoAppDatabase.getInstance(getActivity(), false);
     }
 
     @Override
@@ -47,16 +51,56 @@ public class HistoryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        radioGroup = Objects.requireNonNull(getActivity()).findViewById(R.id.history_radioGroup);
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> manageRadioGroup(checkedId));
+
+        sharedPrefs = Objects.requireNonNull(getActivity()).getSharedPreferences(Costanti.SHARED_PREFERENCES, 0);
+        int restored = sharedPrefs.getInt("historyRadioSelection", R.id.archive_date_radioButton);
+
         RecyclerView recyclerView = Objects.requireNonNull(getActivity()).findViewById(R.id.history_recycler);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(llm);
         DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), llm.getOrientation());
         recyclerView.addItemDecoration(mDividerItemDecoration);
 
-        final RicevutoListAdapter adapter = new RicevutoListAdapter(getActivity());
+        adapter = new RicevutoListAdapter(getActivity());
         recyclerView.setAdapter(adapter);
 
-        RicevutoViewModel ricevutoViewModel = ViewModelProviders.of(this).get(RicevutoViewModel.class);
+        ricevutoViewModel = ViewModelProviders.of(this).get(RicevutoViewModel.class);
+        radioGroup.check(restored);
         ricevutoViewModel.getAllRicevuti().observe(this, adapter::setRicevuti);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        if(radioGroup != null) {
+            SharedPreferences.Editor editor = sharedPrefs.edit();
+            editor.putInt("historyRadioSelection", radioGroup.getCheckedRadioButtonId());
+            editor.apply();
+        }
+    }
+
+    /**
+     * Modifica il LiveData e relativo observer in relazione
+     * all'id ricevuto, riuscendo così ad avere diversi ordinamenti
+     *
+     * @param checkedId id del RadioButton selezionato
+     */
+    private void manageRadioGroup(int checkedId){
+        switch (checkedId) {
+            case R.id.history_date_radioButton :
+                ricevutoViewModel.getAllRicevutiTimeDec().observe(this, adapter::setRicevuti);
+                break;
+            case R.id.history_dateReceived_radioButton :
+                ricevutoViewModel.getAllRicevutiTimeReceivedDec().observe(this, adapter::setRicevuti);
+                break;
+            case R.id.history_nickname_radioButton :
+                ricevutoViewModel.getAllRicevutiUserAsc().observe(this, adapter::setRicevuti);
+                break;
+            case R.id.history_mushroom_radioButton :
+                ricevutoViewModel.getAllRicevutiFungoAsc().observe(this, adapter::setRicevuti);
+                break;
+        }
     }
 }
