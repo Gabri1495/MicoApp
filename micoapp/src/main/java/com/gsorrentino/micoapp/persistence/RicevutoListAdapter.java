@@ -1,7 +1,6 @@
 package com.gsorrentino.micoapp.persistence;
 
-import android.content.Context;
-import android.content.Intent;
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -15,12 +14,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.TooltipCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.gsorrentino.micoapp.EditFindActivity;
 import com.gsorrentino.micoapp.R;
 import com.gsorrentino.micoapp.model.Ricevuto;
-import com.gsorrentino.micoapp.model.Ritrovamento;
 import com.gsorrentino.micoapp.util.AsyncTasks;
 import com.gsorrentino.micoapp.util.Costanti;
 
@@ -49,7 +47,7 @@ public class RicevutoListAdapter extends RecyclerView.Adapter<RicevutoListAdapte
     }
 
 
-    private Context context;
+    private Activity activity;
     private final LayoutInflater mInflater;
     private List<Ricevuto> ricevuti = Collections.emptyList();
     private DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
@@ -59,9 +57,9 @@ public class RicevutoListAdapter extends RecyclerView.Adapter<RicevutoListAdapte
     private boolean multiSelect = false;
     private ArrayList<Integer> selectedItemsIndex = new ArrayList<>();
 
-    public RicevutoListAdapter(Context context) {
-        mInflater = LayoutInflater.from(context);
-        this.context = context;
+    public RicevutoListAdapter(Activity activity) {
+        mInflater = LayoutInflater.from(activity);
+        this.activity = activity;
     }
 
     @Override
@@ -161,11 +159,13 @@ public class RicevutoListAdapter extends RecyclerView.Adapter<RicevutoListAdapte
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             actionMode = mode;
             multiSelect = true;
-            mode.getMenuInflater().inflate(R.menu.archive, menu);
+            mode.getMenuInflater().inflate(R.menu.selection, menu);
             menu.removeItem(R.id.menu_context_edit);
             menu.removeItem(R.id.menu_context_send);
             mode.setTitle(String.valueOf(selectedItemsIndex.size()));
             mode.setSubtitle(R.string.action_mode_selected);
+            ((DrawerLayout)activity.findViewById(R.id.drawer_layout))
+                    .setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             return true;
         }
 
@@ -177,7 +177,7 @@ public class RicevutoListAdapter extends RecyclerView.Adapter<RicevutoListAdapte
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             for (Integer intItem : selectedItemsIndex) {
-                    new AsyncTasks.ManageReceivedAsync(context, ricevuti.get(intItem)).execute(Costanti.DELETE);
+                    new AsyncTasks.ManageReceivedAsync(activity, ricevuti.get(intItem)).execute(Costanti.DELETE);
                 }
                 mode.finish();
             return true;
@@ -188,6 +188,8 @@ public class RicevutoListAdapter extends RecyclerView.Adapter<RicevutoListAdapte
             multiSelect = false;
             selectedItemsIndex.clear();
             actionMode = null;
+            ((DrawerLayout)activity.findViewById(R.id.drawer_layout))
+                    .setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             notifyDataSetChanged();
         }
     }

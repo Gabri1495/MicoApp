@@ -1,5 +1,6 @@
 package com.gsorrentino.micoapp;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +19,8 @@ import androidx.recyclerview.widget.SimpleItemAnimator;
 import com.gsorrentino.micoapp.model.Ritrovamento;
 import com.gsorrentino.micoapp.persistence.RitrovamentoListAdapter;
 import com.gsorrentino.micoapp.persistence.RitrovamentoViewModel;
+import com.gsorrentino.micoapp.util.Costanti;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -30,6 +31,9 @@ public class ArchiveFragment extends Fragment {
 
     private RitrovamentoViewModel ritrovamentoViewModel;
     private RitrovamentoListAdapter adapter;
+    private SharedPreferences sharedPrefs;
+    private RadioGroup radioGroup;
+    private LiveData<Ritrovamento> currentRitrovamenti;
 
 
     public ArchiveFragment() {}
@@ -50,9 +54,12 @@ public class ArchiveFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RadioGroup radioGroup = Objects.requireNonNull(getActivity()).findViewById(R.id.archive_radioGroup);
+        radioGroup = Objects.requireNonNull(getActivity()).findViewById(R.id.archive_radioGroup);
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> manageRadioGroup(checkedId));
-    
+
+        sharedPrefs = Objects.requireNonNull(getActivity()).getSharedPreferences(Costanti.SHARED_PREFERENCES, 0);
+        int restored = sharedPrefs.getInt("radioSelection", R.id.archive_date_radioButton);
+
         RecyclerView recyclerView = Objects.requireNonNull(getActivity()).findViewById(R.id.archive_recycler);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(llm);
@@ -65,20 +72,29 @@ public class ArchiveFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         ritrovamentoViewModel = ViewModelProviders.of(this).get(RitrovamentoViewModel.class);
-        manageRadioGroup(radioGroup.getCheckedRadioButtonId());
-        ritrovamentoViewModel.getAllRitrovamenti().observe(this, adapter::setRitrovamenti);
+        radioGroup.check(restored);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        if(radioGroup != null) {
+            SharedPreferences.Editor editor = sharedPrefs.edit();
+            editor.putInt("radioSelection", radioGroup.getCheckedRadioButtonId());
+            editor.apply();
+        }
     }
 
     private void manageRadioGroup(int checkedId){
         switch (checkedId) {
             case R.id.archive_insert_radioButton :
-                ritrovamentoViewModel.getAllRitrovamenti().observe(this, adapter::setRitrovamenti);;
+                ritrovamentoViewModel.getAllRitrovamenti().observe(this, adapter::setRitrovamenti);
                 break;
             case R.id.archive_date_radioButton :
                 ritrovamentoViewModel.getAllRitrovamentiTimeDec().observe(this, adapter::setRitrovamenti);
                 break;
             case R.id.archive_mushroom_radioButton :
-                ritrovamentoViewModel.getAllRitrovamentiFungoAsc().observe(this, adapter::setRitrovamenti);;
+                ritrovamentoViewModel.getAllRitrovamentiFungoAsc().observe(this, adapter::setRitrovamenti);
                 break;
         }
     }

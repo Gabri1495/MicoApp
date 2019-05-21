@@ -1,6 +1,6 @@
 package com.gsorrentino.micoapp.persistence;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gsorrentino.micoapp.EditFindActivity;
@@ -59,7 +60,7 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
     }
 
 
-    private Context context;
+    private Activity activity;
     /*Cached copy of Ritrovamenti*/
     private List<Ritrovamento> ritrovamenti = Collections.emptyList();
     private final LayoutInflater mInflater;
@@ -70,9 +71,9 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
     private boolean multiSelect = false;
     private ArrayList<Integer> selectedItemsIndex = new ArrayList<>();
 
-    public RitrovamentoListAdapter(Context context) {
-        mInflater = LayoutInflater.from(context);
-        this.context = context;
+    public RitrovamentoListAdapter(Activity activity) {
+        mInflater = LayoutInflater.from(activity);
+        this.activity = activity;
     }
 
     @Override
@@ -139,10 +140,13 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
             String showDate = dateFormat.format(calendar.getTime());
             holder.dateTextView.setText(showDate);
 
-            if(current.note.isEmpty())
+            if(current.note.isEmpty()) {
                 holder.noteTextView.setVisibility(View.GONE);
-            else
+            }
+            else {
+                holder.noteTextView.setVisibility(View.VISIBLE);
                 holder.noteTextView.setText(current.note);
+            }
 
             // TODO Caricare l'immagine a partire dal path
         }
@@ -202,9 +206,11 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             actionMode = mode;
             multiSelect = true;
-            mode.getMenuInflater().inflate(R.menu.archive, menu);
+            mode.getMenuInflater().inflate(R.menu.selection, menu);
             mode.setTitle(String.valueOf(selectedItemsIndex.size()));
             mode.setSubtitle(R.string.action_mode_selected);
+            ((DrawerLayout)activity.findViewById(R.id.drawer_layout))
+                    .setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             return true;
         }
 
@@ -217,17 +223,17 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.menu_context_edit:
-                    Intent intent = new Intent(context, EditFindActivity.class);
+                    Intent intent = new Intent(activity, EditFindActivity.class);
                     intent.putExtra(Costanti.INTENT_FIND, ritrovamenti.get(selectedItemsIndex.get(0)));
-                    context.startActivity(intent);
+                    activity.startActivity(intent);
                     break;
                 case R.id.menu_context_send:
                     //TODO generare il file
-                    Toast.makeText(context, "Si prega di pazientare :)", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Si prega di pazientare :)", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.menu_context_delete:
                     for (Integer intItem : selectedItemsIndex) {
-                        new AsyncTasks.ManageFindAsync(context, ritrovamenti.get(intItem)).execute(Costanti.DELETE);
+                        new AsyncTasks.ManageFindAsync(activity, ritrovamenti.get(intItem)).execute(Costanti.DELETE);
                     }
                     break;
             }
@@ -240,6 +246,8 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
             multiSelect = false;
             selectedItemsIndex.clear();
             actionMode = null;
+            ((DrawerLayout)activity.findViewById(R.id.drawer_layout))
+                    .setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             notifyDataSetChanged();
         }
     }
