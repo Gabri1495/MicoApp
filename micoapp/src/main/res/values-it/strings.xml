@@ -81,4 +81,5 @@
     <string name="received">Ricevuto</string>
     <string name="show_search">Mostra il campo di ricerca</string>
     <string name="search">Cerca</string>
+    <string name="search_place">Cerca luogo</string>
 </resources>

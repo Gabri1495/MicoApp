@@ -67,7 +67,6 @@ public class HistoryFragment extends Fragment {
 
         ricevutoViewModel = ViewModelProviders.of(this).get(RicevutoViewModel.class);
         radioGroup.check(restored);
-        ricevutoViewModel.getAllRicevuti().observe(this, adapter::setRicevuti);
     }
 
     @Override
