@@ -6,53 +6,60 @@
     android:layout_height="match_parent"
     tools:activity=".HistoryFragment">
 
-    <RadioGroup
-        android:id="@+id/history_radioGroup"
+    <HorizontalScrollView
+        android:id="@+id/history_horizontal_scrollView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/history_recycler"
+        app:layout_constraintBottom_toTopOf="@+id/history_recycler"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
+        <RadioGroup
+            android:id="@+id/history_radioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/order_on" />
+            android:orientation="horizontal">
 
-        <RadioButton
-            android:id="@+id/history_dateReceived_radioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/received" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/order_on" />
 
-        <RadioButton
-            android:id="@+id/history_date_radioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/radio_date" />
+            <RadioButton
+                android:id="@+id/history_dateReceived_radioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/received" />
 
-        <RadioButton
-            android:id="@+id/history_mushroom_radioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/radio_mushroom" />
+            <RadioButton
+                android:id="@+id/history_date_radioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/radio_date" />
 
-        <RadioButton
-            android:id="@+id/history_nickname_radioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/nickname" />
-    </RadioGroup>
+            <RadioButton
+                android:id="@+id/history_mushroom_radioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/radio_mushroom" />
+
+            <RadioButton
+                android:id="@+id/history_nickname_radioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/nickname" />
+        </RadioGroup>
+
+    </HorizontalScrollView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/history_recycler"
@@ -63,7 +70,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/history_radioGroup"
+        app:layout_constraintTop_toBottomOf="@id/history_horizontal_scrollView"
         tools:listitem="@layout/history_recyclerview_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

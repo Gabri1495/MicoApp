@@ -147,6 +147,14 @@ public class RicevutoListAdapter extends RecyclerView.Adapter<RicevutoListAdapte
             actionMode.finish();
     }
 
+    /**
+     * Termina {@link ActionMode}
+     */
+    public void terminaActionMode(){
+        if(actionMode != null)
+            actionMode.finish();
+    }
+
 
 
     /**

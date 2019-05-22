@@ -89,4 +89,6 @@
     <string name="order_on">"Order on: "</string>
     <string name="date_autoSet">Date and Time will be automatically set based on save moment</string>
     <string name="received">Received</string>
+    <string name="show_search">Show search field</string>
+    <string name="search">Search</string>
 </resources>

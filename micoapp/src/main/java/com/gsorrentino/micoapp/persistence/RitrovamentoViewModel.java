@@ -20,6 +20,7 @@ public class RitrovamentoViewModel extends AndroidViewModel {
     private LiveData<List<Ritrovamento>> allRitrovamenti;
     private LiveData<List<Ritrovamento>> allRitrovamentiTimeDec;
     private LiveData<List<Ritrovamento>> allRitrovamentiFungoAsc;
+    private LiveData<List<Ritrovamento>> allRitrovamentiNicknameAsc;
 
     public RitrovamentoViewModel(Application application) {
         super(application);
@@ -27,6 +28,7 @@ public class RitrovamentoViewModel extends AndroidViewModel {
         allRitrovamenti = repository.getAllRitrovamenti();
         allRitrovamentiTimeDec = repository.getAllRitrovamentiTimeDec();
         allRitrovamentiFungoAsc = repository.getAllRitrovamentiFungoAsc();
+        allRitrovamentiNicknameAsc = repository.getAllRitrovamentiNicknameAsc();
     }
 
     public LiveData<List<Ritrovamento>> getAllRitrovamenti() {
@@ -39,6 +41,14 @@ public class RitrovamentoViewModel extends AndroidViewModel {
 
     public LiveData<List<Ritrovamento>> getAllRitrovamentiFungoAsc() {
         return allRitrovamentiFungoAsc;
+    }
+
+    public LiveData<List<Ritrovamento>> getAllRitrovamentiNicknameAsc() {
+        return allRitrovamentiNicknameAsc;
+    }
+
+    public LiveData<List<Ritrovamento>> getAllRitrovamentiLuogoSearch(String luogo) {
+        return repository.getAllRitrovamentiLuogoSearch(luogo);
     }
 
     public void insert (Ritrovamento ritrovamento) {

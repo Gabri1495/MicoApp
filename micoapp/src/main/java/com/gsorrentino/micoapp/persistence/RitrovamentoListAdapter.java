@@ -1,6 +1,7 @@
 package com.gsorrentino.micoapp.persistence;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -9,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -98,6 +100,13 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
             holder.itemView.setOnLongClickListener(view -> {
                 if(actionMode != null)
                     return false;
+                /*Chiudo la tastiera se aperta*/
+                View currentFocus = activity.getCurrentFocus();
+                if(currentFocus != null) {
+                    InputMethodManager inputMethodManager = (InputMethodManager) activity
+                            .getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+                }
                 ((AppCompatActivity)view.getContext()).startSupportActionMode(new ActionModeCallbacks());
                 selectItem(holder.itemView, position);
                 return true;
@@ -192,6 +201,14 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
         MenuItem editItem = actionMode.getMenu().findItem(R.id.menu_context_edit);
         editItem.setVisible(selected == 1);
         editItem.setEnabled(selected == 1);
+    }
+
+    /**
+     * Termina {@link ActionMode}
+     */
+    public void terminaActionMode(){
+        if(actionMode != null)
+            actionMode.finish();
     }
 
 

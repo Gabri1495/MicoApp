@@ -33,8 +33,11 @@ public interface RitrovamentoDao {
     @Query("SELECT * FROM ritrovamento ORDER BY fungo ASC")
     LiveData<List<Ritrovamento>> getAllRitrovamentiFungoAsc();
 
-    @Query("SELECT * FROM ritrovamento WHERE fungo = :fungo")
-    Ritrovamento[] loadAllRitrovamentiFungo(String fungo);
+    @Query("SELECT * FROM ritrovamento ORDER BY nickname ASC")
+    LiveData<List<Ritrovamento>> getAllRitrovamentiNicknameAsc();
+
+    @Query("SELECT * FROM ritrovamento WHERE indirizzo LIKE :luogo")
+    LiveData<List<Ritrovamento>> getAllRitrovamentiLuogoSearch(String luogo);
 
     @Query("DELETE FROM ritrovamento")
     void deleteAll();

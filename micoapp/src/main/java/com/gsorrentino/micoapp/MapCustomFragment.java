@@ -111,9 +111,9 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         sharedPrefs = Objects.requireNonNull(getActivity()).getSharedPreferences(Costanti.SHARED_PREFERENCES, 0);
-        lat = Double.longBitsToDouble(sharedPrefs.getLong("lat", Double.doubleToLongBits(Costanti.LAT_DEFAULT)));
-        lng = Double.longBitsToDouble(sharedPrefs.getLong("lng", Double.doubleToLongBits(Costanti.LNG_DEFAULT)));
-        zoom = sharedPrefs.getFloat("zoom", Costanti.ZOOM_DEFAULT);
+        lat = Double.longBitsToDouble(sharedPrefs.getLong(Costanti.LAT, Double.doubleToLongBits(Costanti.LAT_DEFAULT)));
+        lng = Double.longBitsToDouble(sharedPrefs.getLong(Costanti.LNG, Double.doubleToLongBits(Costanti.LNG_DEFAULT)));
+        zoom = sharedPrefs.getFloat(Costanti.ZOOM, Costanti.ZOOM_DEFAULT);
 
         FloatingActionButton fab = Objects.requireNonNull(getActivity()).findViewById(R.id.fab);
         fab.setOnClickListener(view1 -> {
@@ -153,9 +153,9 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
         if(mMap != null) {
             CameraPosition tmpPos = mMap.getCameraPosition();
             SharedPreferences.Editor editor = sharedPrefs.edit();
-            editor.putLong("lat", Double.doubleToRawLongBits(tmpPos.target.latitude));
-            editor.putLong("lng", Double.doubleToRawLongBits(tmpPos.target.longitude));
-            editor.putFloat("zoom", tmpPos.zoom);
+            editor.putLong(Costanti.LAT, Double.doubleToRawLongBits(tmpPos.target.latitude));
+            editor.putLong(Costanti.LNG, Double.doubleToRawLongBits(tmpPos.target.longitude));
+            editor.putFloat(Costanti.ZOOM, tmpPos.zoom);
             editor.apply();
         }
         fusedLocationClient.removeLocationUpdates(locationCallback);

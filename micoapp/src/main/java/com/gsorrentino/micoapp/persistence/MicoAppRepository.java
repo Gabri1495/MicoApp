@@ -34,8 +34,16 @@ class MicoAppRepository {
         return daoFind.getAllRitrovamentiTimeDec();
     }
 
+    LiveData<List<Ritrovamento>> getAllRitrovamentiNicknameAsc() {
+        return daoFind.getAllRitrovamentiNicknameAsc();
+    }
+
     LiveData<List<Ritrovamento>> getAllRitrovamentiFungoAsc() {
         return daoFind.getAllRitrovamentiFungoAsc();
+    }
+
+    LiveData<List<Ritrovamento>> getAllRitrovamentiLuogoSearch(String luogo) {
+        return daoFind.getAllRitrovamentiLuogoSearch(luogo);
     }
 
      /*You must call this on a non-UI thread or your app will crash.

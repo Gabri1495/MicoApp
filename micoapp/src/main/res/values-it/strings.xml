@@ -79,4 +79,6 @@
     <string name="order_on">"Ordina per: "</string>
     <string name="date_autoSet">Data e Orario saranno automaticamente impostati basandosi sul momento del salvataggio</string>
     <string name="received">Ricevuto</string>
+    <string name="show_search">Mostra il campo di ricerca</string>
+    <string name="search">Cerca</string>
 </resources>

@@ -9,7 +9,14 @@ public final class Costanti {
     public static final String REMOVE_FINDS = "removeFinds";
     public static final String REMOVE_RECEIVED = "removeReceived";
 
+    /*Shared Preferences*/
     public static final String SHARED_PREFERENCES = "pref";
+    public static final String LAT = "lat";
+    public static final String LNG = "lng";
+    public static final String ZOOM = "zoom";
+    public static final String HISTORY_RADIO_SELECTION = "historyRadioSelection";
+    public static final String ARCHIVE_RADIO_SELECTION = "archiveRadioSelection";
+    public static final String ARCHIVE_SEARCH_OPEN = "archiveSearchOpen";
 
     /*Return codes from callbacks*/
     public static final int REQUEST_ACCESS_FINE_LOCATION_PERMISSIONS = 1;

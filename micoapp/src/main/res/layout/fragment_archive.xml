@@ -2,50 +2,102 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/archive_constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:activity=".ArchiveFragment">
 
-    <RadioGroup
-        android:id="@+id/archive_radioGroup"
+    <HorizontalScrollView
+        android:id="@+id/archive_horizontal_scrollView"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@id/archive_arrow_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RadioGroup
+            android:id="@+id/archive_radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/order_on" />
+
+            <RadioButton
+                android:id="@+id/archive_date_radioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/radio_date" />
+
+            <RadioButton
+                android:id="@+id/archive_mushroom_radioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/radio_mushroom" />
+
+            <RadioButton
+                android:id="@+id/archive_nickname_radioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/nickname" />
+        </RadioGroup>
+
+    </HorizontalScrollView>
+
+    <ImageButton
+        android:id="@+id/archive_arrow_button"
+        android:layout_width="35dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="#00000000"
+        android:contentDescription="@string/show_search"
+        android:src="@drawable/ic_arrow_drop_up"
+        app:layout_constraintBottom_toBottomOf="@+id/archive_horizontal_scrollView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/archive_horizontal_scrollView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/archive_search_view"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/archive_recycler"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:maxLines="1"
+        android:textSize="12sp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toStartOf="@+id/archive_search_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/archive_horizontal_scrollView"
+        tools:ignore="LabelFor,UnusedAttribute" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/order_on" />
-
-        <RadioButton
-            android:id="@+id/archive_insert_radioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/radio_insert" />
-
-        <RadioButton
-            android:id="@+id/archive_date_radioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/radio_date" />
-
-        <RadioButton
-            android:id="@+id/archive_mushroom_radioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/radio_mushroom" />
-    </RadioGroup>
+    <ImageButton
+        android:id="@+id/archive_search_button"
+        android:layout_width="35dp"
+        android:layout_height="0dp"
+        android:background="#00000000"
+        android:contentDescription="@string/search"
+        android:src="@drawable/ic_search"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/archive_search_view"
+        app:layout_constraintEnd_toEndOf="@+id/archive_arrow_button"
+        app:layout_constraintStart_toStartOf="@+id/archive_arrow_button"
+        app:layout_constraintTop_toTopOf="@+id/archive_search_view" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/archive_recycler"
@@ -56,6 +108,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/archive_radioGroup"
+        app:layout_constraintTop_toBottomOf="@id/archive_search_view"
         tools:listitem="@layout/archive_recyclerview_item" />
 </androidx.constraintlayout.widget.ConstraintLayout>

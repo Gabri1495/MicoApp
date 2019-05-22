@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gsorrentino.micoapp.model.Ricevuto;
-import com.gsorrentino.micoapp.persistence.MicoAppDatabase;
 import com.gsorrentino.micoapp.persistence.RicevutoListAdapter;
 import com.gsorrentino.micoapp.persistence.RicevutoViewModel;
 import com.gsorrentino.micoapp.util.Costanti;
@@ -55,7 +54,7 @@ public class HistoryFragment extends Fragment {
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> manageRadioGroup(checkedId));
 
         sharedPrefs = Objects.requireNonNull(getActivity()).getSharedPreferences(Costanti.SHARED_PREFERENCES, 0);
-        int restored = sharedPrefs.getInt("historyRadioSelection", R.id.archive_date_radioButton);
+        int restored = sharedPrefs.getInt(Costanti.HISTORY_RADIO_SELECTION, R.id.archive_date_radioButton);
 
         RecyclerView recyclerView = Objects.requireNonNull(getActivity()).findViewById(R.id.history_recycler);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -76,7 +75,7 @@ public class HistoryFragment extends Fragment {
         super.onPause();
         if(radioGroup != null) {
             SharedPreferences.Editor editor = sharedPrefs.edit();
-            editor.putInt("historyRadioSelection", radioGroup.getCheckedRadioButtonId());
+            editor.putInt(Costanti.HISTORY_RADIO_SELECTION, radioGroup.getCheckedRadioButtonId());
             editor.apply();
         }
     }
@@ -88,6 +87,7 @@ public class HistoryFragment extends Fragment {
      * @param checkedId id del RadioButton selezionato
      */
     private void manageRadioGroup(int checkedId){
+        adapter.terminaActionMode();
         switch (checkedId) {
             case R.id.history_date_radioButton :
                 ricevutoViewModel.getAllRicevutiTimeDec().observe(this, adapter::setRicevuti);
