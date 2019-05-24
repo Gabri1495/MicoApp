@@ -12,8 +12,6 @@ import android.widget.ImageButton;
 import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -150,28 +148,21 @@ public class ArchiveFragment extends Fragment implements View.OnClickListener {
      * l'interfaccia di ricerca dei {@link Ritrovamento} in
      * {@link ArchiveFragment}
      *
-     * @param open Interfaccia visibile
+     * @param open Visibilità interfaccia di ricerca
      */
     private void manageArrowButton(boolean open){
-        ConstraintLayout constraintLayout = Objects.requireNonNull(getActivity()).findViewById(R.id.archive_constraintLayout);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-
         if(open){
             Objects.requireNonNull(getActivity()).findViewById(R.id.archive_search_view).setVisibility(View.VISIBLE);
             Objects.requireNonNull(getActivity()).findViewById(R.id.archive_search_button).setVisibility(View.VISIBLE);
             ((ImageButton)Objects.requireNonNull(getActivity()).findViewById(R.id.archive_arrow_button))
                     .setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_drop_up));
-            constraintSet.connect(R.id.archive_recycler,ConstraintSet.TOP,R.id.archive_search_view,ConstraintSet.BOTTOM,0);
         }
         else{
             Objects.requireNonNull(getActivity()).findViewById(R.id.archive_search_view).setVisibility(View.GONE);
             Objects.requireNonNull(getActivity()).findViewById(R.id.archive_search_button).setVisibility(View.GONE);
             ((ImageButton)Objects.requireNonNull(getActivity()).findViewById(R.id.archive_arrow_button))
                     .setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_drop_down));
-            constraintSet.connect(R.id.archive_recycler,ConstraintSet.TOP,R.id.archive_horizontal_scrollView,ConstraintSet.BOTTOM,0);
         }
-        constraintSet.applyTo(constraintLayout);
         searchOpen = open;
     }
 

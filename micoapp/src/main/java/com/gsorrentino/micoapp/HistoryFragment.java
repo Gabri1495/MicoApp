@@ -54,7 +54,7 @@ public class HistoryFragment extends Fragment {
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> manageRadioGroup(checkedId));
 
         sharedPrefs = Objects.requireNonNull(getActivity()).getSharedPreferences(Costanti.SHARED_PREFERENCES, 0);
-        int restored = sharedPrefs.getInt(Costanti.HISTORY_RADIO_SELECTION, R.id.archive_date_radioButton);
+        int restored = sharedPrefs.getInt(Costanti.HISTORY_RADIO_SELECTION, R.id.history_date_radioButton);
 
         RecyclerView recyclerView = Objects.requireNonNull(getActivity()).findViewById(R.id.history_recycler);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
