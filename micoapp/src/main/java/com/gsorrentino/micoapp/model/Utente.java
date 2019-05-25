@@ -2,10 +2,12 @@ package com.gsorrentino.micoapp.model;
 
 import androidx.annotation.NonNull;
 
+import java.io.Serializable;
+
 /**
  * Un persona definita da nickname, nome e cognome che ha trovato un fungo.
  */
-public class Utente {
+public class Utente implements Serializable {
     @NonNull
     public String nickname;
     @NonNull

@@ -1,6 +1,7 @@
 package com.gsorrentino.micoapp.util;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteConstraintException;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -101,6 +102,7 @@ public class AsyncTasks {
         private MicoAppDatabase db;
         private Ritrovamento find;
         private final WeakReference<Context> contextRef;
+        private boolean error = false;
 
         /**
          * {@link AsyncTask} per gestire un {@link Ritrovamento}.
@@ -117,18 +119,22 @@ public class AsyncTasks {
         }
 
         @Override
-        protected Void doInBackground(final String... params) {
+        protected Void doInBackground(final String... mode) {
             RitrovamentoDao dao = db.ritrovamentoDao();
-            switch (params[0]) {
-                case Costanti.INSERT:
-                    dao.insertRitrovamento(find);
-                    break;
-                case Costanti.UPDATE:
-                    dao.updateRitrovamento(find);
-                    break;
-                case Costanti.DELETE:
-                    dao.deleteRitrovamento(find);
-                    break;
+            try {
+                switch (mode[0]) {
+                    case Costanti.INSERT:
+                        dao.insertRitrovamento(find);
+                        break;
+                    case Costanti.UPDATE:
+                        dao.updateRitrovamento(find);
+                        break;
+                    case Costanti.DELETE:
+                        dao.deleteRitrovamento(find);
+                        break;
+                }
+            }catch (SQLiteConstraintException e){
+                error = true;
             }
             return null;
         }
@@ -138,7 +144,10 @@ public class AsyncTasks {
             super.onPostExecute(result);
             Context context = contextRef.get();
             if(context != null) {
-                Toast.makeText(context, R.string.success_operation, Toast.LENGTH_SHORT).show();
+                if(!error)
+                    Toast.makeText(context, R.string.success_operation, Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(context, R.string.error_find_already_saved, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -150,6 +159,7 @@ public class AsyncTasks {
         private MicoAppDatabase db;
         private Ricevuto received;
         private final WeakReference<Context> contextRef;
+        private boolean error = false;
 
         /**
          * {@link AsyncTask} per gestire un {@link Ricevuto}.
@@ -167,18 +177,22 @@ public class AsyncTasks {
         }
 
         @Override
-        protected Void doInBackground(final String... params) {
+        protected Void doInBackground(final String... mode) {
             RicevutoDao dao = db.ricevutoDao();
-            switch (params[0]) {
-                case Costanti.INSERT:
-                    dao.insertRicevuto(received);
-                    break;
-                case Costanti.UPDATE:
-                    dao.updateRicevuto(received);
-                    break;
-                case Costanti.DELETE:
-                    dao.deleteRicevuto(received);
-                    break;
+            try {
+                switch (mode[0]) {
+                    case Costanti.INSERT:
+                        dao.insertRicevuto(received);
+                        break;
+                    case Costanti.UPDATE:
+                        dao.updateRicevuto(received);
+                        break;
+                    case Costanti.DELETE:
+                        dao.deleteRicevuto(received);
+                        break;
+                }
+            }catch (SQLiteConstraintException e){
+                error = true;
             }
             return null;
         }
@@ -188,7 +202,10 @@ public class AsyncTasks {
             super.onPostExecute(result);
             Context context = contextRef.get();
             if(context != null) {
-                Toast.makeText(context, R.string.success_operation, Toast.LENGTH_SHORT).show();
+                if(!error)
+                    Toast.makeText(context, R.string.success_operation, Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(context, R.string.error_received_already_saved, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -214,8 +231,8 @@ public class AsyncTasks {
         }
 
         @Override
-        protected Void doInBackground(final String... params) {
-            switch(params[0]){
+        protected Void doInBackground(final String... mode) {
+            switch(mode[0]){
                 case Costanti.REMOVE_FINDS:
                     db.ritrovamentoDao().deleteAll();
                     break;

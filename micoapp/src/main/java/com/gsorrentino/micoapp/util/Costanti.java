@@ -21,9 +21,12 @@ public final class Costanti {
     /*Return codes from callbacks*/
     public static final int REQUEST_ACCESS_FINE_LOCATION_PERMISSIONS = 1;
     public static final int REQUEST_CHECK_LOCALIZATION_SETTINGS = 2;
+    public static final int REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSIONS = 3;
+    public static final int REQUEST_READ_FILE = 4;
 
     /*Notifications IDs*/
-    public static final int PERMISSION_NOTIFICATION_ID = 1;
+    public static final int PERMISSION_LOCALIZATION_NOTIFICATION_ID = 1;
+    public static final int PERMISSION_STORAGE_NOTIFICATION_ID = 2;
 
     /*Channels*/
     public static final String PERMISSION_CHANNEL_ID = "Permissions";

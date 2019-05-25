@@ -12,7 +12,7 @@
     <string name="menu_home">Home</string>
     <string name="menu_map">Mappa</string>
     <string name="menu_memories">Ricordi</string>
-    <string name="menu_send">Invia</string>
+    <string name="menu_receive">Ricevi</string>
     <string name="menu_statistics">Statistiche</string>
     <string name="email_subject">"Assistenza per "</string>
     <string name="email_text">Inglese ed Italiano sono le lingue preferite, altrimenti verrà usato Google Translate.\nCancellare questa parte prima di spedire ;)</string>
@@ -55,8 +55,8 @@
     <string name="save">Salva</string>
     <string name="info_open_source">Questa è un\'app open source</string>
     <string name="info_credits">Ringraziamenti</string>
-    <string name="permission_explanation">Senza il Permesso Localizzazione quest\'app non può automaticamente identificare la tua posizione.\nDovrai selezionarla manualmente</string>
-    <string name="permission_title">A cosa serve il permesso di Localizzazione?</string>
+    <string name="permission_loc_explanation">Senza il Permesso Localizzazione quest\'app non può automaticamente identificare la tua posizione.\nDovrai selezionarla manualmente</string>
+    <string name="permission_loc_title">A cosa serve il permesso di Localizzazione?</string>
     <string name="channel_permissions_name">Permessi</string>
     <string name="channel_permissions_desc">Maggiori informazioni riguardo ai permessi richiesti dall\'app</string>
     <string name="error_location">Errore imprevisto durante il recupero della posizione</string>
@@ -82,4 +82,15 @@
     <string name="show_search">Mostra il campo di ricerca</string>
     <string name="search">Cerca</string>
     <string name="search_place">Cerca luogo</string>
+    <string name="permission_stor_title">A cosa serve il permesso di Archiviazione?</string>
+    <string name="permission_stor_explanation">Senza il Permesso Archiviazione quest\'app non potrà esportare i tuoi Ritrovamenti sotto forma di file.\nNon avrai la possibilità di esportare e condividere i Ritrovamenti</string>
+    <string name="error_storage_not_writable">Fallimento a causa della Memoria Esterna non scrivibile!</string>
+    <string name="mushrooms">Funghi</string>
+    <string name="error_file_creation_open">Impossibile aprire o creare il file</string>
+    <string name="error_io">Si è verificato un errore durante le operazioni di I/O!</string>
+    <string name="error_storage_not_readable">Fallimento a causa della Memoria Esterna non leggibile!</string>
+    <string name="receive_select">Seleziona file</string>
+    <string name="error_find_already_saved">Questo Ritrovamento è già salvato nel database!</string>
+    <string name="error_received_already_saved">Questo Ricevuto è già salvato nel database!</string>
+    <string name="receive_description">Seleziona un file .micoapp.\nQuando esporti un ritrovamento il suo file viene salvato in Documenti/MicoApp</string>
 </resources>

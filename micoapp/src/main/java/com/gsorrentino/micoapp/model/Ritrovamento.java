@@ -12,6 +12,7 @@ import androidx.room.PrimaryKey;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Objects;
@@ -20,7 +21,7 @@ import java.util.Objects;
  * Rappresenta il ritrovamento di un fungo da parte dell'utente
  */
 @Entity(indices={@Index(value={"nickname", "nome", "cognome", "data"}, unique=true)})
-public class Ritrovamento implements Parcelable {
+public class Ritrovamento implements Parcelable, Serializable {
     @PrimaryKey(autoGenerate = true)
     public int key;
     public double latitudine;

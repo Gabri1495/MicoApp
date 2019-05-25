@@ -1,7 +1,9 @@
 package com.gsorrentino.micoapp;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,9 @@ import android.widget.ImageButton;
 import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -47,6 +52,7 @@ public class ArchiveFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        checkManageStoragePermissions();
         searchOpen = true;
     }
 
@@ -173,5 +179,34 @@ public class ArchiveFragment extends Fragment implements View.OnClickListener {
         InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getActivity())
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getActivity().findViewById(R.id.archive_search_view).getWindowToken(), 0);
+    }
+
+    /**
+     * Controlla se il permesso di Scrittura sia concesso o meno.
+     * Nel caso non lo sia provvede a richiederlo ed eventualmente mostra notifica
+     * informativa sull'utilizzo che viene fatto del permesso.
+     */
+    private void checkManageStoragePermissions() {
+        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            /*Permission is not granted. Should we show an explanation?*/
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), Costanti.PERMISSION_CHANNEL_ID)
+                        .setSmallIcon(R.drawable.ic_menu_archive)
+                        .setContentTitle(getString(R.string.permission_stor_title))
+                        .setContentText(getString(R.string.permission_stor_explanation))
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.permission_stor_explanation)))
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                NotificationManagerCompat.from(getActivity()).notify(Costanti.PERMISSION_STORAGE_NOTIFICATION_ID, builder.build());
+            }
+            /*No explanation needed; request the permission*/
+            /*La risposta sarà inviata in callback a questo fragment*/
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    Costanti.REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSIONS);
+        }
     }
 }

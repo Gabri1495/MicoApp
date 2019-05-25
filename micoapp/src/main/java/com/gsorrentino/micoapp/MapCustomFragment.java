@@ -224,7 +224,7 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
     /**
      * Controlla se il permesso di Localizzazione sia concesso o meno.
      * Nel caso non lo sia provvede a richiederlo ed eventualmente mostra notifica
-     * informativa sull'utilizzo che viene fatto del permesso;
+     * informativa sull'utilizzo che viene fatto del permesso.
      * Nel caso sia invece concesso abilita il pulsante nella {@link GoogleMap} per
      * ottenere la posizione corrente
      *
@@ -241,11 +241,11 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
 
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), Costanti.PERMISSION_CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_menu_map)
-                        .setContentTitle(getString(R.string.permission_title))
-                        .setContentText(getString(R.string.permission_explanation))
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.permission_explanation)))
+                        .setContentTitle(getString(R.string.permission_loc_title))
+                        .setContentText(getString(R.string.permission_loc_explanation))
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.permission_loc_explanation)))
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-                NotificationManagerCompat.from(getActivity()).notify(Costanti.PERMISSION_NOTIFICATION_ID, builder.build());
+                NotificationManagerCompat.from(getActivity()).notify(Costanti.PERMISSION_LOCALIZATION_NOTIFICATION_ID, builder.build());
             }
             /*No explanation needed; request the permission*/
             /*La risposta sarà inviata in callback a questo fragment*/

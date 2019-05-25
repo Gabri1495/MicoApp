@@ -13,7 +13,7 @@
     <string name="menu_memories">Memories</string>
     <string name="menu_statistics">Statistics</string>
     <string name="menu_communicate">Communicate</string>
-    <string name="menu_send">Send</string>
+    <string name="menu_receive">Receive</string>
     <string name="menu_history">History</string>
     <string name="email_subject">Support for</string>
     <string name="email_text">English and Italian are the favorite languages, otherwise Google Translate will be used.\nDelete this part before send ;)</string>
@@ -65,8 +65,8 @@
     <string name="save">Save</string>
     <string name="info_open_source">This is an open source app</string>
     <string name="info_credits">Credits</string>
-    <string name="permission_explanation">Without Location Permission this app can not automatically detect your position.\nYou will have to select it manually</string>
-    <string name="permission_title">What is Location Permission for?</string>
+    <string name="permission_loc_explanation">Without Location Permission this app can not automatically detect your position.\nYou will have to select it manually</string>
+    <string name="permission_loc_title">What is Location Permission for?</string>
     <string name="channel_permissions_name">Permissions</string>
     <string name="channel_permissions_desc">More info about permission requested by app</string>
     <string name="error_location">Unexpected error during location retrieving</string>
@@ -92,4 +92,15 @@
     <string name="show_search">Show search field</string>
     <string name="search">Search</string>
     <string name="search_place">Search place</string>
+    <string name="permission_stor_title">What is Storage Permission for?</string>
+    <string name="permission_stor_explanation">Without Storage Permission this app can not export Finds as a file.\nYou will not have the possibility to export and share your Finds</string>
+    <string name="error_storage_not_writable">Failure cause External Storage not writable!</string>
+    <string name="mushrooms">Mushrooms</string>
+    <string name="error_file_creation_open">It is not possible to create or open the file</string>
+    <string name="error_io">An error occurred during I/O operations!</string>
+    <string name="error_storage_not_readable">Failure cause External Storage not readable!</string>
+    <string name="receive_select">Select file</string>
+    <string name="error_find_already_saved">This Find is already saved in database!</string>
+    <string name="error_received_already_saved">This Received is already saved in database!</string>
+    <string name="receive_description">Select a .micoapp file.\nWhen you export a Find its file will be saved in Documents/MicoApp</string>
 </resources>

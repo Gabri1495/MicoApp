@@ -39,9 +39,9 @@
         <menu>
             <group android:checkableBehavior="single">
                 <item
-                    android:id="@+id/menu_send"
-                    android:icon="@drawable/ic_menu_send"
-                    android:title="@string/menu_send" />
+                    android:id="@+id/menu_receive"
+                    android:icon="@drawable/ic_menu_receive"
+                    android:title="@string/menu_receive" />
                 <item
                     android:id="@+id/menu_history"
                     android:icon="@drawable/ic_menu_history"

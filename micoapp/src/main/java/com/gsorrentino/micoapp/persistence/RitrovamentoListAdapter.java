@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +29,7 @@ import com.gsorrentino.micoapp.R;
 import com.gsorrentino.micoapp.model.Ritrovamento;
 import com.gsorrentino.micoapp.util.AsyncTasks;
 import com.gsorrentino.micoapp.util.Costanti;
+import com.gsorrentino.micoapp.util.ImportExportRitrovamentoManager;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -242,12 +244,14 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
             switch (item.getItemId()) {
                 case R.id.menu_context_edit:
                     Intent intent = new Intent(activity, EditFindActivity.class);
-                    intent.putExtra(Costanti.INTENT_FIND, ritrovamenti.get(selectedItemsIndex.get(0)));
+                    intent.putExtra(Costanti.INTENT_FIND, (Parcelable) ritrovamenti.get(selectedItemsIndex.get(0)));
                     activity.startActivity(intent);
                     break;
                 case R.id.menu_context_send:
-                    //TODO generare il file
-                    Toast.makeText(activity, "Si prega di pazientare :)", Toast.LENGTH_SHORT).show();
+                    ImportExportRitrovamentoManager saver = new ImportExportRitrovamentoManager();
+                    for (Integer intItem : selectedItemsIndex) {
+                        saver.exportRitrovamento(activity, ritrovamenti.get(intItem));
+                    }
                     break;
                 case R.id.menu_context_delete:
                     for (Integer intItem : selectedItemsIndex) {

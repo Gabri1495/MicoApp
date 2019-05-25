@@ -35,8 +35,7 @@ public class MainActivity extends AppCompatActivity
         HomeFragment.OnFragmentInteractionListener,
         EncyclopediaFragment.OnFragmentInteractionListener,
         MemoriesFragment.OnFragmentInteractionListener,
-        StatisticsFragment.OnFragmentInteractionListener,
-        SendFragment.OnFragmentInteractionListener {
+        StatisticsFragment.OnFragmentInteractionListener {
 
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
@@ -228,8 +227,8 @@ public class MainActivity extends AppCompatActivity
             case R.id.menu_settings:
                 newFragment = new SettingsFragment();
                 break;
-            case R.id.menu_send:
-                newFragment = new SendFragment();
+            case R.id.menu_receive:
+                newFragment = new ReceiveFragment();
                 break;
             case R.id.menu_history:
                 newFragment = new HistoryFragment();
