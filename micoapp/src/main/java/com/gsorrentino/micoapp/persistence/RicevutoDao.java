@@ -8,7 +8,9 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.gsorrentino.micoapp.model.Ricevuto;
+import com.gsorrentino.micoapp.model.Utente;
 
+import java.util.Calendar;
 import java.util.List;
 
 @Dao
@@ -39,8 +41,9 @@ public interface RicevutoDao {
     @Query("SELECT * FROM ricevuto ORDER BY nickname ASC")
     LiveData<List<Ricevuto>> getAllRicevutiUserAsc();
 
-    @Query("SELECT * FROM ricevuto WHERE fungo = :fungo")
-    Ricevuto[] loadAllRicevutiFungo(String fungo);
+    @Query("SELECT * FROM ricevuto WHERE nickname = :nickname AND nome = :nome " +
+            "AND cognome = :cognome AND data = :data")
+    Ricevuto getRicevuto(String nickname, String nome, String cognome, Calendar data);
 
     @Query("DELETE FROM ricevuto")
     void deleteAll();

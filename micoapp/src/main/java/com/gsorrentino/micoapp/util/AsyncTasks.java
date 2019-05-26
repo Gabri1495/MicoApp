@@ -252,4 +252,84 @@ public class AsyncTasks {
             }
         }
     }
+
+
+
+    public static class ImportFindAsync extends AsyncTask<Void, Void, Void> {
+
+        private MicoAppDatabase db;
+        private final WeakReference<Context> contextRef;
+        private Ritrovamento find;
+        /* 1 indica il successo dell'operazione
+        *  2 indica l'aggiunta del Ritrovamento e l'aggiornamento del Ricevuto
+         * 3 indica il fallimento dell'operazione */
+        private int resultCode;
+
+        /**
+         * {@link AsyncTask} per importare un {@link Ritrovamento}
+         *  dopo aver adeguatamente controllato il database.
+         *
+         * @param context Usato per recuperare istanza DB e mostrare Toast
+         * @param find Elemento da importare
+         */
+        public ImportFindAsync(Context context, Ritrovamento find) {
+            this.find = find;
+            contextRef = new WeakReference<>(context);
+            db = MicoAppDatabase.getInstance(context, false);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            resultCode = 0;
+            Ricevuto received = new Ricevuto(find.data, find.fungo, find.autore);
+
+            Ritrovamento findInDB = db.ritrovamentoDao().getRitrovamento(find.autore.nickname, find.autore.nome,
+                    find.autore.cognome, find.data);
+            Ricevuto receivedInDB = db.ricevutoDao().getRicevuto(received.autore.nickname, received.autore.nome,
+                    received.autore.cognome, received.data);
+
+            try {
+                /*Nessun elemento nel db, aggiungo normalmente*/
+                if (findInDB == null && receivedInDB == null) {
+                    db.ricevutoDao().insertRicevuto(received);
+                    db.ritrovamentoDao().insertRitrovamento(find);
+                    resultCode = 1;
+                }
+                /*Ritrovamento non presente, ma Ricevuto sì,
+                 * aggiorno Ricevuto e aggiungo Ritrovamento*/
+                else if (findInDB == null) {
+                    received.key = receivedInDB.key;
+                    db.ricevutoDao().updateRicevuto(received);
+                    db.ritrovamentoDao().insertRitrovamento(find);
+                    resultCode = 2;
+                }
+                /*In qualsiasi altro caso non faccio nulla*/
+                else {
+                    resultCode = 3;
+                }
+            }catch(SQLiteConstraintException ignored){}
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            Context context = contextRef.get();
+            if(context != null) {
+                switch(resultCode){
+                    case 1:
+                        Toast.makeText(context, R.string.success_operation, Toast.LENGTH_SHORT).show();
+                        break;
+                    case 2:
+                        Toast.makeText(context, R.string.update_import, Toast.LENGTH_LONG).show();
+                        break;
+                    case 3:
+                        Toast.makeText(context, R.string.error_import_fail, Toast.LENGTH_LONG).show();
+                        break;
+                    default:
+                        Toast.makeText(context, R.string.error_generic, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
 }

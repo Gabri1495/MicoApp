@@ -9,6 +9,7 @@ import androidx.room.Update;
 
 import com.gsorrentino.micoapp.model.Ritrovamento;
 
+import java.util.Calendar;
 import java.util.List;
 
 @Dao
@@ -38,6 +39,10 @@ public interface RitrovamentoDao {
 
     @Query("SELECT * FROM ritrovamento WHERE indirizzo LIKE :luogo")
     LiveData<List<Ritrovamento>> getAllRitrovamentiLuogoSearch(String luogo);
+
+    @Query("SELECT * FROM ritrovamento WHERE nickname = :nickname AND nome = :nome " +
+            "AND cognome = :cognome AND data = :data")
+    Ritrovamento getRitrovamento(String nickname, String nome, String cognome, Calendar data);
 
     @Query("DELETE FROM ritrovamento")
     void deleteAll();

@@ -103,4 +103,6 @@
     <string name="error_find_already_saved">This Find is already saved in database!</string>
     <string name="error_received_already_saved">This Received is already saved in database!</string>
     <string name="receive_description">Select a .micoapp file.\nWhen you export a Find its file will be saved in Documents/MicoApp</string>
+    <string name="error_import_fail">Find and/or Received already there!</string>
+    <string name="update_import">Find imported,\nReceived updated</string>
 </resources>
