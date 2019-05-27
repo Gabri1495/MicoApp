@@ -52,6 +52,15 @@
             android:summaryOn="@string/exit_double_back_desc_on"
             android:title="@string/exit_double_back" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/tips">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/preference_show_data_toast"
+            android:summaryOff="@string/show_data_toast_desc_off"
+            android:summaryOn="@string/show_data_toast_desc_on"
+            android:title="@string/show_data_toast" />
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/database">
 
         <Preference android:title="@string/delete_finds"

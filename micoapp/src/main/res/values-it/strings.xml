@@ -95,4 +95,8 @@
     <string name="receive_description">Seleziona un file .micoapp.\nQuando esporti un ritrovamento il suo file viene salvato in Documenti/MicoApp</string>
     <string name="error_import_fail">Ritrovamento e/o Ricevuto già presenti!</string>
     <string name="update_import">Ritrovamento importato,\nRicevuto aggiornato</string>
+    <string name="tips">Consigli</string>
+    <string name="show_data_toast">Mostra Toast con informazioni sulla data</string>
+    <string name="show_data_toast_desc_off">Nella creazione del Ritrovamento la data è disabilitata senza spiegazione</string>
+    <string name="show_data_toast_desc_on">Mostra una spiegazione riguardo all\'utilizzo della data durante la creazione del Ritrovamento</string>
 </resources>

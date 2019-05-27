@@ -216,7 +216,10 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
         hourEditText.setEnabled(false);
         minuteEditText.setEnabled(false);
         secondEditText.setEnabled(false);
-        Toast.makeText(this, R.string.date_autoSet, Toast.LENGTH_LONG).show();
+        if(PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean(getString(R.string.preference_show_data_toast), true)) {
+            Toast.makeText(this, R.string.date_autoSet, Toast.LENGTH_LONG).show();
+        }
     }
 
     /**

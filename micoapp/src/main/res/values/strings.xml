@@ -105,4 +105,9 @@
     <string name="receive_description">Select a .micoapp file.\nWhen you export a Find its file will be saved in Documents/MicoApp</string>
     <string name="error_import_fail">Find and/or Received already there!</string>
     <string name="update_import">Find imported,\nReceived updated</string>
+    <string name="tips">Tips</string>
+    <string name="show_data_toast">Show Toast about date information</string>
+    <string name="show_data_toast_desc_on">Show an explanation about date usage in Find creation view</string>
+    <string name="show_data_toast_desc_off">In Find creation view date is disabled without explanation</string>
+    <string name="preference_show_data_toast" translatable="false">preference_show_data_toast</string>
 </resources>

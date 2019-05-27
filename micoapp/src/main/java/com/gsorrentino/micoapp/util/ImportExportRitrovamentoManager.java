@@ -48,9 +48,14 @@ public class ImportExportRitrovamentoManager {
 
             /*Sono pronto a creare il file dentro la directory*/
             String fileName = ritrovamento.fungo
+                    + "_" + ritrovamento.autore.nickname
+                    + ritrovamento.autore.nome + ritrovamento.autore.cognome
                     + "_" + ritrovamento.data.get(Calendar.YEAR)
-                    + "_" + (ritrovamento.data.get(Calendar.MONTH) + 1)
-                    + "_" + ritrovamento.data.get(Calendar.DAY_OF_MONTH)
+                    + (ritrovamento.data.get(Calendar.MONTH) + 1)
+                    + ritrovamento.data.get(Calendar.DAY_OF_MONTH)
+                    + ritrovamento.data.get(Calendar.HOUR_OF_DAY)
+                    + ritrovamento.data.get(Calendar.MINUTE)
+                    + ritrovamento.data.get(Calendar.SECOND)
                     + ".micoapp";
             File file = new File(directory, fileName);
             try {
@@ -90,7 +95,8 @@ public class ImportExportRitrovamentoManager {
                 FileDescriptor fileDescriptor = Objects.requireNonNull(activity.getContentResolver().openFileDescriptor(filePathName, "r")).getFileDescriptor();
                 FileInputStream fis = new FileInputStream(fileDescriptor);
                 ObjectInputStream ois = new ObjectInputStream(fis);
-                ritrovamento = (Ritrovamento) ois.readObject();
+                Object tmp = ois.readObject();
+                ritrovamento = (Ritrovamento) tmp;
                 ois.close();
                 fis.close();
                 if(ritrovamento != null) {
