@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,11 +25,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gsorrentino.micoapp.EditFindActivity;
+import com.gsorrentino.micoapp.MainActivity;
 import com.gsorrentino.micoapp.R;
 import com.gsorrentino.micoapp.model.Ritrovamento;
 import com.gsorrentino.micoapp.util.AsyncTasks;
 import com.gsorrentino.micoapp.util.Costanti;
 import com.gsorrentino.micoapp.util.ImportExportRitrovamentoManager;
+import com.gsorrentino.micoapp.util.OnClickMapButtonListener;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -47,6 +50,7 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
         private final ConstraintLayout subItem;
         private final TextView addressTextView;
         private final TextView noteTextView;
+        private final Button showMapButton;
         private final ImageView mushroomImageView;
 
         private RitrovamentoViewHolder(View itemView) {
@@ -58,6 +62,7 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
             subItem = itemView.findViewById(R.id.archive_constraintSubLayout);
             addressTextView = itemView.findViewById(R.id.archive_address_textView);
             noteTextView = itemView.findViewById(R.id.archive_note_textView);
+            showMapButton = itemView.findViewById(R.id.archive_showMap_button);
             mushroomImageView = itemView.findViewById(R.id.archive_mushroom_image);
         }
     }
@@ -157,6 +162,8 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
                 holder.noteTextView.setVisibility(View.VISIBLE);
                 holder.noteTextView.setText(current.note);
             }
+
+            holder.showMapButton.setOnClickListener(new OnClickMapButtonListener((MainActivity) activity, current));
 
             // TODO Caricare l'immagine a partire dal path
         }

@@ -110,4 +110,6 @@
     <string name="show_data_toast_desc_on">Show an explanation about date usage in Find creation view</string>
     <string name="show_data_toast_desc_off">In Find creation view date is disabled without explanation</string>
     <string name="preference_show_data_toast" translatable="false">preference_show_data_toast</string>
+    <string name="show_map">Show map</string>
+    <string name="copied_on_clipboard">Copied on clipboard</string>
 </resources>

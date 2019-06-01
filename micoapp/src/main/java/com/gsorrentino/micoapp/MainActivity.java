@@ -203,7 +203,6 @@ public class MainActivity extends AppCompatActivity
     /*Handle navigation view item clicks here.*/
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        fragmentTransaction = fragmentManager.beginTransaction();
 
         switch (id) {
             case R.id.menu_home:
@@ -233,12 +232,26 @@ public class MainActivity extends AppCompatActivity
             case R.id.menu_history:
                 newFragment = new HistoryFragment();
         }
-        fragmentTransaction.replace(R.id.fragment_container, newFragment);
-        fragmentTransaction.commit();
+        replaceFragment(newFragment, false);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    /**
+     * Sostituisce il fragment dell'activity
+     *
+     * @param newFragment Fragment da sostituire
+     * @param backStack Aggiungere il fragment rimpiazzato al backstack
+     */
+    public void replaceFragment(Fragment newFragment, boolean backStack){
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, newFragment);
+        if(backStack)
+            fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
 

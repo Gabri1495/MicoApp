@@ -99,4 +99,6 @@
     <string name="show_data_toast">Mostra Toast con informazioni sulla data</string>
     <string name="show_data_toast_desc_off">Nella creazione del Ritrovamento la data è disabilitata senza spiegazione</string>
     <string name="show_data_toast_desc_on">Mostra una spiegazione riguardo all\'utilizzo della data durante la creazione del Ritrovamento</string>
+    <string name="show_map">Mostra mappa</string>
+    <string name="copied_on_clipboard">Copiato negli appunti</string>
 </resources>

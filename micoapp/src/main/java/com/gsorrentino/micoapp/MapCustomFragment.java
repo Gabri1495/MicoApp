@@ -3,12 +3,16 @@ package com.gsorrentino.micoapp;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,9 +44,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.gsorrentino.micoapp.model.Ritrovamento;
 import com.gsorrentino.micoapp.persistence.MicoAppDatabase;
 import com.gsorrentino.micoapp.util.Costanti;
 
+import java.text.DateFormat;
 import java.util.Objects;
 
 /**
@@ -51,7 +57,7 @@ import java.util.Objects;
  */
 public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnMapLongClickListener,
-        GoogleMap.OnMapClickListener {
+        GoogleMap.OnMapClickListener, GoogleMap.OnInfoWindowClickListener {
 
     /*Recupero della visualizzazione precedente*/
     private double lat;
@@ -72,8 +78,14 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
     /*Per permettere utilizzo della mappa anche senza localizzazione attiva*/
     private boolean alreadyShowed;
 
+    private Ritrovamento ritrovamento;
+
 
     public MapCustomFragment() {
+    }
+
+    public MapCustomFragment(Ritrovamento ritrovamento) {
+        this.ritrovamento = ritrovamento;
     }
 
 
@@ -165,9 +177,17 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), zoom));
+        /*Controllo se devo mostrare il marker di un Ritrovamento*/
+        if(ritrovamento != null) {
+            setMarker(ritrovamento, mMap);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ritrovamento.getCoordinate(), zoom));
+        }
+        else {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), zoom));
+        }
         mMap.setOnMapClickListener(this);
         mMap.setOnMapLongClickListener(this);
+        mMap.setOnInfoWindowClickListener(this);
         /*Cerco di avere già pronte in memoria le coordinate appena la mappa è pronta*/
         retrieveCurrentLocation();
     }
@@ -189,6 +209,28 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
         if(marker != null) {
             marker.remove();
             marker = null;
+        }
+    }
+
+
+    @Override
+    public void onInfoWindowClick(Marker iMarker) {
+        Object tmp = iMarker.getTag();
+        if(tmp instanceof Ritrovamento) {
+            Ritrovamento find = (Ritrovamento) tmp;
+            Intent intent = new Intent(getActivity(), EditFindActivity.class);
+            intent.putExtra(Costanti.INTENT_FIND, (Parcelable) find);
+            Objects.requireNonNull(getActivity()).startActivity(intent);
+        }
+        else {
+            /*Copio le coordinate negli appunti*/
+            /*Gets a handle to the clipboard service*/
+            ClipboardManager clipboard = (ClipboardManager) Objects.requireNonNull(getActivity())
+                    .getSystemService(Context.CLIPBOARD_SERVICE);
+            /* Creates a new text clip to put on the clipboard*/
+            ClipData clip = ClipData.newPlainText(marker.getTitle(), marker.getTitle());
+            clipboard.setPrimaryClip(clip);
+            Toast.makeText(getActivity(), R.string.copied_on_clipboard, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -324,6 +366,23 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
                 }
             });
         }
+    }
+
+
+    /**
+     * Aggiunge un {@link Marker} ad una {@link GoogleMap}
+     *
+     * @param ritrovamento Ritrovamento associato al Marker
+     * @param map mappa a cui aggiungere un Ritrovamento
+     */
+    private void setMarker(Ritrovamento ritrovamento, GoogleMap map) {
+        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+        Marker mark = map.addMarker(new MarkerOptions()
+                .position(ritrovamento.getCoordinate())
+                .title("" + ritrovamento.fungo)
+                .snippet(ritrovamento.autore.nickname + " - " + dateFormat.format(ritrovamento.data.getTime())));
+        mark.setTag(ritrovamento);
+        mark.showInfoWindow();
     }
 
 
