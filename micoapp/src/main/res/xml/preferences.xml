@@ -4,7 +4,7 @@
     <PreferenceCategory android:title="@string/user_information">
 
         <EditTextPreference
-            android:dialogLayout="@layout/preference_dialog_edittext_custom"
+            android:dialogLayout="@layout/preference_dialog_edittext_name_custom"
             android:imeOptions="actionNext"
             android:inputType="textPersonName"
             android:key="@string/preference_nickname"
@@ -13,7 +13,7 @@
             android:singleLine="true"
             android:title="@string/nickname" />
         <EditTextPreference
-            android:dialogLayout="@layout/preference_dialog_edittext_custom"
+            android:dialogLayout="@layout/preference_dialog_edittext_name_custom"
             android:imeOptions="actionNext"
             android:inputType="textPersonName"
             android:key="@string/preference_name"
@@ -22,7 +22,7 @@
             android:singleLine="true"
             android:title="@string/name" />
         <EditTextPreference
-            android:dialogLayout="@layout/preference_dialog_edittext_custom"
+            android:dialogLayout="@layout/preference_dialog_edittext_name_custom"
             android:inputType="textPersonName"
             android:key="@string/preference_surname"
             android:maxLines="1"
@@ -51,6 +51,15 @@
             android:summaryOff="@string/exit_double_back_desc_off"
             android:summaryOn="@string/exit_double_back_desc_on"
             android:title="@string/exit_double_back" />
+        <EditTextPreference
+            android:defaultValue="https://funghimagazine.it/"
+            android:dialogLayout="@layout/preference_dialog_edittext_link_custom"
+            android:inputType="textUri"
+            android:key="@string/preference_link_encyclopedia"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/link_encyclopedia" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/tips">
 

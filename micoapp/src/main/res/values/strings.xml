@@ -112,4 +112,11 @@
     <string name="preference_show_data_toast" translatable="false">preference_show_data_toast</string>
     <string name="show_map">Show map</string>
     <string name="copied_on_clipboard">Copied on clipboard</string>
+    <string name="preference_link_encyclopedia" translatable="false">preference_link_encyclopedia</string>
+    <string name="link_encyclopedia">Link Encyclopedia</string>
+    <string name="action_save_link">Save link</string>
+    <string name="link_will_be_saved">The current page will be reloaded next time</string>
+    <string name="link_will_not_be_saved">Default page will be loaded next time</string>
+    <string name="copy_url">Copy url</string>
+    <string name="refresh">Refresh</string>
 </resources>

@@ -33,7 +33,6 @@ import com.gsorrentino.micoapp.util.Costanti;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         HomeFragment.OnFragmentInteractionListener,
-        EncyclopediaFragment.OnFragmentInteractionListener,
         MemoriesFragment.OnFragmentInteractionListener,
         StatisticsFragment.OnFragmentInteractionListener {
 

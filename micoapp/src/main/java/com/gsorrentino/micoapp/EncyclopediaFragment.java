@@ -1,107 +1,122 @@
 package com.gsorrentino.micoapp;
 
+import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
-import android.net.Uri;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import androidx.preference.PreferenceManager;
+
+import com.gsorrentino.micoapp.util.Costanti;
+
+import java.util.Objects;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link EncyclopediaFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link EncyclopediaFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class EncyclopediaFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    private OnFragmentInteractionListener mListener;
+    private WebView myWebView;
+    private Switch saveLink;
+    private SharedPreferences sharedPrefs;
 
-    public EncyclopediaFragment() {
-        // Required empty public constructor
-    }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment EncyclopediaFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static EncyclopediaFragment newInstance(String param1, String param2) {
-        EncyclopediaFragment fragment = new EncyclopediaFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    public EncyclopediaFragment() {}
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            // TODO: Rename and change types of parameters
-            String mParam1 = getArguments().getString(ARG_PARAM1);
-            String mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_encyclopedia, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        sharedPrefs = Objects.requireNonNull(getActivity()).getSharedPreferences(Costanti.SHARED_PREFERENCES, 0);
+        myWebView = getActivity().findViewById(R.id.encyclopedia_webview);
+
+        myWebView.getSettings().setJavaScriptEnabled(true);
+        myWebView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                return false;
+            }});
     }
+
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.encyclopedia, menu);
+
+        MenuItem saveLinkMenuItem = menu.findItem(R.id.action_save_link);
+        saveLink = saveLinkMenuItem.getActionView().findViewById(R.id.action_switch);
+        String link = PreferenceManager.getDefaultSharedPreferences(Objects.requireNonNull(getActivity()))
+                .getString(getActivity().getString(R.string.preference_link_encyclopedia), "");
+        boolean restoredSaveLink = sharedPrefs.getBoolean(Costanti.ENCYCLOPEDIA_SAVE_LINK, saveLink.isChecked());
+        link = sharedPrefs.getString(Costanti.ENCYCLOPEDIA_SAVED_LINK, link);
+
+        /*Al click dello switch simulo la selezione dello specifico MenuItem*/
+        saveLink.setOnClickListener(v -> onOptionsItemSelected(saveLinkMenuItem));
+
+        saveLink.setChecked(restoredSaveLink);
+        myWebView.loadUrl(link);
     }
+
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case (R.id.action_save_link):
+                if(saveLink.isChecked())
+                    Toast.makeText(getActivity(), R.string.link_will_be_saved, Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(getActivity(), R.string.link_will_not_be_saved, Toast.LENGTH_SHORT).show();
+                return true;
+
+            case (R.id.action_copy_url):
+                ClipboardManager clipboard = (ClipboardManager) Objects.requireNonNull(getActivity())
+                        .getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText(myWebView.getUrl(), myWebView.getUrl());
+                clipboard.setPrimaryClip(clip);
+                Toast.makeText(getActivity(), R.string.copied_on_clipboard, Toast.LENGTH_SHORT).show();
+                return true;
+
+            case (R.id.action_refresh):
+                myWebView.reload();
+                return true;
+        }
+        return false;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.putBoolean(Costanti.ENCYCLOPEDIA_SAVE_LINK, saveLink.isChecked());
+        if(saveLink.isChecked()){
+            editor.putString(Costanti.ENCYCLOPEDIA_SAVED_LINK, myWebView.getUrl());
+        }
+        else{
+            editor.remove(Costanti.ENCYCLOPEDIA_SAVED_LINK);
+        }
+        editor.apply();
     }
 }

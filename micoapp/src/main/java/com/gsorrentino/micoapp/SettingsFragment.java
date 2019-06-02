@@ -33,6 +33,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         setSummaryAndListener(findPreference(getString(R.string.preference_nickname)));
         setSummaryAndListener(findPreference(getString(R.string.preference_name)));
         setSummaryAndListener(findPreference(getString(R.string.preference_surname)));
+        setSummaryAndListener(findPreference(getString(R.string.preference_link_encyclopedia)));
 
         /*Configuro le Preference per le varie rimozioni*/
         Preference preferenceButton = findPreference(getString(R.string.preference_delete_finds));
@@ -109,6 +110,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                     .requireNonNull(findPreference(getString(R.string.preference_name)))).getText()
                     + " " + newValue;
             ((TextView) headerView.findViewById(R.id.header_name_surname)).setText(tmp);
+        }
+        if(key.equals(getString(R.string.preference_link_encyclopedia))){
+            preference.setSummary((String) newValue);
         }
 
         return true;

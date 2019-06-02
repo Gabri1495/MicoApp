@@ -17,6 +17,8 @@ public final class Costanti {
     public static final String HISTORY_RADIO_SELECTION = "historyRadioSelection";
     public static final String ARCHIVE_RADIO_SELECTION = "archiveRadioSelection";
     public static final String ARCHIVE_SEARCH_OPEN = "archiveSearchOpen";
+    public static final String ENCYCLOPEDIA_SAVE_LINK = "encyclopediaSaveLink";
+    public static final String ENCYCLOPEDIA_SAVED_LINK = "encyclopediaSavedLink";
 
     /*Return codes from callbacks*/
     public static final int REQUEST_ACCESS_FINE_LOCATION_PERMISSIONS = 1;
