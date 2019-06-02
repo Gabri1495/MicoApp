@@ -4,6 +4,7 @@ import android.view.View;
 
 import com.gsorrentino.micoapp.MainActivity;
 import com.gsorrentino.micoapp.MapCustomFragment;
+import com.gsorrentino.micoapp.R;
 import com.gsorrentino.micoapp.model.Ritrovamento;
 
 public class OnClickMapButtonListener implements View.OnClickListener {
@@ -20,7 +21,8 @@ public class OnClickMapButtonListener implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if(activity != null) {
-            activity.replaceFragment(new MapCustomFragment(ritrovamento), false);
+            activity.replaceFragment(new MapCustomFragment(ritrovamento), false,
+                    true, R.id.menu_map);
         }
     }
 }

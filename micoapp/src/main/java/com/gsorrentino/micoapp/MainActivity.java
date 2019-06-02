@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
     Fragment newFragment;
+    NavigationView navigationView;
 
     SharedPreferences sharedPreferences;
 
@@ -60,11 +61,8 @@ public class MainActivity extends AppCompatActivity
 
         /* Aggiungo dinamicamente il primo fragment solo se non ve ne sono già */
         fragmentManager = getSupportFragmentManager();
-        fragmentTransaction = fragmentManager.beginTransaction();
         if (fragmentManager.getFragments().isEmpty()) {
-            newFragment = new HomeFragment();
-            fragmentTransaction.replace(R.id.fragment_container, newFragment);
-            fragmentTransaction.commit();
+            replaceFragment(new HomeFragment(), false);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -90,7 +88,7 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         /* Utilizzo i valori delle impostazioni per personalizzare l'header */
@@ -240,17 +238,40 @@ public class MainActivity extends AppCompatActivity
 
 
     /**
-     * Sostituisce il fragment dell'activity
+     * Sostituisce il fragment dell'activity e aggiorna l'item
+     * cliccato nel NavigationDrawer
      *
      * @param newFragment Fragment da sostituire
      * @param backStack Aggiungere il fragment rimpiazzato al backstack
+     * @param changeSelected Cambiare o meno l'oggetto selezionato nel menu drawer
+     *                       (utile nel caso si effettui un cambio senza che l'utente abbia
+     *                       selezionato un nuovo elemento del menu)
+     * @param itemId Risorsa che rappresenta l'item del menù da selezionare
+     *               (non usata se changeSelected è false)
      */
-    public void replaceFragment(Fragment newFragment, boolean backStack){
+    public void replaceFragment(Fragment newFragment, boolean backStack,
+                                boolean changeSelected, int itemId){
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, newFragment);
         if(backStack)
             fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+        if(changeSelected) {
+            MenuItem menuItem = navigationView.getMenu().findItem(itemId);
+            if(menuItem != null){
+                menuItem.setChecked(true);
+            }
+
+        }
+    }
+
+
+    /**
+     * Invoca {@link MainActivity#replaceFragment(Fragment, boolean, boolean, int)}
+     * passando i primi due parametri e impostando automatica a false e 0 gli altri
+     */
+    public void replaceFragment(Fragment newFragment, boolean backStack) {
+        replaceFragment(newFragment, backStack, false, 0);
     }
 
 

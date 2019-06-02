@@ -10,6 +10,9 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -18,11 +21,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -38,6 +45,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -380,9 +389,30 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
         Marker mark = map.addMarker(new MarkerOptions()
                 .position(ritrovamento.getCoordinate())
                 .title("" + ritrovamento.fungo)
-                .snippet(ritrovamento.autore.nickname + " - " + dateFormat.format(ritrovamento.data.getTime())));
+                .snippet(ritrovamento.autore.nickname + " - " + dateFormat.format(ritrovamento.data.getTime()))
+                .icon(vectorToBitmap(R.drawable.ic_marker_mushroom, 2)));
         mark.setTag(ritrovamento);
         mark.showInfoWindow();
+    }
+
+
+    /**
+     * Demonstrates converting a {@link Drawable} to a {@link BitmapDescriptor},
+     * for use as a marker icon.
+     * See <a href= "https://stackoverflow.com/questions/33548447/vectordrawable-with-googlemap-bitmapdescriptor">
+     *     Suggested workaround from Google Maps team</a>
+     *
+     * @param id Resource that should be converted
+     * @param resize How much the original size should be scaled
+     */
+    private BitmapDescriptor vectorToBitmap(@DrawableRes int id, int resize) {
+        Drawable vectorDrawable = ResourcesCompat.getDrawable(getResources(), id, null);
+        Bitmap bitmap = Bitmap.createBitmap(Objects.requireNonNull(vectorDrawable).getIntrinsicWidth() * resize,
+                vectorDrawable.getIntrinsicHeight() * resize, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
 
