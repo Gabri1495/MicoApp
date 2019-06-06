@@ -3,6 +3,8 @@ package com.gsorrentino.micoapp.persistence;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Parcelable;
@@ -31,7 +33,7 @@ import com.gsorrentino.micoapp.model.Ritrovamento;
 import com.gsorrentino.micoapp.util.AsyncTasks;
 import com.gsorrentino.micoapp.util.Costanti;
 import com.gsorrentino.micoapp.util.ImportExportRitrovamentoManager;
-import com.gsorrentino.micoapp.util.OnClickMapButtonListener;
+import com.gsorrentino.micoapp.util.OnClickCustomListeners;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -163,9 +165,21 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
                 holder.noteTextView.setText(current.note);
             }
 
-            holder.showMapButton.setOnClickListener(new OnClickMapButtonListener((MainActivity) activity, current));
+            holder.showMapButton.setOnClickListener(new OnClickCustomListeners.
+                    OnClickMapButtonListener((MainActivity) activity, current));
 
-            // TODO Caricare l'immagine a partire dal path
+            // TODO migliorare caricamento
+            List<String> paths = current.getPathsImmagine();
+            if(paths.size() > 0){
+                String path = paths.get(0);
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                //TODO migliorare riduzione immagine (per esempio con ThumbnailsUtils)
+                options.inSampleSize = 16;
+                Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+                if(bitmap != null)
+                    holder.mushroomImageView.setImageBitmap(bitmap);
+            }
+
         }
         /*Se i dati non sono ancora pronti evitiamo di lavorare
           su dei null, ma non prendiamo ulteriori provvedimenti */

@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -29,7 +28,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -136,7 +134,7 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
         lng = Double.longBitsToDouble(sharedPrefs.getLong(Costanti.LNG, Double.doubleToLongBits(Costanti.LNG_DEFAULT)));
         zoom = sharedPrefs.getFloat(Costanti.ZOOM, Costanti.ZOOM_DEFAULT);
 
-        FloatingActionButton fab = Objects.requireNonNull(getActivity()).findViewById(R.id.fab);
+        FloatingActionButton fab = Objects.requireNonNull(getActivity()).findViewById(R.id.map_fab);
         fab.setOnClickListener(view1 -> {
             retrieveCurrentLocation();
             Intent intent = new Intent(getActivity(), EditFindActivity.class);
@@ -391,6 +389,8 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
                 .title("" + ritrovamento.fungo)
                 .snippet(ritrovamento.autore.nickname + " - " + dateFormat.format(ritrovamento.data.getTime()))
                 .icon(vectorToBitmap(R.drawable.ic_marker_mushroom, 2)));
+        /*Al posto di caricare un immagine Bitmap converto un vector per via di una
+        * maggior definizione dell'icona finale*/
         mark.setTag(ritrovamento);
         mark.showInfoWindow();
     }

@@ -2,28 +2,45 @@ package com.gsorrentino.micoapp;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.format.DateFormat;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.gsorrentino.micoapp.model.Ritrovamento;
 import com.gsorrentino.micoapp.model.Utente;
 import com.gsorrentino.micoapp.util.AsyncTasks;
 import com.gsorrentino.micoapp.util.Costanti;
+import com.gsorrentino.micoapp.util.Metodi;
+import com.gsorrentino.micoapp.util.OnClickCustomListeners;
 
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -37,12 +54,26 @@ import static com.gsorrentino.micoapp.util.Costanti.EDIT_MODE;
  */
 public class EditFindActivity extends AppCompatActivity implements View.OnClickListener {
 
+    SharedPreferences defaultSharedPreferences;
     SharedPreferences sharedPreferences;
     private Geocoder geocoder;
+    private String nickname;
+    private String nome;
+    private String cognome;
 
     /*Capire se dobbiamo modificare o creare*/
     private String currentMode;
     private Ritrovamento ritrovamento;
+    private String currentPhotoPath;
+    /*Per capire se ho terminato salvando*/
+    private boolean terminated = false;
+    /*Usato per capire quale Ritrovamento stia modificando*/
+    private int currentKey = 0;
+    /*Lista dei path di cui è stata creata una view
+    * (quindi per ognuno di essi esiste una foto salvata) e di
+    * quelli caricati all'inizio*/
+    private List<String> photoPathsAdded = new ArrayList<>();
+    private List<String> photoPathsInitial = new ArrayList<>();
 
     private EditText fungoEditText;
     private EditText quantityEditText;
@@ -55,15 +86,22 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
     private EditText noteEditText;
     private EditText latEditText;
     private EditText lngEditText;
+    private ViewGroup imagesContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_find);
         findViewById(R.id.edit_save_update_button).setOnClickListener(this);
+        findViewById(R.id.edit_take_photo_fab).setOnClickListener(this);
+        findViewById(R.id.edit_add_photo_fab).setOnClickListener(this);
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = getSharedPreferences(Costanti.SHARED_PREFERENCES, 0);
         geocoder = new Geocoder(this, Locale.getDefault());
+        nickname = defaultSharedPreferences.getString(getString(R.string.preference_nickname), "Nemo");
+        nome = defaultSharedPreferences.getString(getString(R.string.preference_name), "Nessuno");
+        cognome = defaultSharedPreferences.getString(getString(R.string.preference_surname), "Nessuno");
 
         fungoEditText = findViewById(R.id.edit_mushroom_editText);
         quantityEditText = findViewById(R.id.edit_quantity_editText);
@@ -76,6 +114,7 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
         noteEditText = findViewById(R.id.edit_note_editText);
         latEditText = findViewById(R.id.edit_lat_editText);
         lngEditText = findViewById(R.id.edit_lng_editText);
+        imagesContainer = findViewById(R.id.edit_find_image_container);
 
         /*Subito pronto per l'immssione*/
         fungoEditText.requestFocus();
@@ -88,9 +127,49 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
         if(latLng != null)
             createMode(latLng);
 
-        ritrovamento = getIntent().getParcelableExtra(Costanti.INTENT_FIND);
+        Intent intent = getIntent();
+        ritrovamento = intent.getParcelableExtra(Costanti.INTENT_FIND);
         if(ritrovamento != null)
             editMode(ritrovamento);
+
+        String jsonPhotoPathsAdded = sharedPreferences.getString(Costanti.ADDED_PATHS, "[]");
+        String jsonPhotoPathsCurrent = sharedPreferences.getString(Costanti.CURRENT_PATHS, "[]");
+        String jsonPhotoPathsInitial = sharedPreferences.getString(Costanti.INITIAL_PATHS, "[]");
+        int restoredKey = sharedPreferences.getInt(Costanti.CURRENT_KEY, 0);
+        Gson gson = new Gson();
+        List<String> tmpAdded;
+        List<String> tmpInit;
+        Type type = new TypeToken<List<String>>(){}.getType();
+        tmpAdded = gson.fromJson(jsonPhotoPathsAdded == null ? "[]" : jsonPhotoPathsAdded, type);
+        tmpInit = gson.fromJson(jsonPhotoPathsInitial == null ? "[]" : jsonPhotoPathsInitial, type);
+        /*Erano presenti delle immagini, chiedo se si voglia recuperare il lavoro*/
+        if(restoredKey == currentKey){
+            List<String> tmpCurrent;
+            tmpCurrent = gson.fromJson(jsonPhotoPathsCurrent == null ? "[]" : jsonPhotoPathsCurrent, type);
+            /*Procedo solo se i dati temporanei salvati denotano una modifica effettuata*/
+            if(!tmpInit.containsAll(tmpAdded) || !tmpInit.containsAll(tmpCurrent)) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(R.string.dialog_recover_images);
+                builder.setPositiveButton(R.string.proceed, (dialog, which) -> {
+                    removeImageViews();
+                    photoPathsInitial = tmpInit;
+                    for (String s : tmpCurrent) {
+                        currentPhotoPath = s;
+                        addImageItem();
+                    }
+                });
+                builder.setNegativeButton(R.string.undo, (dialog, which) -> {
+                    cleanRecovery(tmpAdded, tmpInit);
+                    dialog.cancel();
+                });
+                builder.create().show();
+            }
+        }
+        else{
+            /*L'utente ha aperto un Ritrovamento diverso, si presuppone
+            * non sia interessato al ripristino*/
+            cleanRecovery(tmpAdded, tmpInit);
+        }
     }
 
     @Override
@@ -102,78 +181,253 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
+    public void onStop(){
+        super.onStop();
+        if(!terminated) {
+            Gson gson = new Gson();
+            String jsonPhotoPathsCurrent = gson.toJson(getCurrentPhotoPaths());
+            String jsonPhotoPathsInitial = gson.toJson(photoPathsInitial);
+            String jsonPhotoPathsAdded = gson.toJson(photoPathsAdded);
+
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(Costanti.ADDED_PATHS, jsonPhotoPathsAdded);
+            editor.putString(Costanti.CURRENT_PATHS, jsonPhotoPathsCurrent);
+            editor.putString(Costanti.INITIAL_PATHS, jsonPhotoPathsInitial);
+            editor.putInt(Costanti.CURRENT_KEY, currentKey);
+            editor.apply();
+        }
+    }
+
+    @Override
     public void onClick(View v) {
-        if(!checkFields()){
-            Toast.makeText(this, R.string.error_missing_field, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        /*Disattivo il pulsante per non rischiare di creare una doppia entità*/
-        findViewById(R.id.edit_save_update_button).setEnabled(false);
-
-        String fungo = fungoEditText.getText().toString();
-        String nota = noteEditText.getText().toString();
-        int quantita = Integer.valueOf(quantityEditText.getText().toString());
-        double lat = Double.valueOf(latEditText.getText().toString());
-        double lng = Double.valueOf(lngEditText.getText().toString());
-
-        List<Address> indirizzo = null;
-        try {
-            indirizzo = geocoder.getFromLocation(lat, lng, 1);
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(this, R.string.error_generic, Toast.LENGTH_SHORT).show();
-        }
-
-        switch (currentMode){
-            case CREATE_MODE:
-                String nickname = sharedPreferences.getString(getString(R.string.preference_nickname), "Nemo");
-                String nome = sharedPreferences.getString(getString(R.string.preference_name), "Nessuno");
-                String cognome = sharedPreferences.getString(getString(R.string.preference_surname), "Nessuno");
-
-                Ritrovamento newRitrovamento = new Ritrovamento(lat, lng, fungo,
-                        new Utente(Objects.requireNonNull(nickname), Objects.requireNonNull(nome), Objects.requireNonNull(cognome)));
-                if(indirizzo != null && indirizzo.size() > 0)
-                    newRitrovamento.indirizzo = indirizzo.get(0).getAddressLine(0);
-                newRitrovamento.quantita = quantita;
-                newRitrovamento.note = nota;
-
-                new AsyncTasks.ManageFindAsync(this, newRitrovamento).execute(Costanti.INSERT);
+        switch(v.getId()) {
+            case R.id.edit_take_photo_fab:
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    /* Create the File where the photo should go*/
+                    File photoFile = Metodi.createImageFile(nickname + "_" + nome + "_" + cognome);
+                    /* Save a file path for use with ACTION_VIEW intents*/
+                    if (photoFile != null) {
+                        currentPhotoPath = photoFile.getAbsolutePath();
+                        Uri photoURI = FileProvider.getUriForFile(this,
+                                "com.gsorrentino.micoapp",
+                                photoFile);
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                        startActivityForResult(takePictureIntent, Costanti.REQUEST_IMAGE_CAPTURE);
+                    }
+                    else{
+                        Toast.makeText(this, R.string.error_generic, Toast.LENGTH_SHORT).show();
+                    }
+                }
                 break;
 
-            case EDIT_MODE:
-                @SuppressLint("SimpleDateFormat")
-                SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyyHHmmss");
-                formatter.setLenient(false);
-                String date = "";
-                date += dayEditText.getText().toString()
-                        + monthEditText.getText().toString()
-                        + yearEditText.getText().toString()
-                        + hourEditText.getText().toString()
-                        + minuteEditText.getText().toString()
-                        + secondEditText.getText().toString();
-                try {
-                    ritrovamento.data.setTime(formatter.parse(date));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    Toast.makeText(this, R.string.error_date, Toast.LENGTH_SHORT).show();
-                    findViewById(R.id.edit_save_update_button).setEnabled(true);
+            case R.id.edit_add_photo_fab:
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("image/*");
+
+                startActivityForResult(intent, Costanti.REQUEST_OPEN_IMAGE);
+                break;
+
+            case R.id.edit_save_update_button:
+                if (!checkFields()) {
+                    Toast.makeText(this, R.string.error_missing_field, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                ritrovamento.fungo = fungo;
-                /*Evito di invocare il geocoder se le coordinate non sono state toccate*/
-                if((ritrovamento.latitudine != lat || ritrovamento.longitudine != lng)
-                        && indirizzo != null && indirizzo.size() > 0)
-                    ritrovamento.indirizzo = indirizzo.get(0).getAddressLine(0);
-                ritrovamento.latitudine = lat;
-                ritrovamento.longitudine = lng;
-                ritrovamento.quantita = quantita;
-                ritrovamento.note = nota;
 
-                new AsyncTasks.ManageFindAsync(this, ritrovamento).execute(Costanti.UPDATE);
-                break;
+                /*Disattivo il pulsante per non rischiare di creare una doppia entità*/
+                findViewById(R.id.edit_save_update_button).setEnabled(false);
+
+                String fungo = fungoEditText.getText().toString();
+                String nota = noteEditText.getText().toString();
+                int quantita = Integer.valueOf(quantityEditText.getText().toString());
+                double lat = Double.valueOf(latEditText.getText().toString());
+                double lng = Double.valueOf(lngEditText.getText().toString());
+
+                List<Address> indirizzo = null;
+                try {
+                    indirizzo = geocoder.getFromLocation(lat, lng, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, R.string.error_generic, Toast.LENGTH_SHORT).show();
+                }
+
+                switch (currentMode) {
+                    case CREATE_MODE:
+                        Ritrovamento newRitrovamento = new Ritrovamento(lat, lng, fungo,
+                                new Utente(Objects.requireNonNull(nickname), Objects.requireNonNull(nome), Objects.requireNonNull(cognome)));
+                        if (indirizzo != null && indirizzo.size() > 0)
+                            newRitrovamento.indirizzo = indirizzo.get(0).getAddressLine(0);
+                        newRitrovamento.quantita = quantita;
+                        newRitrovamento.note = nota;
+                        newRitrovamento.setPathsImmagine(getCurrentPhotoPaths());
+
+                        new AsyncTasks.ManageFindAsync(this, newRitrovamento).execute(Costanti.INSERT);
+                        break;
+
+                    case EDIT_MODE:
+                        @SuppressLint("SimpleDateFormat")
+                        SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyyHHmmss");
+                        formatter.setLenient(false);
+                        String date = "";
+                        date += dayEditText.getText().toString()
+                                + monthEditText.getText().toString()
+                                + yearEditText.getText().toString()
+                                + hourEditText.getText().toString()
+                                + minuteEditText.getText().toString()
+                                + secondEditText.getText().toString();
+                        try {
+                            ritrovamento.data.setTime(formatter.parse(date));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            Toast.makeText(this, R.string.error_date, Toast.LENGTH_SHORT).show();
+                            findViewById(R.id.edit_save_update_button).setEnabled(true);
+                            return;
+                        }
+                        ritrovamento.fungo = fungo;
+                        /*Evito di invocare il geocoder se le coordinate non sono state toccate*/
+                        if ((ritrovamento.latitudine != lat || ritrovamento.longitudine != lng)
+                                && indirizzo != null && indirizzo.size() > 0)
+                            ritrovamento.indirizzo = indirizzo.get(0).getAddressLine(0);
+                        ritrovamento.latitudine = lat;
+                        ritrovamento.longitudine = lng;
+                        ritrovamento.quantita = quantita;
+                        ritrovamento.note = nota;
+                        ritrovamento.setPathsImmagine(getCurrentPhotoPaths());
+
+                        new AsyncTasks.ManageFindAsync(this, ritrovamento).execute(Costanti.UPDATE);
+                        break;
+                }
+                terminated = true;
+                deleteUnusedPhoto();
+                resetPreferences();
+                finish();
         }
-        finish();
+    }
+
+    /**
+     * Aggiunge un layout nell'apposito container per una nuova
+     * immagine da mostrare. Per mostrare l'immagine utilizza
+     * {@link EditFindActivity#currentPhotoPath}.
+     */
+    private void addImageItem() {
+        /*Aggiungo gli elementi grafici per la nuova immagine*/
+        View viewToAdd = getLayoutInflater().inflate(
+                R.layout.edit_find_image_item,
+                imagesContainer,false);
+        ImageView imageView = viewToAdd.findViewById(R.id.imageView);
+        imageView.setTag(currentPhotoPath);
+        viewToAdd.findViewById(R.id.image_fab).setOnClickListener(new OnClickCustomListeners.
+                OnClickRemoveImageListener(viewToAdd));
+        imagesContainer.addView(viewToAdd);
+
+        /*Setto la Bitmap nell'ImageView appena creata*/
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        //TODO migliorare riduzione immagine (per esempio con ThumbnailsUtils)
+        options.inSampleSize = 8;
+        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, options);
+        if(bitmap != null) {
+            imageView.setImageBitmap(bitmap);
+        }
+
+        photoPathsAdded.add(currentPhotoPath);
+    }
+
+    /**
+     * Ritorna l'elenco dei path delle foto mostrate in
+     * {@link EditFindActivity#imagesContainer}
+     *
+     * @return Lista di stringhe con i path
+     */
+    private List<String> getCurrentPhotoPaths(){
+        List<String> currentPhotoPaths = new ArrayList<>();
+        int numberChild = imagesContainer.getChildCount();
+        for(int index = 0; index < numberChild; index++) {
+            currentPhotoPaths.add((String)imagesContainer.getChildAt(index)
+                    .findViewById(R.id.imageView).getTag());
+        }
+        return currentPhotoPaths;
+    }
+
+    /**
+     * Rimuove graficamente tutte le anteprime delle immagini
+     */
+    private void removeImageViews(){
+        int numberChild = imagesContainer.getChildCount();
+        for(int index = numberChild - 1; index >= 0; index--) {
+            imagesContainer.removeViewAt(index);
+        }
+    }
+
+    /**
+     * Confrontando {@link EditFindActivity#getCurrentPhotoPaths()}
+     * con {@link EditFindActivity#photoPathsAdded} cancella
+     * dall'archivio tutte le foto non più utilizzate e svuota
+     * {@link EditFindActivity#photoPathsAdded}.
+     */
+    private void deleteUnusedPhoto(){
+        List<String> photoPathsCurrent = getCurrentPhotoPaths();
+        File toDelete;
+        boolean allDeleted = true;
+        for(String s : photoPathsAdded){
+            if(!photoPathsCurrent.contains(s)){
+                toDelete = new File(s);
+                if(toDelete.exists())
+                    if(!toDelete.delete())
+                        allDeleted = false;
+            }
+        }
+        photoPathsAdded.clear();
+        if(!allDeleted)
+            Toast.makeText(this, R.string.error_photos_undeleted, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Cancella dall'archivio un elenco di foto
+     *
+     * @param paths Elenco dei paths delle foto da cancellare
+     */
+    private void deletePhoto(List<String> paths){
+        File toDelete;
+        boolean allDeleted = true;
+        for(String s : paths){
+            toDelete = new File(s);
+            if(toDelete.exists())
+                if(!toDelete.delete())
+                    allDeleted = false;
+        }
+        if(!allDeleted)
+            Toast.makeText(this, R.string.error_photos_undeleted, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Rimuove le Preferences relative ai path usati per il ripristino
+     */
+    private void resetPreferences(){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(Costanti.ADDED_PATHS);
+        editor.remove(Costanti.CURRENT_PATHS);
+        editor.remove(Costanti.INITIAL_PATHS);
+        editor.remove(Costanti.CURRENT_KEY);
+        editor.apply();
+    }
+
+    /**
+     * Nel caso non si sia interessati al ripristino rimuove tutti
+     * i dati temporanei utilizzati
+     *
+     * @param list Lista di tutti i path utilizzati
+     * @param subList Lista dei path da mantenere
+     */
+    private void cleanRecovery(List<String> list, List<String> subList){
+        List<String> toRemove = new ArrayList<>();
+        for(String s : list){
+            if(!subList.contains(s)){
+                toRemove.add(s);
+            }
+        }
+        deletePhoto(toRemove);
+        resetPreferences();
     }
 
     /**
@@ -207,6 +461,7 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
      */
     private void createMode(LatLng latLng){
         currentMode = CREATE_MODE;
+        currentKey = 0;
         this.setTitle(R.string.create_find);
         latEditText.setText(String.valueOf(latLng.latitude));
         lngEditText.setText(String.valueOf(latLng.longitude));
@@ -230,6 +485,7 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
      */
     private void editMode(Ritrovamento ritrovamento){
         currentMode = EDIT_MODE;
+        currentKey = ritrovamento.key;
         fungoEditText.setText(ritrovamento.fungo);
         quantityEditText.setText(String.valueOf(ritrovamento.quantita));
         noteEditText.setText(ritrovamento.note);
@@ -242,5 +498,44 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
         hourEditText.setText(DateFormat.format("HH", date));
         minuteEditText.setText(DateFormat.format("mm", date));
         secondEditText.setText(DateFormat.format("ss", date));
+        StringBuilder tmpPaths = new StringBuilder();
+        boolean firstDone = false;
+        for(String s : ritrovamento.getPathsImmagine()){
+            if(firstDone) {
+                tmpPaths.append("\n\n");
+            }
+            tmpPaths.append(s);
+            firstDone = true;
+            currentPhotoPath = s;
+            addImageItem();
+        }
+        ((TextView)findViewById(R.id.edit_path_textView)).setText(tmpPaths.toString());
+        photoPathsInitial = getCurrentPhotoPaths();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == Costanti.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            addImageItem();
+        }
+
+        if (requestCode == Costanti.REQUEST_OPEN_IMAGE && resultCode == RESULT_OK) {
+            Uri imageUri = null;
+            if (data != null) {
+                imageUri = data.getData();
+            }
+            if(imageUri != null) {
+                File fileImage = Metodi.createImageFile(nickname + "_" + nome + "_" + cognome);
+                if(fileImage != null) {
+                    Metodi.uriToFile(getContentResolver(), imageUri, fileImage);
+                    currentPhotoPath = fileImage.getAbsolutePath();
+                    addImageItem();
+                } else{
+                    Toast.makeText(this, R.string.error_generic, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 }

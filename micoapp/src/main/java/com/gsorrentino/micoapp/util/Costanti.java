@@ -19,12 +19,18 @@ public final class Costanti {
     public static final String ARCHIVE_SEARCH_OPEN = "archiveSearchOpen";
     public static final String ENCYCLOPEDIA_SAVE_LINK = "encyclopediaSaveLink";
     public static final String ENCYCLOPEDIA_SAVED_LINK = "encyclopediaSavedLink";
+    public static final String CURRENT_PATHS = "currentPaths";
+    public static final String ADDED_PATHS = "addedPaths";
+    public static final String INITIAL_PATHS = "initialPaths";
+    public static final String CURRENT_KEY = "currentKey";
 
     /*Return codes from callbacks*/
     public static final int REQUEST_ACCESS_FINE_LOCATION_PERMISSIONS = 1;
     public static final int REQUEST_CHECK_LOCALIZATION_SETTINGS = 2;
     public static final int REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSIONS = 3;
     public static final int REQUEST_READ_FILE = 4;
+    public static final int REQUEST_IMAGE_CAPTURE = 5;
+    public static final int REQUEST_OPEN_IMAGE = 6;
 
     /*Notifications IDs*/
     public static final int PERMISSION_LOCALIZATION_NOTIFICATION_ID = 1;

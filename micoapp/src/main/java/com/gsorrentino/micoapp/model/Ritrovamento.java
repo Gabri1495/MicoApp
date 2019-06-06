@@ -13,8 +13,10 @@ import androidx.room.PrimaryKey;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -39,7 +41,7 @@ public class Ritrovamento implements Parcelable, Serializable {
     @Embedded
     @NonNull
     public Utente autore;
-    public String pathImmagine;
+    private List<String> pathsImmagine;
     @Ignore
     public boolean expanded;    /*Utilizzato per gestire l'ampliamento e riduzione nella RecyclerView*/
 
@@ -107,6 +109,15 @@ public class Ritrovamento implements Parcelable, Serializable {
         }
     }
 
+    public List<String> getPathsImmagine() {
+        if(this.pathsImmagine == null)
+            this.pathsImmagine = new ArrayList<>();
+        return pathsImmagine;
+    }
+
+    public void setPathsImmagine(List<String> pathsImmagine) {
+        this.pathsImmagine = pathsImmagine;
+    }
 
     /*Implementazioni di Parcelable*/
 
@@ -122,7 +133,7 @@ public class Ritrovamento implements Parcelable, Serializable {
         latitudine = parcel.readDouble();
         longitudine= parcel.readDouble();
         note = parcel.readString();
-        pathImmagine = parcel.readString();
+        parcel.readList(getPathsImmagine(), String.class.getClassLoader());
         quantita = parcel.readInt();
     }
 
@@ -138,7 +149,7 @@ public class Ritrovamento implements Parcelable, Serializable {
         dest.writeDouble(latitudine);
         dest.writeDouble(longitudine);
         dest.writeString(note);
-        dest.writeString(pathImmagine);
+        dest.writeList(pathsImmagine);
         dest.writeInt(quantita);
     }
 

@@ -107,4 +107,11 @@
     <string name="link_will_not_be_saved">La pagina default verrà caricata la prossima volta</string>
     <string name="copy_url">Copia url</string>
     <string name="refresh">Ricarica</string>
+    <string name="remove_image">Rimuovi immagine</string>
+    <string name="mushroom_image">Immagine di un fungo</string>
+    <string name="add_photo">Aggiunge una foto</string>
+    <string name="take_photo">Scatta una foto</string>
+    <string name="dialog_recover_images">Durante l\'ultima modifica qualcosa non è stato salvato.\nVuoi ripristinare le foto?</string>
+    <string name="error_photos_undeleted">Attenzione! Qualche foto nella cartella di MicoApp non è stata adeguatamente cancellata</string>
+    <string name="photo_path">Percorsi Foto</string>
 </resources>

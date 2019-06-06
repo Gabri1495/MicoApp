@@ -119,4 +119,11 @@
     <string name="link_will_not_be_saved">Default page will be loaded next time</string>
     <string name="copy_url">Copy url</string>
     <string name="refresh">Refresh</string>
+    <string name="remove_image">Remove image</string>
+    <string name="mushroom_image">Mushroom image</string>
+    <string name="take_photo">Take a photo</string>
+    <string name="add_photo">Add a photo</string>
+    <string name="dialog_recover_images">During last editing something has not been saved.\nDo you want to recover photos?</string>
+    <string name="error_photos_undeleted">Be aware! Some photo in MicoApp folder is not been properly deleted</string>
+    <string name="photo_path">Photos\' paths</string>
 </resources>
