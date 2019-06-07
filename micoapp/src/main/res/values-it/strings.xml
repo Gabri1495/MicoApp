@@ -115,4 +115,8 @@
     <string name="error_photos_undeleted">Attenzione! Qualche foto nella cartella di MicoApp non è stata adeguatamente cancellata</string>
     <string name="photo_path">Percorsi Foto</string>
     <string name="remember_delete_photos">Ricordati di cancellare manualmente la cartella delle foto</string>
+    <string name="finds">Ritrovamenti</string>
+    <string name="received_s">Ricevuti</string>
+    <string name="photos">Foto</string>
+    <string name="different_users">Utenti differenti</string>
 </resources>

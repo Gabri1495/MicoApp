@@ -12,12 +12,13 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.gsorrentino.micoapp.model.Ricevuto;
 import com.gsorrentino.micoapp.model.Ritrovamento;
 import com.gsorrentino.micoapp.util.AsyncTasks;
+import com.gsorrentino.micoapp.util.Costanti;
 
 import java.lang.ref.WeakReference;
 
 import static com.gsorrentino.micoapp.util.Costanti.DB_NAME;
 
-@Database(entities = {Ritrovamento.class, Ricevuto.class}, version = 1, exportSchema = false)
+@Database(entities = {Ritrovamento.class, Ricevuto.class}, version = Costanti.DB_VERSION, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class MicoAppDatabase extends RoomDatabase {
 

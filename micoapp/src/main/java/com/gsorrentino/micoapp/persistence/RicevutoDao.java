@@ -26,6 +26,12 @@ public interface RicevutoDao {
     @Delete
     void deleteRicevuto (Ricevuto ricevuto);
 
+    @Query("SELECT COUNT() FROM ricevuto")
+    int countRicevuti();
+
+    @Query("SELECT nickname, nome, cognome FROM ricevuto GROUP BY nickname, nome, cognome")
+    List<Utente> getUtentiRicevuti();
+
     @Query("SELECT * FROM ricevuto")
     LiveData<List<Ricevuto>> getAllRicevuti();
 

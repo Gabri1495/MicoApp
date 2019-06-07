@@ -8,6 +8,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.gsorrentino.micoapp.model.Ritrovamento;
+import com.gsorrentino.micoapp.model.Utente;
 
 import java.util.Calendar;
 import java.util.List;
@@ -24,6 +25,15 @@ public interface RitrovamentoDao {
 
     @Delete
     void deleteRitrovamento (Ritrovamento ritrovamento);
+
+    @Query("SELECT COUNT() FROM ritrovamento")
+    int countRitrovamenti();
+
+    @Query("SELECT nickname, nome, cognome FROM ritrovamento GROUP BY nickname, nome, cognome")
+    List<Utente> getUtentiRitrovamenti();
+
+    @Query("SELECT * FROM ritrovamento")
+    List<Ritrovamento> getAllRitrovamentiStatic();
 
     @Query("SELECT * FROM ritrovamento")
     LiveData<List<Ritrovamento>> getAllRitrovamenti();

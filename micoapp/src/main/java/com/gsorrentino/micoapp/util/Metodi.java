@@ -86,11 +86,16 @@ public class Metodi {
     public static boolean deletePhoto(List<String> paths){
         File toDelete;
         boolean allDeleted = true;
-        for(String s : paths){
-            toDelete = new File(s);
-            if(toDelete.exists())
-                if(!toDelete.delete())
-                    allDeleted = false;
+        try {
+            for (String s : paths) {
+                toDelete = new File(s);
+                if (toDelete.exists())
+                    if (!toDelete.delete())
+                        allDeleted = false;
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+            allDeleted = false;
         }
         return allDeleted;
     }

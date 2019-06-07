@@ -1,8 +1,10 @@
 package com.gsorrentino.micoapp.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.AsyncTask;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gsorrentino.micoapp.R;
@@ -14,8 +16,10 @@ import com.gsorrentino.micoapp.persistence.RicevutoDao;
 import com.gsorrentino.micoapp.persistence.RitrovamentoDao;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 /**
  * Classe container per classi statiche di {@link AsyncTask},
@@ -333,6 +337,58 @@ public class AsyncTasks {
                     default:
                         Toast.makeText(context, R.string.error_generic, Toast.LENGTH_SHORT).show();
                 }
+            }
+        }
+    }
+
+
+    /**
+     * {@link AsyncTask} per generare le statistiche dal database e mostrarle nella ui
+     */
+    public static class ShowStatAsync extends AsyncTask<Void, Void, List<String>>{
+
+        private final WeakReference<Activity> activityRef;
+        private MicoAppDatabase db;
+
+        public ShowStatAsync(Activity activity){
+            activityRef = new WeakReference<>(activity);
+            db = MicoAppDatabase.getInstance(activity, false);
+        }
+
+        @Override
+        protected List<String> doInBackground(Void... params) {
+            List<String> results = new ArrayList<>();
+            RitrovamentoDao findDao = db.ritrovamentoDao();
+            RicevutoDao receivedDao = db.ricevutoDao();
+
+            results.add(String.valueOf(findDao.countRitrovamenti()));
+            List<Ritrovamento> finds = findDao.getAllRitrovamentiStatic();
+            int numberPhoto = 0;
+            for(Ritrovamento r : finds)
+                numberPhoto += r.getPathsImmagine().size();
+            results.add(String.valueOf(numberPhoto));
+            results.add(String.valueOf(findDao.getUtentiRitrovamenti().size()));
+            results.add(String.valueOf(receivedDao.countRicevuti()));
+            results.add(String.valueOf(receivedDao.getUtentiRicevuti().size()));
+
+            return results;
+        }
+
+        @Override
+        protected void onPostExecute(List<String> results){
+            Activity activity = activityRef.get();
+            if(activity!=null){
+                int i = 0;
+                ((TextView) activity.findViewById(R.id.stat_finds_textView_result))
+                        .setText(results.get(i++));
+                ((TextView) activity.findViewById(R.id.stat_photo_textView_result))
+                        .setText(results.get(i++));
+                ((TextView) activity.findViewById(R.id.stat_users_find_textView_result))
+                        .setText(results.get(i++));
+                ((TextView) activity.findViewById(R.id.stat_received_textView_result))
+                        .setText(results.get(i++));
+                ((TextView) activity.findViewById(R.id.stat_users_received_textView_result))
+                        .setText(results.get(i));
             }
         }
     }

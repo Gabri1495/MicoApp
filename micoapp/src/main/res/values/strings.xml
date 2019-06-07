@@ -127,4 +127,8 @@
     <string name="error_photos_undeleted">Be aware! Some photo in MicoApp folder is not been properly deleted</string>
     <string name="photo_path">Photos\' paths</string>
     <string name="remember_delete_photos">Remember to manually delete photos\' folder</string>
+    <string name="finds">Finds</string>
+    <string name="received_s">Received</string>
+    <string name="photos">Photos</string>
+    <string name="different_users">Different users</string>
 </resources>
