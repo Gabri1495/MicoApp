@@ -62,14 +62,17 @@ public class ImportExportRitrovamentoManager {
                 FileOutputStream fos = new FileOutputStream(file);
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
                 oos.writeObject(ritrovamento);
+                oos.writeInt(Costanti.DB_VERSION);
                 oos.close();
                 fos.close();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 Toast.makeText(activity, R.string.error_file_creation_open, Toast.LENGTH_SHORT).show();
+                return;
             } catch (IOException e) {
                 e.printStackTrace();
                 Toast.makeText(activity, R.string.error_io, Toast.LENGTH_SHORT).show();
+                return;
             }
             Toast.makeText(activity, R.string.success_operation, Toast.LENGTH_SHORT).show();
             return;
@@ -91,15 +94,17 @@ public class ImportExportRitrovamentoManager {
 
             /*Sono pronto a caricare il file*/
             Ritrovamento ritrovamento;
+            int dbVersion;
             try {
                 FileDescriptor fileDescriptor = Objects.requireNonNull(activity.getContentResolver().openFileDescriptor(filePathName, "r")).getFileDescriptor();
                 FileInputStream fis = new FileInputStream(fileDescriptor);
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 Object tmp = ois.readObject();
                 ritrovamento = (Ritrovamento) tmp;
+                dbVersion = ois.readInt();
                 ois.close();
                 fis.close();
-                if(ritrovamento != null) {
+                if(ritrovamento != null && dbVersion == Costanti.DB_VERSION) {
                     /*AutoGenerate tratta lo 0 come valore non settato.
                     * In questo modo lascio gestire la chiave al database locale
                     * ed evito incompatibilità con quello d'origine*/

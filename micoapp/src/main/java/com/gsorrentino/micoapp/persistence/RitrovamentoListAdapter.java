@@ -166,7 +166,7 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
             }
 
             holder.showMapButton.setOnClickListener(new OnClickCustomListeners.
-                    OnClickMapButtonListener((MainActivity) activity, current));
+                    OnClickMapButtonListener((MainActivity) activity, this, current));
 
             // TODO migliorare caricamento
             List<String> paths = current.getPathsImmagine();

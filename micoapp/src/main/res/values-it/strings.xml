@@ -114,4 +114,5 @@
     <string name="dialog_recover_images">Durante l\'ultima modifica qualcosa non è stato salvato.\nVuoi ripristinare le foto?</string>
     <string name="error_photos_undeleted">Attenzione! Qualche foto nella cartella di MicoApp non è stata adeguatamente cancellata</string>
     <string name="photo_path">Percorsi Foto</string>
+    <string name="remember_delete_photos">Ricordati di cancellare manualmente la cartella delle foto</string>
 </resources>

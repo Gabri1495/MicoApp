@@ -103,6 +103,7 @@ public class AsyncTasks {
         private Ritrovamento find;
         private final WeakReference<Context> contextRef;
         private boolean error = false;
+        private boolean allPhotosDeleted = true;
 
         /**
          * {@link AsyncTask} per gestire un {@link Ritrovamento}.
@@ -131,6 +132,7 @@ public class AsyncTasks {
                         break;
                     case Costanti.DELETE:
                         dao.deleteRitrovamento(find);
+                        allPhotosDeleted= Metodi.deletePhoto(find.getPathsImmagine());
                         break;
                 }
             }catch (SQLiteConstraintException e){
@@ -144,7 +146,9 @@ public class AsyncTasks {
             super.onPostExecute(result);
             Context context = contextRef.get();
             if(context != null) {
-                if(!error)
+                if(!allPhotosDeleted)
+                    Toast.makeText(context, R.string.error_photos_undeleted, Toast.LENGTH_SHORT).show();
+                else if(!error)
                     Toast.makeText(context, R.string.success_operation, Toast.LENGTH_SHORT).show();
                 else
                     Toast.makeText(context, R.string.error_find_already_saved, Toast.LENGTH_LONG).show();

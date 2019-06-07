@@ -126,4 +126,5 @@
     <string name="dialog_recover_images">During last editing something has not been saved.\nDo you want to recover photos?</string>
     <string name="error_photos_undeleted">Be aware! Some photo in MicoApp folder is not been properly deleted</string>
     <string name="photo_path">Photos\' paths</string>
+    <string name="remember_delete_photos">Remember to manually delete photos\' folder</string>
 </resources>

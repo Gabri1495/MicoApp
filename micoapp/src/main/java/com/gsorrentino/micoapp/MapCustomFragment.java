@@ -23,9 +23,6 @@ import android.widget.Toast;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
@@ -54,9 +51,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gsorrentino.micoapp.model.Ritrovamento;
 import com.gsorrentino.micoapp.persistence.MicoAppDatabase;
 import com.gsorrentino.micoapp.util.Costanti;
+import com.gsorrentino.micoapp.util.ManagePermissions;
 
 import java.text.DateFormat;
 import java.util.Objects;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Un {@link Fragment} che gestisce fra le altre cose
@@ -80,6 +80,7 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
     private Marker marker;
+    private Marker markerToBeUpdated;
     /*Mantengo la posizione corrente di modo da allegarla all'Intent*/
     private LatLng currentPosition;
     /*Per permettere utilizzo della mappa anche senza localizzazione attiva*/
@@ -227,7 +228,8 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
             Ritrovamento find = (Ritrovamento) tmp;
             Intent intent = new Intent(getActivity(), EditFindActivity.class);
             intent.putExtra(Costanti.INTENT_FIND, (Parcelable) find);
-            Objects.requireNonNull(getActivity()).startActivity(intent);
+            markerToBeUpdated = iMarker;
+            startActivityForResult(intent, Costanti.REQUEST_UPDATE_FIND);
         }
         else {
             /*Copio le coordinate negli appunti*/
@@ -243,14 +245,15 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
 
 
     /**
-     * Dopo aver invocato {@link MapCustomFragment#checkManageLocationPermissions()}
+     * Dopo aver invocato
+     * {@link com.gsorrentino.micoapp.util.ManagePermissions#checkManageLocationPermissions(Fragment, GoogleMap)}
      * recupera la posizione attuale e la salva nel campo interno privato.
      * In caso di insuccesso, se anche il campo privato non è inizializzato,
      * imposta le coordinate di 0.0, 0.0; in caso di solo errore verranno
      * lasciate le coordinate precedentemente ottenute
      */
     private void retrieveCurrentLocation() {
-        if(checkManageLocationPermissions()) {
+        if(ManagePermissions.checkManageLocationPermissions(this, mMap)) {
             try {
                 fusedLocationClient.getLastLocation()
                         .addOnSuccessListener(Objects.requireNonNull(getActivity()), location -> {
@@ -270,47 +273,6 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
     }
 
 
-    /**
-     * Controlla se il permesso di Localizzazione sia concesso o meno.
-     * Nel caso non lo sia provvede a richiederlo ed eventualmente mostra notifica
-     * informativa sull'utilizzo che viene fatto del permesso.
-     * Nel caso sia invece concesso abilita il pulsante nella {@link GoogleMap} per
-     * ottenere la posizione corrente
-     *
-     * @return true solo se il permesso è già stato concesso
-     */
-    private boolean checkManageLocationPermissions() {
-        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()),
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-             /*Permission is not granted. Should we show an explanation?*/
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), Costanti.PERMISSION_CHANNEL_ID)
-                        .setSmallIcon(R.drawable.ic_menu_map)
-                        .setContentTitle(getString(R.string.permission_loc_title))
-                        .setContentText(getString(R.string.permission_loc_explanation))
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.permission_loc_explanation)))
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-                NotificationManagerCompat.from(getActivity()).notify(Costanti.PERMISSION_LOCALIZATION_NOTIFICATION_ID, builder.build());
-            }
-            /*No explanation needed; request the permission*/
-            /*La risposta sarà inviata in callback a questo fragment*/
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    Costanti.REQUEST_ACCESS_FINE_LOCATION_PERMISSIONS);
-        } else {
-             /*Permission has already been granted*/
-            if(mMap != null) {
-                mMap.setMyLocationEnabled(true);
-            }
-            return true;
-        }
-        return false;
-    }
-
-
     /*Warning soppresso perché eseguo l'operazione solo se nella callback
     * ricevo un successo nella richiesta dell'autorizzazione; in tal caso
     * sono quindi certo che avrò l'autorizzazione*/
@@ -318,7 +280,7 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions, @NonNull int[] grantResults) {
-        // If request is cancelled, the result arrays are empty.
+         /*If request is cancelled, the result arrays are empty.*/
         if (requestCode == Costanti.REQUEST_ACCESS_FINE_LOCATION_PERMISSIONS) {
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -397,6 +359,22 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
 
 
     /**
+     * Modifica posizione, titolo, snippet e tag di un marker sulla base di un Ritrovamento
+     *
+     * @param ritrovamento da cui ricavare i dati da modificare
+     * @param marker da modificare
+     */
+    private void updateMarker(Ritrovamento ritrovamento, Marker marker){
+        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+        marker.setPosition(ritrovamento.getCoordinate());
+        marker.setTitle("" + ritrovamento.fungo);
+        marker.setSnippet(ritrovamento.autore.nickname + " - " + dateFormat.format(ritrovamento.data.getTime()));
+        marker.setTag(ritrovamento);
+        marker.showInfoWindow();
+    }
+
+
+    /**
      * Demonstrates converting a {@link Drawable} to a {@link BitmapDescriptor},
      * for use as a marker icon.
      * See <a href= "https://stackoverflow.com/questions/33548447/vectordrawable-with-googlemap-bitmapdescriptor">
@@ -417,9 +395,18 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
 
 
     /*Callback di ritorno con la risposta dell'utente alla richiesta di
-    * abilitare la localizzazione del dispositivo*/
+    * abilitare la localizzazione del dispositivo e non solo*/
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
-        manageLocationUpdate();
+        switch(requestCode){
+            case (Costanti.REQUEST_CHECK_LOCALIZATION_SETTINGS):
+                manageLocationUpdate();
+                break;
+            case(Costanti.REQUEST_UPDATE_FIND):
+                if (resultCode == RESULT_OK) {
+                    updateMarker(data.getParcelableExtra(Costanti.INTENT_FIND), markerToBeUpdated);
+                }
+                break;
+        }
     }
 }

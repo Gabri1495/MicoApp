@@ -43,7 +43,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 if(context != null) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setMessage(R.string.dialog_deleting_finds);
-                    builder.setPositiveButton(R.string.proceed, (dialog, which) -> new AsyncTasks.DeleteAllDbAsync(context).execute(Costanti.REMOVE_FINDS));
+                    builder.setPositiveButton(R.string.proceed, (dialog, which) -> {
+                        Toast.makeText(context, R.string.remember_delete_photos, Toast.LENGTH_SHORT).show();
+                        new AsyncTasks.DeleteAllDbAsync(context).execute(Costanti.REMOVE_FINDS);
+                    });
                     builder.setNegativeButton(R.string.undo, (dialog, which) -> dialog.cancel());
                     builder.create().show();
                 }
@@ -74,6 +77,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setMessage(R.string.dialog_deleting_db);
                     builder.setPositiveButton(R.string.proceed, (dialog, which) -> {
+                        Toast.makeText(context, R.string.remember_delete_photos, Toast.LENGTH_SHORT).show();
                         context.deleteDatabase(Costanti.DB_NAME);
                         MicoAppDatabase.invalidateInstance();
                         Toast.makeText(context, R.string.success_operation, Toast.LENGTH_SHORT).show();

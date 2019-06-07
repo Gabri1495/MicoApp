@@ -4,12 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.text.format.DateFormat;
 import android.view.View;
@@ -20,18 +22,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.gsorrentino.micoapp.model.Ritrovamento;
 import com.gsorrentino.micoapp.model.Utente;
 import com.gsorrentino.micoapp.util.AsyncTasks;
 import com.gsorrentino.micoapp.util.Costanti;
+import com.gsorrentino.micoapp.util.ManagePermissions;
 import com.gsorrentino.micoapp.util.Metodi;
 import com.gsorrentino.micoapp.util.OnClickCustomListeners;
 
@@ -65,8 +70,12 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
     private String currentMode;
     private Ritrovamento ritrovamento;
     private String currentPhotoPath;
-    /*Per capire se ho terminato salvando*/
+    /*Per capire se ho terminato salvando e quindi evito di salvare Preference*/
     private boolean terminated = false;
+    /*Per capire se ho ripristinato le Preference*/
+    private boolean recovered = false;
+    /*Per vedere se ho i permessi di accesso allo storage*/
+    private boolean permission;
     /*Usato per capire quale Ritrovamento stia modificando*/
     private int currentKey = 0;
     /*Lista dei path di cui è stata creata una view
@@ -75,6 +84,8 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
     private List<String> photoPathsAdded = new ArrayList<>();
     private List<String> photoPathsInitial = new ArrayList<>();
 
+    private FloatingActionButton takeFab;
+    private FloatingActionButton addFab;
     private EditText fungoEditText;
     private EditText quantityEditText;
     private EditText dayEditText;
@@ -92,9 +103,13 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_find);
+        permission = ManagePermissions.checkManageStoragePermissions(this);
         findViewById(R.id.edit_save_update_button).setOnClickListener(this);
-        findViewById(R.id.edit_take_photo_fab).setOnClickListener(this);
-        findViewById(R.id.edit_add_photo_fab).setOnClickListener(this);
+        takeFab = findViewById(R.id.edit_take_photo_fab);
+        takeFab.setOnClickListener(this);
+        addFab = findViewById(R.id.edit_add_photo_fab);
+        addFab.setOnClickListener(this);
+        managePhotoButtons();
 
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences = getSharedPreferences(Costanti.SHARED_PREFERENCES, 0);
@@ -157,18 +172,22 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
                         currentPhotoPath = s;
                         addImageItem();
                     }
+                    recovered = true;
                 });
                 builder.setNegativeButton(R.string.undo, (dialog, which) -> {
                     cleanRecovery(tmpAdded, tmpInit);
                     dialog.cancel();
+                    recovered = true;
                 });
                 builder.create().show();
             }
         }
         else{
             /*L'utente ha aperto un Ritrovamento diverso, si presuppone
-            * non sia interessato al ripristino*/
+            * non sia interessato al ripristino, oppure non c'era nulla
+            * da ripristinare*/
             cleanRecovery(tmpAdded, tmpInit);
+            recovered = true;
         }
     }
 
@@ -183,7 +202,7 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onStop(){
         super.onStop();
-        if(!terminated) {
+        if(!terminated && recovered) {
             Gson gson = new Gson();
             String jsonPhotoPathsCurrent = gson.toJson(getCurrentPhotoPaths());
             String jsonPhotoPathsInitial = gson.toJson(photoPathsInitial);
@@ -205,7 +224,7 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
                     /* Create the File where the photo should go*/
-                    File photoFile = Metodi.createImageFile(nickname + "_" + nome + "_" + cognome);
+                    File photoFile = Metodi.createImageFile(ritrovamento.fungo, nickname + "_" + nome + "_" + cognome);
                     /* Save a file path for use with ACTION_VIEW intents*/
                     if (photoFile != null) {
                         currentPhotoPath = photoFile.getAbsolutePath();
@@ -296,6 +315,8 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
                         ritrovamento.setPathsImmagine(getCurrentPhotoPaths());
 
                         new AsyncTasks.ManageFindAsync(this, ritrovamento).execute(Costanti.UPDATE);
+                        /*Solo se sto modificando un Ritrovamento ritorno il valore modificato*/
+                        manageReturnValue();
                         break;
                 }
                 terminated = true;
@@ -383,24 +404,6 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
     }
 
     /**
-     * Cancella dall'archivio un elenco di foto
-     *
-     * @param paths Elenco dei paths delle foto da cancellare
-     */
-    private void deletePhoto(List<String> paths){
-        File toDelete;
-        boolean allDeleted = true;
-        for(String s : paths){
-            toDelete = new File(s);
-            if(toDelete.exists())
-                if(!toDelete.delete())
-                    allDeleted = false;
-        }
-        if(!allDeleted)
-            Toast.makeText(this, R.string.error_photos_undeleted, Toast.LENGTH_SHORT).show();
-    }
-
-    /**
      * Rimuove le Preferences relative ai path usati per il ripristino
      */
     private void resetPreferences(){
@@ -426,8 +429,27 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
                 toRemove.add(s);
             }
         }
-        deletePhoto(toRemove);
+        if(!Metodi.deletePhoto(toRemove))
+            Toast.makeText(this, R.string.error_photos_undeleted, Toast.LENGTH_SHORT).show();
         resetPreferences();
+    }
+
+    /**
+     * Gestisco i valori di ritorno dopo un StartActivityForResult
+     */
+    private void manageReturnValue(){
+        Intent data = new Intent();
+        data.putExtra(Costanti.INTENT_FIND, (Parcelable) ritrovamento);
+        setResult(RESULT_OK, data);
+    }
+
+    /**
+     * In base a {@link EditFindActivity#permission} abilita o meno
+     * i due pulsanti per aggiungere e scattare foto
+     */
+    private void managePhotoButtons() {
+        addFab.setEnabled(permission);
+        takeFab.setEnabled(permission);
     }
 
     /**
@@ -527,7 +549,7 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
                 imageUri = data.getData();
             }
             if(imageUri != null) {
-                File fileImage = Metodi.createImageFile(nickname + "_" + nome + "_" + cognome);
+                File fileImage = Metodi.createImageFile(ritrovamento.fungo,nickname + "_" + nome + "_" + cognome);
                 if(fileImage != null) {
                     Metodi.uriToFile(getContentResolver(), imageUri, fileImage);
                     currentPhotoPath = fileImage.getAbsolutePath();
@@ -535,6 +557,19 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
                 } else{
                     Toast.makeText(this, R.string.error_generic, Toast.LENGTH_SHORT).show();
                 }
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
+        /*If request is cancelled, the result arrays are empty.*/
+        if (requestCode == Costanti.REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSIONS) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                permission = true;
+                managePhotoButtons();
             }
         }
     }

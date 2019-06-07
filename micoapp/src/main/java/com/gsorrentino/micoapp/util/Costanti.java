@@ -2,6 +2,7 @@ package com.gsorrentino.micoapp.util;
 
 public final class Costanti {
     /*Database*/
+    public static final int DB_VERSION = 1;
     public static final String DB_NAME = "mico_app.db";
     public static final String INSERT = "insert";
     public static final String UPDATE = "update";
@@ -31,6 +32,7 @@ public final class Costanti {
     public static final int REQUEST_READ_FILE = 4;
     public static final int REQUEST_IMAGE_CAPTURE = 5;
     public static final int REQUEST_OPEN_IMAGE = 6;
+    public static final int REQUEST_UPDATE_FIND = 7;
 
     /*Notifications IDs*/
     public static final int PERMISSION_LOCALIZATION_NOTIFICATION_ID = 1;

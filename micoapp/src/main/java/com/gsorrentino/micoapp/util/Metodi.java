@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import static android.os.Environment.getExternalStoragePublicDirectory;
 
@@ -23,10 +24,11 @@ public class Metodi {
      * volta dentro a quella pubblica delle immagini
      *
      * @param imageFileNamePrefix Prefisso da anteporre alla data nel nome del file
+     * @param imageFileNameSuffix Suffisso da post porre alla data nel nome del file
      * @return Un file salvato con il formato .jpg, null in case of error
      */
     @SuppressLint("SimpleDateFormat")
-    public static File createImageFile(String imageFileNamePrefix) {
+    public static File createImageFile(String imageFileNamePrefix, String imageFileNameSuffix) {
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             File storageDir = new File(getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
                     "MicoApp");
@@ -38,7 +40,7 @@ public class Metodi {
                 }
             }
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            String imageFileName = imageFileNamePrefix + "_" + timeStamp + ".jpg";
+            String imageFileName = imageFileNamePrefix + "_" + timeStamp + imageFileNameSuffix + ".jpg";
             return new File(storageDir, imageFileName);
         }
         return null;
@@ -72,5 +74,24 @@ public class Metodi {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+
+    /**
+     * Cancella dall'archivio un elenco di foto
+     *
+     * @param paths Elenco dei paths delle foto da cancellare
+     * @return tutte le foto sono state cancellate
+     */
+    public static boolean deletePhoto(List<String> paths){
+        File toDelete;
+        boolean allDeleted = true;
+        for(String s : paths){
+            toDelete = new File(s);
+            if(toDelete.exists())
+                if(!toDelete.delete())
+                    allDeleted = false;
+        }
+        return allDeleted;
     }
 }
