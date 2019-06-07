@@ -342,6 +342,7 @@ public class AsyncTasks {
     }
 
 
+
     /**
      * {@link AsyncTask} per generare le statistiche dal database e mostrarle nella ui
      */
@@ -361,14 +362,40 @@ public class AsyncTasks {
             RitrovamentoDao findDao = db.ritrovamentoDao();
             RicevutoDao receivedDao = db.ricevutoDao();
 
+            /*Conto Ritrovamenti*/
             results.add(String.valueOf(findDao.countRitrovamenti()));
+            /*Conto foto*/
             List<Ritrovamento> finds = findDao.getAllRitrovamentiStatic();
             int numberPhoto = 0;
-            for(Ritrovamento r : finds)
-                numberPhoto += r.getPathsImmagine().size();
+            int maxPhoto = 0;
+            int maxQuantity = 0;
+            String morePhoto = "";
+            String moreQuantity = "";
+            int tmpPhoto;
+            int tmpQuantity;
+            for(Ritrovamento r : finds) {
+                tmpPhoto = r.getPathsImmagine().size();
+                numberPhoto += tmpPhoto;
+                if(tmpPhoto > maxPhoto) {
+                    morePhoto = r.fungo + " (" + tmpPhoto + ")";
+                    maxPhoto = tmpPhoto;
+                }
+                tmpQuantity = r.quantita;
+                if(tmpQuantity > maxQuantity){
+                    moreQuantity = r.fungo + " (" + tmpQuantity + ")";
+                    maxQuantity = tmpQuantity;
+                }
+            }
             results.add(String.valueOf(numberPhoto));
+            /*Ritrovamento con maggior foto*/
+            results.add(morePhoto);
+            /*Ritrovamento con maggior quantità*/
+            results.add(moreQuantity);
+            /*Conto di quanti diversi utenti ho Ritrovamenti*/
             results.add(String.valueOf(findDao.getUtentiRitrovamenti().size()));
+            /*Conto Ricevuti*/
             results.add(String.valueOf(receivedDao.countRicevuti()));
+            /*Conto da quanti diversi utenti ho Ricevuti*/
             results.add(String.valueOf(receivedDao.getUtentiRicevuti().size()));
 
             return results;
@@ -382,6 +409,10 @@ public class AsyncTasks {
                 ((TextView) activity.findViewById(R.id.stat_finds_textView_result))
                         .setText(results.get(i++));
                 ((TextView) activity.findViewById(R.id.stat_photo_textView_result))
+                        .setText(results.get(i++));
+                ((TextView) activity.findViewById(R.id.stat_more_photo_textView_result))
+                        .setText(results.get(i++));
+                ((TextView) activity.findViewById(R.id.stat_more_quantity_textView_result))
                         .setText(results.get(i++));
                 ((TextView) activity.findViewById(R.id.stat_users_find_textView_result))
                         .setText(results.get(i++));

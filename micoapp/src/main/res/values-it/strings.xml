@@ -119,4 +119,6 @@
     <string name="received_s">Ricevuti</string>
     <string name="photos">Foto</string>
     <string name="different_users">Utenti differenti</string>
+    <string name="has_more_photos">Ha più foto</string>
+    <string name="has_more_quantity">Maggior quantità</string>
 </resources>

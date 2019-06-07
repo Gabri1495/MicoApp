@@ -27,9 +27,31 @@
         android:layout_marginTop="8dp"
         android:text="@string/photos"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/stat_users_find_textView"
+        app:layout_constraintBottom_toTopOf="@+id/stat_more_photo_textView"
         app:layout_constraintStart_toStartOf="@+id/stat_finds_textView"
         app:layout_constraintTop_toBottomOf="@+id/stat_finds_textView" />
+
+    <TextView
+        android:id="@+id/stat_more_photo_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/has_more_photos"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/stat_more_quantity_textView"
+        app:layout_constraintStart_toStartOf="@+id/stat_photo_textView"
+        app:layout_constraintTop_toBottomOf="@+id/stat_photo_textView" />
+
+    <TextView
+        android:id="@+id/stat_more_quantity_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/has_more_quantity"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/stat_users_find_textView"
+        app:layout_constraintStart_toStartOf="@+id/stat_more_photo_textView"
+        app:layout_constraintTop_toBottomOf="@+id/stat_more_photo_textView" />
 
     <TextView
         android:id="@+id/stat_users_find_textView"
@@ -39,8 +61,8 @@
         android:text="@string/different_users"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/stat_received_textView"
-        app:layout_constraintStart_toStartOf="@+id/stat_photo_textView"
-        app:layout_constraintTop_toBottomOf="@+id/stat_photo_textView" />
+        app:layout_constraintStart_toStartOf="@+id/stat_more_quantity_textView"
+        app:layout_constraintTop_toBottomOf="@+id/stat_more_quantity_textView" />
 
     <TextView
         android:id="@+id/stat_received_textView"
@@ -69,55 +91,91 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="right"
-        app:constraint_referenced_ids="stat_photo_textView,stat_users_received_textView,stat_users_find_textView,stat_finds_textView,stat_received_textView"
+        app:constraint_referenced_ids="stat_photo_textView,stat_users_received_textView,
+        stat_users_find_textView,stat_finds_textView,stat_received_textView,
+        stat_more_photo_textView,stat_more_quantity_textView"
         tools:layout_editor_absoluteX="411dp" />
 
     <TextView
         android:id="@+id/stat_finds_textView_result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="16dp"
+        android:textAlignment="center"
         android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/stat_finds_textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/barrier"
         app:layout_constraintTop_toTopOf="@+id/stat_finds_textView" />
 
     <TextView
         android:id="@+id/stat_photo_textView_result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="16dp"
+        android:textAlignment="center"
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/stat_photo_textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/barrier"
         app:layout_constraintTop_toTopOf="@+id/stat_photo_textView" />
 
     <TextView
-        android:id="@+id/stat_users_find_textView_result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/stat_more_photo_textView_result"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="16dp"
+        android:textAlignment="center"
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/stat_more_photo_textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/barrier"
+        app:layout_constraintTop_toTopOf="@+id/stat_more_photo_textView" />
+
+    <TextView
+        android:id="@+id/stat_more_quantity_textView_result"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/stat_more_quantity_textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/barrier"
+        app:layout_constraintTop_toTopOf="@+id/stat_more_quantity_textView" />
+
+    <TextView
+        android:id="@+id/stat_users_find_textView_result"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/stat_users_find_textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/barrier"
         app:layout_constraintTop_toTopOf="@+id/stat_users_find_textView" />
 
     <TextView
         android:id="@+id/stat_received_textView_result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="16dp"
+        android:textAlignment="center"
         android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/stat_received_textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/barrier"
         app:layout_constraintTop_toTopOf="@+id/stat_received_textView" />
 
     <TextView
         android:id="@+id/stat_users_received_textView_result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="16dp"
+        android:textAlignment="center"
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/stat_users_received_textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/barrier"
         app:layout_constraintTop_toTopOf="@+id/stat_users_received_textView" />
