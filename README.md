@@ -1,19 +1,19 @@
 <img src="micoapp/src/main/ic_launcher-web.png" width="300" height="300">
 
 # MicoApp
-An Android application to support who likes to search mushrooms.
+An Android application to support everyone who likes to search mushrooms.
 
-This app has born in 2019 as a project for the course of 
+This app was born in 2019 as a project for the course of 
 [Laboratorio di Applicazioni Mobili](https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2018/367016) 
-at University of Bologna, but the focus was already to do something more.
+at University of Bologna, but the focus was to do something more than a simple and almost useless project for an exam.
 
 If you like to search mushrooms like me this app could help you to keep a personal record of 
 which moushrooms, where have you found them and eventually share these finds with your friends 
-(I know how gelous is a searcher, so there is no possibility to share online your informations).
+(I know how jealous is a searcher, so there is no possibility to share online your informations).
 
 ## How to install
 Obviously you can fork or copy the entire project to build it yourself, but if you are interested
-only to the final application, [here](MicoApp) you can find apk.
+only to the final application, [here](MicoApp_0.9.1(31).apk) you can find apk.
 
 ## License
 Please take a look at **open source license**.  
