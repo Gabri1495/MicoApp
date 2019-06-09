@@ -63,7 +63,7 @@
     <string name="note">Note</string>
     <string name="edit_find">Edit Find</string>
     <string name="save">Save</string>
-    <string name="info_open_source">This is an open source app</string>
+    <string name="info_open_source">This open source app was born in 2019 as a project for the course of Laboratorio di Applicazioni Mobili at University of Bologna, but the focus was to do something more than a simple and almost useless project for an exam.\n\nIf you like to search mushrooms like me this app could help you to keep a personal record of which moushrooms, where have you found them and eventually share these finds with your friends (I know how jealous is a searcher, so there is no possibility to share online your informations).</string>
     <string name="info_credits">Credits</string>
     <string name="permission_loc_explanation">Without Location Permission this app can not automatically detect your position.\nYou will have to select it manually</string>
     <string name="permission_loc_title">What is Location Permission for?</string>
@@ -141,4 +141,13 @@
     <string name="never">Never</string>
     <string name="notif_mem_title">New Memories have been found</string>
     <string name="notif_mem_desc">Let\'s check them!</string>
+    <string name="info_coIdeator_label">Co-Ideator:</string>
+    <string name="info_coIdeator" translatable="false">Roberto Cocchi</string>
+    <string name="info_technical_support_label">Technical support:</string>
+    <string name="info_technical_support" translatable="false">Nicola Fava</string>
+    <string name="info_designer_label">Designer:</string>
+    <string name="info_designer" translatable="false">Agnese Testoni</string>
+    <string name="info_main_tester_label">Main Tester:</string>
+    <string name="info_main_tester" translatable="false">Agnese Testoni\nFrancesco Bellei\nNicola Fava\nRoberto Cocchi\nRubens Ferrari</string>
+    <string name="info_channel">All the members of my Telegram channel</string>
 </resources>

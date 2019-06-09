@@ -53,7 +53,7 @@
     <string name="quantity">Quantità</string>
     <string name="edit_find">Modifica Ritrovamento</string>
     <string name="save">Salva</string>
-    <string name="info_open_source">Questa è un\'app open source</string>
+    <string name="info_open_source">Quest\'app open source è nata nel 2019 come progetto del corso di Laboratorio di Applicazioni Mobili all\'Università di Bologna, ma l\'obbiettivo era di fare qualcosa in più di un semplice e praticamente inutile progetto per un esame.  Se ti piace cercare funghi come a me, quest\'app può aiutarti a tener traccia di quali funghi, dove li hai trovati ed eventualmente condividere questi ritrovamenti con i tuoi amici (So quanto sia geloso un cercatore, per cui nessuna possibilità di condividere online le tue informazioni).</string>
     <string name="info_credits">Ringraziamenti</string>
     <string name="permission_loc_explanation">Senza il Permesso Localizzazione quest\'app non può automaticamente identificare la tua posizione.\nDovrai selezionarla manualmente</string>
     <string name="permission_loc_title">A cosa serve il permesso di Localizzazione?</string>
@@ -129,4 +129,9 @@
     <string name="never">Mai</string>
     <string name="notif_mem_title">Sono stati trovati nuovi Ricordi</string>
     <string name="notif_mem_desc">Vediamoli!</string>
+    <string name="info_coIdeator_label">Co-Ideatore:</string>
+    <string name="info_technical_support_label">Supporto tecnico:</string>
+    <string name="info_designer_label">Designer:</string>
+    <string name="info_main_tester_label">Tester principali:</string>
+    <string name="info_channel">Tutti i membri del mio canale Telegram</string>
 </resources>

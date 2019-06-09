@@ -41,9 +41,17 @@ public class MemoriesWorker extends Worker {
                 MemoriesWorker.class, 1, TimeUnit.DAYS).build();
     }
 
+    /* È stato utilizzato per fini di test
+    private static OneTimeWorkRequest getOwnOneTimeWorkRequest() {
+        return new OneTimeWorkRequest.Builder(
+                MemoriesWorker.class).setInitialDelay(20, TimeUnit.SECONDS).build();
+    }*/
+
     static void enqueueSelf() {
         WorkManager.getInstance().enqueueUniquePeriodicWork(
-                uniqueMemoriesWorkName, ExistingPeriodicWorkPolicy.KEEP, getOwnWorkRequest() );
+                uniqueMemoriesWorkName, ExistingPeriodicWorkPolicy.KEEP, getOwnWorkRequest());
+        /*WorkManager.getInstance().enqueueUniqueWork(
+                uniqueMemoriesWorkName, ExistingWorkPolicy.KEEP, getOwnOneTimeWorkRequest());*/
     }
 
     @NonNull

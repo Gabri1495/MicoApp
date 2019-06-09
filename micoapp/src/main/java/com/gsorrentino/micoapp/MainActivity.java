@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -183,7 +182,9 @@ public class MainActivity extends AppCompatActivity
 
             /*Mostra la pagina su GitHub con il codice sorgente*/
             case R.id.action_github:
-                Toast.makeText(this, R.string.tmp_github, Toast.LENGTH_LONG).show();
+                Intent gitHubIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Gabri1495/MicoApp"));
+                if(gitHubIntent.resolveActivity(getPackageManager()) != null)
+                    startActivity(gitHubIntent);
                 return true;
 
             /*Mostra l'activity riassuntiva dell'applicazione*/
