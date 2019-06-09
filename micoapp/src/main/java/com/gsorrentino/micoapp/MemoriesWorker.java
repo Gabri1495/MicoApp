@@ -71,7 +71,8 @@ public class MemoriesWorker extends Worker {
                 && month != lastCheck.get(Calendar.MONTH) && day != lastCheck.get(Calendar.DAY_OF_MONTH)){
             for(Ritrovamento r : ritrovamenti){
                 if(r.data.get(Calendar.DAY_OF_MONTH) == day
-                        && r.data.get(Calendar.MONTH) == month){
+                        && r.data.get(Calendar.MONTH) == month
+                        && !memories.contains(r.key)){
                     memories.add(r.key);
                     newMemories = true;
                 }
