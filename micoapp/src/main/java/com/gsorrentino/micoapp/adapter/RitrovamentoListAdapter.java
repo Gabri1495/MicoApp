@@ -1,4 +1,4 @@
-package com.gsorrentino.micoapp.persistence;
+package com.gsorrentino.micoapp.adapter;
 
 import android.app.Activity;
 import android.content.Context;

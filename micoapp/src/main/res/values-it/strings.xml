@@ -121,4 +121,12 @@
     <string name="different_users">Utenti differenti</string>
     <string name="has_more_photos">Ha più foto</string>
     <string name="has_more_quantity">Maggior quantità</string>
+    <string name="channel_memories_name">Ricordi</string>
+    <string name="channel_memories_desc">Per ricordarti dei tuoi precedenti ritrovamenti</string>
+    <string name="worker_state">Stato worker</string>
+    <string name="worker_last_run">Ultima esecuzione worker</string>
+    <string name="worker_delete">Cancella worker</string>
+    <string name="never">Mai</string>
+    <string name="notif_mem_title">Sono stati trovati nuovi Ricordi</string>
+    <string name="notif_mem_desc">Vediamoli!</string>
 </resources>

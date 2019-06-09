@@ -31,9 +31,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.gsorrentino.micoapp.util.Costanti;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        HomeFragment.OnFragmentInteractionListener,
-        MemoriesFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
@@ -54,6 +52,9 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         createNotificationChannel();
+
+        /*Avvio il Worker per il controllo delle memorie*/
+        MemoriesWorker.enqueueSelf();
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         backPressed = false;
@@ -273,25 +274,29 @@ public class MainActivity extends AppCompatActivity
         replaceFragment(newFragment, backStack, false, 0);
     }
 
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-        //TODO gestire comunicazione con fragment
-    }
-
-
     /**
      * Crea i vari {@link NotificationChannel} che l'applicazione usa,
      * ma solo nel caso le API utilizzate siano 26+
      */
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(Costanti.PERMISSION_CHANNEL_ID,
-                    getString(R.string.channel_permissions_name),
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setDescription(getString(R.string.channel_permissions_desc));
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
+
+            if(notificationManager.getNotificationChannel(Costanti.PERMISSION_CHANNEL_ID) == null) {
+                NotificationChannel channel = new NotificationChannel(Costanti.PERMISSION_CHANNEL_ID,
+                        getString(R.string.channel_permissions_name),
+                        NotificationManager.IMPORTANCE_DEFAULT);
+                channel.setDescription(getString(R.string.channel_permissions_desc));
+                notificationManager.createNotificationChannel(channel);
+            }
+
+            if(notificationManager.getNotificationChannel(Costanti.MEMORIES_CHANNEL_ID) == null) {
+                NotificationChannel channel = new NotificationChannel(Costanti.MEMORIES_CHANNEL_ID,
+                        getString(R.string.channel_memories_name),
+                        NotificationManager.IMPORTANCE_DEFAULT);
+                channel.setDescription(getString(R.string.channel_memories_desc));
+                notificationManager.createNotificationChannel(channel);
+            }
         }
     }
 

@@ -54,6 +54,9 @@ public interface RitrovamentoDao {
             "AND cognome = :cognome AND data = :data")
     Ritrovamento getRitrovamento(String nickname, String nome, String cognome, Calendar data);
 
+    @Query("SELECT * FROM ritrovamento WHERE `key` = :key")
+    Ritrovamento getRitrovamento(int key);
+
     @Query("DELETE FROM ritrovamento")
     void deleteAll();
 }

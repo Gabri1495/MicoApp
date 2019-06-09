@@ -7,7 +7,7 @@ import com.gsorrentino.micoapp.MainActivity;
 import com.gsorrentino.micoapp.MapCustomFragment;
 import com.gsorrentino.micoapp.R;
 import com.gsorrentino.micoapp.model.Ritrovamento;
-import com.gsorrentino.micoapp.persistence.RitrovamentoListAdapter;
+import com.gsorrentino.micoapp.adapter.RitrovamentoListAdapter;
 
 public class OnClickCustomListeners {
 
@@ -34,10 +34,22 @@ public class OnClickCustomListeners {
             this.ritrovamento = ritrovamento;
         }
 
+        /**
+         * Listener personalizzato che dovrà rimpiazzare un fragment con
+         * un {@link MapCustomFragment} passandogli uno specifico Ritrovamento
+         *
+         * @param activity Necessaria per sostituire il fragment
+         * @param ritrovamento Verrà visualizzato sulla mappa
+         */
+        public OnClickMapButtonListener(MainActivity activity, Ritrovamento ritrovamento) {
+            this(activity, null, ritrovamento);
+        }
+
         @Override
         public void onClick(View v) {
             if(activity != null) {
-                adapter.terminaActionMode();
+                if(adapter != null)
+                    adapter.terminaActionMode();
                 activity.replaceFragment(new MapCustomFragment(ritrovamento), false,
                         true, R.id.menu_map);
             }

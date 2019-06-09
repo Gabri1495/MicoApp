@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gsorrentino.micoapp.model.Ricevuto;
-import com.gsorrentino.micoapp.persistence.RicevutoListAdapter;
+import com.gsorrentino.micoapp.adapter.RicevutoListAdapter;
 import com.gsorrentino.micoapp.persistence.RicevutoViewModel;
 import com.gsorrentino.micoapp.util.Costanti;
 

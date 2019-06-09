@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.gsorrentino.micoapp.model.Ritrovamento;
-import com.gsorrentino.micoapp.persistence.RitrovamentoListAdapter;
+import com.gsorrentino.micoapp.adapter.RitrovamentoListAdapter;
 import com.gsorrentino.micoapp.persistence.RitrovamentoViewModel;
 import com.gsorrentino.micoapp.util.Costanti;
 

@@ -25,6 +25,10 @@ public final class Costanti {
     public static final String INITIAL_PATHS = "initialPaths";
     public static final String CURRENT_KEY = "currentKey";
 
+    public static final String SHARED_PREFERENCES_MEMORIES = "pref_mem";
+    public static final String SAVED_MEMORIES = "savedMem";
+    public static final String LAST_MEMORIES = "lastMem";
+
     /*Return codes from callbacks*/
     public static final int REQUEST_ACCESS_FINE_LOCATION_PERMISSIONS = 1;
     public static final int REQUEST_CHECK_LOCALIZATION_SETTINGS = 2;
@@ -37,9 +41,11 @@ public final class Costanti {
     /*Notifications IDs*/
     public static final int PERMISSION_LOCALIZATION_NOTIFICATION_ID = 1;
     public static final int PERMISSION_STORAGE_NOTIFICATION_ID = 2;
+    public static final int MEMORIES_NOTIFICATION_ID = 3;
 
     /*Channels*/
     public static final String PERMISSION_CHANNEL_ID = "Permissions";
+    public static final String MEMORIES_CHANNEL_ID = "Memories";
 
     /*Default values*/
     public static final double LAT_DEFAULT = 44.498955;

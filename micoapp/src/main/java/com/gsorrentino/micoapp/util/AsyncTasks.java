@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gsorrentino.micoapp.MemoriesFragment;
 import com.gsorrentino.micoapp.R;
 import com.gsorrentino.micoapp.model.Ricevuto;
 import com.gsorrentino.micoapp.model.Ritrovamento;
@@ -157,6 +158,55 @@ public class AsyncTasks {
                 else
                     Toast.makeText(context, R.string.error_find_already_saved, Toast.LENGTH_LONG).show();
             }
+        }
+    }
+
+
+
+    public static class GetFindsAsync extends AsyncTask<Void, Void, List<Ritrovamento>> {
+
+        private MemoriesFragment fragment;
+        private List<Integer> memories;
+
+        /**
+         * {@link AsyncTask} per recuperare una lista di {@link Ritrovamento}.
+         *
+         * @param fragment Utilizzato per sfruttarne il contesto e fornire la
+         *                 lista di ritorno
+         * @param memories Elenco delle key dei {@link Ritrovamento}
+         *                 da recuperare
+         */
+        public GetFindsAsync(MemoriesFragment fragment, List<Integer> memories) {
+            this.fragment = fragment;
+            this.memories = memories;
+        }
+
+        @Override
+        protected List<Ritrovamento> doInBackground(Void... params) {
+            MicoAppDatabase db = MicoAppDatabase.getInstance(fragment.getActivity(), false);
+            RitrovamentoDao dao = db.ritrovamentoDao();
+            List<Ritrovamento> memFinds = new ArrayList<>();
+            Ritrovamento tmp;
+
+            for(Integer i : memories) {
+                try {
+                    tmp = dao.getRitrovamento(i);
+                    if(tmp != null)
+                        memFinds.add(tmp);
+                    if(isCancelled())
+                        return null;
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            return memFinds;
+        }
+
+        @Override
+        protected void onPostExecute(List<Ritrovamento> memFinds) {
+            if(fragment != null)
+                fragment.setRitrovamenti(memFinds);
         }
     }
 

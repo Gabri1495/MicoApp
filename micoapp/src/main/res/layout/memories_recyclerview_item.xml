@@ -7,7 +7,7 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/archive_mushroomNumber_textView"
+        android:id="@+id/memories_mushroomNumber_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -17,69 +17,69 @@
         tools:text="6" />
 
     <TextView
-        android:id="@+id/archive_mushroom_textView"
+        android:id="@+id/memories_mushroom_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/archive_date_textView"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/archive_mushroomNumber_textView"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toStartOf="@+id/memories_date_textView"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/memories_mushroomNumber_textView"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="Fungo" />
 
     <TextView
-        android:id="@+id/archive_user_textView"
+        android:id="@+id/memories_user_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/archive_constraintSubLayout"
-        app:layout_constraintEnd_toStartOf="@+id/archive_mushroom_image"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toTopOf="@+id/memories_constraintSubLayout"
+        app:layout_constraintEnd_toStartOf="@+id/memories_mushroom_image"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/archive_mushroom_textView"
-        app:layout_constrainedWidth="true"
+        app:layout_constraintTop_toBottomOf="@+id/memories_mushroom_textView"
         tools:text="Utente" />
 
     <TextView
-        android:id="@+id/archive_date_textView"
+        android:id="@+id/memories_date_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/archive_mushroom_image"
+        app:layout_constraintEnd_toStartOf="@+id/memories_mushroom_image"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="26/6/01" />
 
     <ImageView
-        android:id="@+id/archive_mushroom_image"
+        android:id="@+id/memories_mushroom_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="10dp"
         android:contentDescription="@string/archive_image_content"
-        app:layout_constraintBottom_toTopOf="@+id/archive_constraintSubLayout"
+        app:layout_constraintBottom_toTopOf="@+id/memories_constraintSubLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/ic_launcher" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/archive_constraintSubLayout"
+        android:id="@+id/memories_constraintSubLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/archive_mushroom_image">
+        app:layout_constraintTop_toBottomOf="@+id/memories_mushroom_image">
 
         <TextView
-            android:id="@+id/archive_address_textView"
+            android:id="@+id/memories_address_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -87,7 +87,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="16dp"
             app:layout_constrainedWidth="true"
-            app:layout_constraintBottom_toTopOf="@+id/archive_note_textView"
+            app:layout_constraintBottom_toTopOf="@+id/memories_note_textView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -95,31 +95,52 @@
             tools:text="Località" />
 
         <TextView
-            android:id="@+id/archive_note_textView"
+            android:id="@+id/memories_note_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="8dp"
             app:layout_constrainedWidth="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/archive_showMap_button"
+            app:layout_constraintBottom_toTopOf="@id/memories_delete_button"
+            app:layout_constraintEnd_toStartOf="@+id/memories_showMap_button"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/archive_address_textView"
+            app:layout_constraintTop_toBottomOf="@+id/memories_address_textView"
             tools:text="Nota" />
 
         <Button
-            android:id="@+id/archive_showMap_button"
+            android:id="@+id/memories_showMap_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
             android:text="@string/show_map"
+            app:layout_constraintBottom_toTopOf="@id/memories_edit_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/memories_address_textView" />
+
+        <Button
+            android:id="@+id/memories_edit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/edit"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/archive_address_textView" />
+            app:layout_constraintTop_toBottomOf="@id/memories_showMap_button" />
+
+        <Button
+            android:id="@+id/memories_delete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/delete"
+            app:layout_constraintBottom_toBottomOf="@id/memories_edit_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/memories_edit_button" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
