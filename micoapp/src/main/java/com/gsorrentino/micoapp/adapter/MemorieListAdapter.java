@@ -3,9 +3,9 @@ package com.gsorrentino.micoapp.adapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Parcelable;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +24,7 @@ import com.gsorrentino.micoapp.MemoriesFragment;
 import com.gsorrentino.micoapp.R;
 import com.gsorrentino.micoapp.model.Ritrovamento;
 import com.gsorrentino.micoapp.util.Costanti;
+import com.gsorrentino.micoapp.util.Metodi;
 import com.gsorrentino.micoapp.util.OnClickCustomListeners;
 
 import java.text.DateFormat;
@@ -134,6 +135,7 @@ public class MemorieListAdapter extends RecyclerView.Adapter<MemorieListAdapter.
                     OnClickMapButtonListener((MainActivity) activity, current));
 
             holder.editButton.setOnClickListener(v -> {
+                memoriesFragment.findsMustBeUpdated();
                 Intent intent = new Intent(activity, EditFindActivity.class);
                 intent.putExtra(Costanti.INTENT_FIND, (Parcelable) current);
                 activity.startActivity(intent);
@@ -141,14 +143,13 @@ public class MemorieListAdapter extends RecyclerView.Adapter<MemorieListAdapter.
 
             holder.deleteButton.setOnClickListener(v -> memoriesFragment.removeMemory(current));
 
-            // TODO migliorare caricamento
             List<String> paths = current.getPathsImmagine();
             if(paths.size() > 0){
                 String path = paths.get(0);
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                //TODO migliorare riduzione immagine (per esempio con ThumbnailsUtils)
-                options.inSampleSize = 16;
-                Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int width = displayMetrics.widthPixels;
+                Bitmap bitmap = Metodi.loadBitMapResized(path, width / 4, false);
                 if(bitmap != null)
                     holder.mushroomImageView.setImageBitmap(bitmap);
             }

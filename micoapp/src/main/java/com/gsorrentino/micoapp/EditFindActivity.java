@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -18,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -80,7 +80,7 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
     private int currentKey = 0;
     /*Lista dei path di cui è stata creata una view
     * (quindi per ognuno di essi esiste una foto salvata) e di
-    * quelli caricati all'inizio*/
+    * quelli caricati all'avvio dell'Activity*/
     private List<String> photoPathsAdded = new ArrayList<>();
     private List<String> photoPathsInitial = new ArrayList<>();
 
@@ -98,6 +98,7 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
     private EditText latEditText;
     private EditText lngEditText;
     private ViewGroup imagesContainer;
+    private HorizontalScrollView imagesScrollBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +131,7 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
         latEditText = findViewById(R.id.edit_lat_editText);
         lngEditText = findViewById(R.id.edit_lng_editText);
         imagesContainer = findViewById(R.id.edit_find_image_container);
+        imagesScrollBar = findViewById(R.id.edit_horizontal_scrollView);
 
         /*Subito pronto per l'immssione*/
         fungoEditText.requestFocus();
@@ -147,46 +149,51 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
         if(ritrovamento != null)
             editMode(ritrovamento);
 
+        /*Gestisco eventuale recovery dello stato precedente delle foto*/
         String jsonPhotoPathsAdded = sharedPreferences.getString(Costanti.ADDED_PATHS, "[]");
         String jsonPhotoPathsCurrent = sharedPreferences.getString(Costanti.CURRENT_PATHS, "[]");
         String jsonPhotoPathsInitial = sharedPreferences.getString(Costanti.INITIAL_PATHS, "[]");
         int restoredKey = sharedPreferences.getInt(Costanti.CURRENT_KEY, 0);
         Gson gson = new Gson();
-        List<String> tmpAdded;
-        List<String> tmpInit;
+        List<String> recoveredAdded;
+        List<String> recoveredInit;
         Type type = new TypeToken<List<String>>(){}.getType();
-        tmpAdded = gson.fromJson(jsonPhotoPathsAdded == null ? "[]" : jsonPhotoPathsAdded, type);
-        tmpInit = gson.fromJson(jsonPhotoPathsInitial == null ? "[]" : jsonPhotoPathsInitial, type);
+        recoveredAdded = gson.fromJson(jsonPhotoPathsAdded == null ? "[]" : jsonPhotoPathsAdded, type);
+        recoveredInit = gson.fromJson(jsonPhotoPathsInitial == null ? "[]" : jsonPhotoPathsInitial, type);
         /*Erano presenti delle immagini, chiedo se si voglia recuperare il lavoro*/
         if(restoredKey == currentKey){
-            List<String> tmpCurrent;
-            tmpCurrent = gson.fromJson(jsonPhotoPathsCurrent == null ? "[]" : jsonPhotoPathsCurrent, type);
-            /*Procedo solo se i dati temporanei salvati denotano una modifica effettuata*/
-            if(!tmpInit.containsAll(tmpAdded) || !tmpInit.containsAll(tmpCurrent)) {
+            List<String> recoveredCurrent = gson
+                    .fromJson(jsonPhotoPathsCurrent == null ? "[]" : jsonPhotoPathsCurrent, type);
+            /*Procedo solo se i dati temporanei salvati denotano una modifica effettuata
+            * (non ne sono stati aggiunti più di quelli iniziali & non ne sono stati tolti)*/
+            boolean beenAddedPic = !recoveredInit.containsAll(recoveredAdded);
+            boolean beenOnlyRemovedPic = !recoveredCurrent.containsAll(recoveredInit);
+            if(beenAddedPic || beenOnlyRemovedPic) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.dialog_recover_images);
                 builder.setPositiveButton(R.string.proceed, (dialog, which) -> {
                     removeImageViews();
-                    photoPathsInitial = tmpInit;
-                    for (String s : tmpCurrent) {
+                    for (String s : recoveredCurrent) {
                         currentPhotoPath = s;
-                        addImageItem();
+                        addImageItem(currentPhotoPath);
                     }
+                    resetPreferences();
                     recovered = true;
                 });
                 builder.setNegativeButton(R.string.undo, (dialog, which) -> {
-                    cleanRecovery(tmpAdded, tmpInit);
-                    dialog.cancel();
+                    cleanRecovery(recoveredAdded, recoveredInit);
                     recovered = true;
                 });
                 builder.create().show();
+            } else {
+                resetPreferences();
+                recovered = true;
             }
-        }
-        else{
+        } else{
             /*L'utente ha aperto un Ritrovamento diverso, si presuppone
             * non sia interessato al ripristino, oppure non c'era nulla
             * da ripristinare*/
-            cleanRecovery(tmpAdded, tmpInit);
+            cleanRecovery(recoveredAdded, recoveredInit);
             recovered = true;
         }
     }
@@ -200,8 +207,8 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    public void onStop(){
-        super.onStop();
+    public void onDestroy(){
+        super.onDestroy();
         if(!terminated && recovered) {
             Gson gson = new Gson();
             String jsonPhotoPathsCurrent = gson.toJson(getCurrentPhotoPaths());
@@ -224,7 +231,9 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
                     /* Create the File where the photo should go*/
-                    File photoFile = Metodi.createImageFile(ritrovamento.fungo, nickname + "_" + nome + "_" + cognome);
+                    File photoFile = Metodi.createImageFile(
+                            ritrovamento != null ? ritrovamento.fungo : fungoEditText.getText().toString(),
+                            nickname + "_" + nome + "_" + cognome);
                     /* Save a file path for use with ACTION_VIEW intents*/
                     if (photoFile != null) {
                         currentPhotoPath = photoFile.getAbsolutePath();
@@ -321,37 +330,34 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
                 }
                 terminated = true;
                 deleteUnusedPhoto();
-                resetPreferences();
                 finish();
         }
     }
 
     /**
      * Aggiunge un layout nell'apposito container per una nuova
-     * immagine da mostrare. Per mostrare l'immagine utilizza
-     * {@link EditFindActivity#currentPhotoPath}.
+     * immagine da mostrare.
+     *
+     * @param photoPath Utilizzato per mostrare l'immagine
      */
-    private void addImageItem() {
+    private void addImageItem(String photoPath) {
         /*Aggiungo gli elementi grafici per la nuova immagine*/
         View viewToAdd = getLayoutInflater().inflate(
                 R.layout.edit_find_image_item,
                 imagesContainer,false);
         ImageView imageView = viewToAdd.findViewById(R.id.imageView);
-        imageView.setTag(currentPhotoPath);
+        imageView.setTag(photoPath);
         viewToAdd.findViewById(R.id.image_fab).setOnClickListener(new OnClickCustomListeners.
                 OnClickRemoveImageListener(viewToAdd));
         imagesContainer.addView(viewToAdd);
 
         /*Setto la Bitmap nell'ImageView appena creata*/
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        //TODO migliorare riduzione immagine (per esempio con ThumbnailsUtils)
-        options.inSampleSize = 8;
-        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, options);
+        Bitmap bitmap = Metodi.loadBitMapResized(photoPath, imagesScrollBar.getHeight(), true);
         if(bitmap != null) {
             imageView.setImageBitmap(bitmap);
         }
 
-        photoPathsAdded.add(currentPhotoPath);
+        photoPathsAdded.add(photoPath);
     }
 
     /**
@@ -483,7 +489,6 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
      */
     private void createMode(LatLng latLng){
         currentMode = CREATE_MODE;
-        currentKey = 0;
         this.setTitle(R.string.create_find);
         latEditText.setText(String.valueOf(latLng.latitude));
         lngEditText.setText(String.valueOf(latLng.longitude));
@@ -529,10 +534,15 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
             tmpPaths.append(s);
             firstDone = true;
             currentPhotoPath = s;
-            addImageItem();
         }
+        /*Carico le immagini solo dopo che la view è stata disegnata*/
+        imagesScrollBar.post(() -> {
+            for(String s1 : ritrovamento.getPathsImmagine())
+                addImageItem(s1);
+        });
         ((TextView)findViewById(R.id.edit_path_textView)).setText(tmpPaths.toString());
-        photoPathsInitial = getCurrentPhotoPaths();
+        /*I path associati al Ritrovamento che sto modificando vengono salvati*/
+        photoPathsInitial = ritrovamento.getPathsImmagine();
     }
 
     @Override
@@ -540,7 +550,7 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == Costanti.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            addImageItem();
+            addImageItem(currentPhotoPath);
         }
 
         if (requestCode == Costanti.REQUEST_OPEN_IMAGE && resultCode == RESULT_OK) {
@@ -549,11 +559,13 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
                 imageUri = data.getData();
             }
             if(imageUri != null) {
-                File fileImage = Metodi.createImageFile(ritrovamento.fungo,nickname + "_" + nome + "_" + cognome);
+                File fileImage = Metodi.createImageFile(
+                        ritrovamento != null ? ritrovamento.fungo : fungoEditText.getText().toString(),
+                        nickname + "_" + nome + "_" + cognome);
                 if(fileImage != null) {
                     Metodi.uriToFile(getContentResolver(), imageUri, fileImage);
                     currentPhotoPath = fileImage.getAbsolutePath();
-                    addImageItem();
+                    addImageItem(currentPhotoPath);
                 } else{
                     Toast.makeText(this, R.string.error_generic, Toast.LENGTH_SHORT).show();
                 }

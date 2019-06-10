@@ -13,7 +13,7 @@ which mushrooms, where have you found them and eventually share these finds with
 
 ## How to install
 Obviously you can fork or copy the entire project to build it yourself, but if you are interested
-only to the final application, [here](MicoApp_1.0.0(33).apk) you can find apk. 
+only to the final application, [here](MicoApp_1.1.0(34).apk) you can find apk. 
 I have no official site and no distribution channel other than GitHub, so don't trust anyone else.
 
 ## License

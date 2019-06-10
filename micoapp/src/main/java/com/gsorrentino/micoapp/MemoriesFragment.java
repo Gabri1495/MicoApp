@@ -38,6 +38,9 @@ public class MemoriesFragment extends Fragment {
     private AsyncTasks.GetFindsAsync async;
     private Gson gson = new Gson();
     private SharedPreferences sharedPrefs;
+    /*Usato per capire se serva o meno ricaricare i Ritrovamenti sulla base delle memorie.
+    * Inizializzo a true per evitare un doppio popolamento all'avvio*/
+    private boolean findsUpdated = true;
 
     public MemoriesFragment() {}
 
@@ -49,6 +52,8 @@ public class MemoriesFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         sharedPrefs = Objects.requireNonNull(getActivity()).getSharedPreferences(Costanti.SHARED_PREFERENCES_MEMORIES, 0);
         String jsonMemories = sharedPrefs.getString(Costanti.SAVED_MEMORIES, "[]");
         Type type = new TypeToken<List<Integer>>(){}.getType();
@@ -60,17 +65,40 @@ public class MemoriesFragment extends Fragment {
         DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), llm.getOrientation());
         recyclerView.addItemDecoration(mDividerItemDecoration);
         ((SimpleItemAnimator) Objects.requireNonNull(recyclerView.getItemAnimator())).setSupportsChangeAnimations(false);
+
         adapter = new MemorieListAdapter(this);
         recyclerView.setAdapter(adapter);
 
-        async = new AsyncTasks.GetFindsAsync(this, memories);
-        async.execute();
+        updateFinds();
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        if(!findsUpdated)
+            updateFinds();
     }
 
     @Override
     public void onDestroy(){
         super.onDestroy();
         async.cancel(true);
+    }
+
+    /**
+     * Basandosi sulle Memorie recupera i Ritrovamenti per mostrarli
+     */
+    private void updateFinds(){
+        async = new AsyncTasks.GetFindsAsync(this, memories);
+        async.execute();
+    }
+
+    /**
+     * Fa sapere a {@link MemoriesFragment} che al prossimo {@link MemoriesFragment#onStart()}
+     * sarà necessario aggiornare la lista dei Ritrovamenti mostrati
+     */
+    public void findsMustBeUpdated(){
+        findsUpdated = false;
     }
 
     /**
@@ -83,6 +111,7 @@ public class MemoriesFragment extends Fragment {
         finds = ritrovamenti;
         if(adapter != null)
             adapter.setRitrovamenti(ritrovamenti);
+        findsUpdated = true;
     }
 
     /**

@@ -2,6 +2,9 @@ package com.gsorrentino.micoapp.util;
 
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
 
@@ -40,7 +43,7 @@ public class Metodi {
                 }
             }
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            String imageFileName = imageFileNamePrefix + "_" + timeStamp + imageFileNameSuffix + ".jpg";
+            String imageFileName = imageFileNamePrefix + "_" + timeStamp + "_" +  imageFileNameSuffix + ".jpg";
             return new File(storageDir, imageFileName);
         }
         return null;
@@ -98,5 +101,44 @@ public class Metodi {
             allDeleted = false;
         }
         return allDeleted;
+    }
+
+
+    /**
+     * Carico un'immagine a partire da un percorso e ridimensionandola
+     * secondo un massimo passato come parametro
+     *
+     * @param currentPhotoPath path dell'immagine da caricare
+     * @param maxSize massima dimensione che l'immagine dovrà avere, deve essere
+     *                   maggiore di 0, altrimenti l'immagine in uscita avrà
+     *                  dimensione 1x1
+     * @param isHeight Se true ridimensionerà sulla base dell'altezza, altrimenti
+     *                 sulla base della larghezza
+     * @return Bitmap ridimensionata, null nel caso il caricamento sia fallito
+     */
+    public static Bitmap loadBitMapResized(String currentPhotoPath, int maxSize, boolean isHeight){
+
+        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath);
+        if(bitmap == null)
+            return null;
+        int originalHeight = bitmap.getHeight();
+        int originalWidth = bitmap.getWidth();
+        int finalHeight = originalHeight;
+        int finalWidth = originalWidth;
+        float ratio = (float)originalHeight/originalWidth;
+        /*L'immagine è più grande dello spazio disponibile*/
+        if(isHeight && originalHeight > maxSize){
+            finalHeight = maxSize;
+            finalWidth = (int) (finalHeight / ratio);
+        } else if (originalWidth > maxSize) {
+            finalWidth = maxSize;
+            finalHeight = (int) (finalWidth * ratio);
+        }
+
+        /*Evito l'eccezione nel caso mi vengano fornite misure non valide*/
+        finalHeight = finalHeight > 0 ? finalHeight : 1;
+        finalWidth = finalWidth > 0 ? finalWidth : 1;
+
+        return ThumbnailUtils.extractThumbnail(bitmap, finalWidth, finalHeight);
     }
 }
