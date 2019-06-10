@@ -11,6 +11,7 @@
         android:id="@+id/archive_horizontal_scrollView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         app:layout_constraintEnd_toStartOf="@id/archive_arrow_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">

@@ -135,7 +135,7 @@
     <string name="has_more_quantity">Higher quantity</string>
     <string name="channel_memories_name">Memories</string>
     <string name="channel_memories_desc">To remember you about your previous finds</string>
-    <string name="worker_state">Worker State</string>
+    <string name="worker_state">Worker State:</string>
     <string name="worker_last_run">Worker last run:</string>
     <string name="worker_delete">Delete worker</string>
     <string name="never">Never</string>
