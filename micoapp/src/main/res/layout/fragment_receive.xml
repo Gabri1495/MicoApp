@@ -25,6 +25,7 @@
         android:text="@string/receive_description"
         android:textAlignment="center"
         android:textSize="18sp"
+        app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toTopOf="@+id/receive_select_file"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

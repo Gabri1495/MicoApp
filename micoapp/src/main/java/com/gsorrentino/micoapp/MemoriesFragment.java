@@ -19,6 +19,7 @@ import com.gsorrentino.micoapp.adapter.MemorieListAdapter;
 import com.gsorrentino.micoapp.model.Ritrovamento;
 import com.gsorrentino.micoapp.util.AsyncTasks;
 import com.gsorrentino.micoapp.util.Costanti;
+import com.gsorrentino.micoapp.util.ManagePermissions;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class MemoriesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ManagePermissions.checkManageStoragePermissions(this);
         return inflater.inflate(R.layout.fragment_memories, container, false);
     }
 

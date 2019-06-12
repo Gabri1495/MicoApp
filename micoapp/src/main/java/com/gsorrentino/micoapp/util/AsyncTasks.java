@@ -112,7 +112,8 @@ public class AsyncTasks {
 
         /**
          * {@link AsyncTask} per gestire un {@link Ritrovamento}.
-         * I parametri passati durante {@link AsyncTask#execute(Object[])} permettono di effettuare un {@link Costanti#INSERT},
+         * I parametri passati durante {@link AsyncTask#execute(Object[])} permettono
+         * di effettuare un {@link Costanti#INSERT},
          * {@link Costanti#UPDATE}, oppure {@link Costanti#DELETE}
          *
          * @param context Usato per recuperare istanza DB e mostrare Toast
@@ -330,7 +331,7 @@ public class AsyncTasks {
          * @param context Usato per recuperare istanza DB e mostrare Toast
          * @param find Elemento da importare
          */
-        public ImportFindAsync(Context context, Ritrovamento find) {
+        ImportFindAsync(Context context, Ritrovamento find) {
             this.find = find;
             contextRef = new WeakReference<>(context);
             db = MicoAppDatabase.getInstance(context, false);

@@ -92,8 +92,8 @@
     <string name="receive_select">Seleziona file</string>
     <string name="error_find_already_saved">Questo Ritrovamento è già salvato nel database!</string>
     <string name="error_received_already_saved">Questo Ricevuto è già salvato nel database!</string>
-    <string name="receive_description">Seleziona un file .micoapp.\nQuando esporti un ritrovamento il suo file viene salvato in Documenti/MicoApp</string>
-    <string name="error_import_fail">Ritrovamento e/o Ricevuto già presenti!</string>
+    <string name="receive_description">Seleziona un file .micoapp.\nQuando esporti un ritrovamento il suo file viene salvato in Download/MicoApp</string>
+    <string name="error_import_fail">Ritrovamento già presente!</string>
     <string name="update_import">Ritrovamento importato,\nRicevuto aggiornato</string>
     <string name="tips">Consigli</string>
     <string name="show_data_toast">Mostra Toast con informazioni sulla data</string>
