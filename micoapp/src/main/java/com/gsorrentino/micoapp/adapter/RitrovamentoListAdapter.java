@@ -178,6 +178,8 @@ public class RitrovamentoListAdapter extends RecyclerView.Adapter<RitrovamentoLi
                 Bitmap bitmap = Metodi.loadBitMapResized(path, width / 4, false);
                 if(bitmap != null)
                     holder.mushroomImageView.setImageBitmap(bitmap);
+                else
+                    holder.mushroomImageView.setImageResource(R.mipmap.ic_launcher);
             }
 
         }

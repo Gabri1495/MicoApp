@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.text.format.DateFormat;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -277,7 +278,9 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
                     indirizzo = geocoder.getFromLocation(lat, lng, 1);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Toast.makeText(this, R.string.error_generic, Toast.LENGTH_SHORT).show();
+                    Toast geocoderToast = Toast.makeText(this, R.string.error_geocoder, Toast.LENGTH_LONG);
+                    geocoderToast.setGravity(Gravity.TOP | Gravity.CENTER, 10, 0);
+                    geocoderToast.show();
                 }
 
                 switch (currentMode) {

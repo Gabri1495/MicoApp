@@ -150,4 +150,5 @@
     <string name="info_main_tester_label">Main Tester:</string>
     <string name="info_main_tester" translatable="false">Agnese Testoni\nFrancesco Bellei\nNicola Fava\nRoberto Cocchi\nRubens Ferrari</string>
     <string name="info_channel">All the members of my Telegram channel</string>
+    <string name="error_geocoder">Geocoder doesn\'t work properly and address should not be updated. Try edit, modify coords and save again</string>
 </resources>

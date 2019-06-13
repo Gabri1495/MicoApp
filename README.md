@@ -13,12 +13,12 @@ which mushrooms, where have you found them and eventually share these finds with
 
 ## How to install
 Obviously you can fork or copy the entire project to build it yourself, but if you are interested
-only to the final application, [here](MicoApp_1.1.2(36).apk) you can find apk. 
+only to the final application, [here](MicoApp_1.1.3(37).apk) you can find apk. 
 I have no official site and no distribution channel other than GitHub, so don't trust anyone else.
 
 ## License
 Please take a look at **open source license**.  
-More than an exam these application has been and will be a pleasure (I will continue to work in spare time);
+More than an exam these application has been and will be a pleasure (I will continue to work on it in spare time);
 when it will be completed, I will publish it on PlayStore for free,
 without ads and eventually with a donation options.  
 Feel free to copy, modify and redistribute these code, but I would like that it remains free, open and without ads.
