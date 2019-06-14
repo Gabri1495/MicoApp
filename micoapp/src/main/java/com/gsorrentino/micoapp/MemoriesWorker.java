@@ -62,7 +62,6 @@ public class MemoriesWorker extends Worker {
         Calendar c;
         int day;
         List<Integer> memories;
-//        List<Integer> tmpMemories = new ArrayList<>();
         try {
             sharedPrefs = getApplicationContext()
                     .getSharedPreferences(Costanti.SHARED_PREFERENCES_MEMORIES, 0);
@@ -76,22 +75,22 @@ public class MemoriesWorker extends Worker {
             int year = c.get(Calendar.YEAR);
 
             String jsonMemories = sharedPrefs.getString(Costanti.SAVED_MEMORIES, "[]");
-            Type type = new TypeToken<List<Integer>>() {
-            }.getType();
+            Type type = new TypeToken<List<Integer>>() {}.getType();
             memories = gson.fromJson(jsonMemories == null ? "[]" : jsonMemories, type);
             boolean newMemories = false;
+            boolean newDay = year != lastCheck.get(Calendar.YEAR)
+                    || month != lastCheck.get(Calendar.MONTH)
+                    || day != lastCheck.get(Calendar.DAY_OF_MONTH);
             MicoAppDatabase db = MicoAppDatabase.getInstance(getApplicationContext(), false);
             RitrovamentoDao dao = db.ritrovamentoDao();
             List<Ritrovamento> ritrovamenti = dao.getAllRitrovamentiStatic();
             /*Controllo se oggi ho già controllato*/
-            if (ritrovamenti != null && year != lastCheck.get(Calendar.YEAR)
-                && month != lastCheck.get(Calendar.MONTH) && day != lastCheck.get(Calendar.DAY_OF_MONTH)) {
+            if (ritrovamenti != null && newDay) {
                 for (Ritrovamento r : ritrovamenti) {
                     if (r.data.get(Calendar.DAY_OF_MONTH) == day
                             && r.data.get(Calendar.MONTH) == month
                             && !memories.contains(r.key)) {
                         memories.add(r.key);
-//                        tmpMemories.add(r.key);
                         newMemories = true;
                     }
                 }
@@ -120,7 +119,7 @@ public class MemoriesWorker extends Worker {
                 NotificationManagerCompat.from(context).notify(Costanti.MEMORIES_NOTIFICATION_ID, builder.build());
             }
         }catch (Exception e){
-//            sharedPrefs.edit().putString("errore nell'esecuzione", e.getMessage()).apply();
+            /*Non prendo provvedimenti, ma evito che il Worker si arresti*/
         }
 
 

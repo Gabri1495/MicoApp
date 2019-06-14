@@ -275,7 +275,14 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
 
                 List<Address> indirizzo = null;
                 try {
-                    indirizzo = geocoder.getFromLocation(lat, lng, 1);
+                    /*Evito di invocare il geocoder se le coordinate non sono state toccate*/
+                    boolean editNeedGeocoder = currentMode.equals(EDIT_MODE)
+                            && (ritrovamento.indirizzo == null
+                                || ritrovamento.latitudine != lat
+                                || ritrovamento.longitudine != lng);
+                    if(currentMode.equals(CREATE_MODE) || editNeedGeocoder) {
+                        indirizzo = geocoder.getFromLocation(lat, lng, 1);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                     Toast geocoderToast = Toast.makeText(this, R.string.error_geocoder, Toast.LENGTH_LONG);
@@ -316,9 +323,7 @@ public class EditFindActivity extends AppCompatActivity implements View.OnClickL
                             return;
                         }
                         ritrovamento.fungo = fungo;
-                        /*Evito di invocare il geocoder se le coordinate non sono state toccate*/
-                        if ((ritrovamento.latitudine != lat || ritrovamento.longitudine != lng)
-                                && indirizzo != null && indirizzo.size() > 0)
+                        if (indirizzo != null && indirizzo.size() > 0)
                             ritrovamento.indirizzo = indirizzo.get(0).getAddressLine(0);
                         ritrovamento.latitudine = lat;
                         ritrovamento.longitudine = lng;
