@@ -7,6 +7,10 @@ import android.os.AsyncTask;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.lifecycle.LiveData;
+
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.gsorrentino.micoapp.MapCustomFragment;
 import com.gsorrentino.micoapp.MemoriesFragment;
 import com.gsorrentino.micoapp.R;
 import com.gsorrentino.micoapp.model.Ricevuto;
@@ -208,6 +212,43 @@ public class AsyncTasks {
         protected void onPostExecute(List<Ritrovamento> memFinds) {
             if(fragment != null)
                 fragment.setRitrovamenti(memFinds);
+        }
+    }
+
+
+
+    public static class GetFindsCoordsAsync extends AsyncTask<Void, Void, List<Ritrovamento>> {
+
+        private MapCustomFragment fragment;
+        private LatLngBounds boundaries;
+
+        /**
+         * {@link AsyncTask} per recuperare una lista di {@link Ritrovamento}.
+         *
+         * @param fragment Utilizzato per sfruttarne il contesto e fornire la
+         *                 lista di ritorno
+         * @param boundaries Limiti delle coordinate entro cui recuperare
+         *                 i {@link Ritrovamento}
+         */
+        public GetFindsCoordsAsync(MapCustomFragment fragment, LatLngBounds boundaries) {
+            this.fragment = fragment;
+            this.boundaries = boundaries;
+        }
+
+        @Override
+        protected List<Ritrovamento> doInBackground(Void... params) {
+            MicoAppDatabase db = MicoAppDatabase.getInstance(fragment.getActivity(), false);
+            RitrovamentoDao dao = db.ritrovamentoDao();
+            List<Ritrovamento> coordsFinds = dao.getAllRitrovamentiCoordsBounds(
+                    boundaries.southwest.latitude, boundaries.southwest.longitude,
+                    boundaries.northeast.latitude, boundaries.northeast.longitude);
+            return coordsFinds;
+        }
+
+        @Override
+        protected void onPostExecute(List<Ritrovamento> coordsFinds) {
+            if(fragment != null)
+                fragment.showRitrovamenti(coordsFinds);
         }
     }
 

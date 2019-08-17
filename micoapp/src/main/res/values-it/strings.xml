@@ -135,4 +135,5 @@
     <string name="info_main_tester_label">Tester principali:</string>
     <string name="info_channel">Tutti i membri del mio canale Telegram</string>
     <string name="error_geocoder">Il Geocoder non ha lavorato adeguatamente e l\'indirizzo non dovrebbe essere aggiornato. Prova a modificare, cambaire coordinate e salvare ancora</string>
+    <string name="show_mushrooms">Mostra funghi</string>
 </resources>

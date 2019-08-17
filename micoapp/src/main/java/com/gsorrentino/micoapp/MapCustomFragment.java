@@ -19,6 +19,7 @@ import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.DrawableRes;
@@ -44,16 +45,20 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gsorrentino.micoapp.model.Ritrovamento;
 import com.gsorrentino.micoapp.persistence.MicoAppDatabase;
+import com.gsorrentino.micoapp.util.AsyncTasks;
 import com.gsorrentino.micoapp.util.Costanti;
 import com.gsorrentino.micoapp.util.ManagePermissions;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
@@ -81,6 +86,8 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
     private FusedLocationProviderClient fusedLocationClient;
     private Marker marker;
     private Marker markerToBeUpdated;
+    private List<Marker> markerList = new ArrayList<>();
+    private AsyncTasks.GetFindsCoordsAsync async;
     /*Mantengo la posizione corrente di modo da allegarla all'Intent*/
     private LatLng currentPosition;
     /*Per permettere utilizzo della mappa anche senza localizzazione attiva*/
@@ -146,6 +153,9 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
             startActivity(intent);
         });
 
+        Button showMush_button = Objects.requireNonNull(getActivity()).findViewById(R.id.map_showMush_button);
+        showMush_button.setOnClickListener(view1 -> manageShowMushOnClick());
+
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
         Objects.requireNonNull(mapFragment).getMapAsync(this);
@@ -179,6 +189,17 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
             editor.apply();
         }
         fusedLocationClient.removeLocationUpdates(locationCallback);
+    }
+
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if(async != null)
+            async.cancel(true);
+        for(Marker m : markerList) {
+            m = null;
+        }
     }
 
 
@@ -240,6 +261,15 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
             ClipData clip = ClipData.newPlainText(marker.getTitle(), marker.getTitle());
             clipboard.setPrimaryClip(clip);
             Toast.makeText(getActivity(), R.string.copied_on_clipboard, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    private void manageShowMushOnClick(){
+        if(mMap != null) {
+            LatLngBounds currentBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+            async = new AsyncTasks.GetFindsCoordsAsync(this, currentBounds);
+            async.execute();
         }
     }
 
@@ -339,6 +369,17 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
 
 
     /**
+     * Aggiunge un marker sulla mappa per ogni {@link Ritrovamento} passatogli
+     *
+     * @param ritrovamenti Ritrovamenti da mostrare sulla mappa
+     */
+    public void showRitrovamenti(List<Ritrovamento> ritrovamenti) {
+        for(Ritrovamento r : ritrovamenti)
+            setMarker(r, mMap);
+    }
+
+
+    /**
      * Aggiunge un {@link Marker} ad una {@link GoogleMap}
      *
      * @param ritrovamento Ritrovamento associato al Marker
@@ -355,6 +396,7 @@ public class MapCustomFragment extends Fragment implements OnMapReadyCallback,
         * maggior definizione dell'icona finale*/
         mark.setTag(ritrovamento);
         mark.showInfoWindow();
+        markerList.add(mark);
     }
 
 

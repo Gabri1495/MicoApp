@@ -50,6 +50,19 @@ public interface RitrovamentoDao {
     @Query("SELECT * FROM ritrovamento WHERE indirizzo LIKE :luogo")
     LiveData<List<Ritrovamento>> getAllRitrovamentiLuogoSearch(String luogo);
 
+    @Query("SELECT * FROM ritrovamento WHERE " +
+            "(CASE WHEN :latDown < :latUp " +
+            "   THEN latitudine BETWEEN :latDown AND :latUp " +
+            "   ELSE latitudine BETWEEN :latUp AND :latDown " +
+            "END) " +
+            "AND " +
+            "(CASE WHEN :lngDown < :lngUp " +
+            "   THEN longitudine BETWEEN :lngDown AND :lngUp " +
+            "   ELSE longitudine BETWEEN :lngUp AND :lngDown " +
+            "END)")
+    List<Ritrovamento> getAllRitrovamentiCoordsBounds(double latDown, double lngDown,
+                                                                double latUp, double lngUp);
+
     @Query("SELECT * FROM ritrovamento WHERE nickname = :nickname AND nome = :nome " +
             "AND cognome = :cognome AND data = :data")
     Ritrovamento getRitrovamento(String nickname, String nome, String cognome, Calendar data);
